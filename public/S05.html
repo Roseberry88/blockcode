@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코딩스타트 - 코딩 과제 관리 시스템</title>
+    <!-- Blockly 라이브러리 로드 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.3.0/blockly_compressed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.3.0/blocks_compressed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.3.0/javascript_compressed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.3.0/python_compressed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.3.0/msg/ko.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #4285f4;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4285f4;
+            font-weight: bold;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .task-list {
+            width: 25%;
+            background-color: #f0f0f0;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .task-categories {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-tab {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .category-tab.active {
+            background-color: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .task-item {
+            padding: 1rem;
+            background-color: white;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+
+        .task-item.active {
+            border: 2px solid #4285f4;
+        }
+
+        .task-title {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .task-details {
+            width: 75%;
+            padding: 1rem;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .task-header {
+            margin-bottom: 1rem;
+        }
+
+        .task-description {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .description-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .example-box {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            white-space: pre;
+        }
+
+        .editor-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: #f0f0f0;
+            padding: 0.5rem;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .editor-tab {
+            padding: 0.25rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .editor-tab.active {
+            background-color: #4285f4;
+            color: white;
+        }
+
+        .code-editor {
+            border: 1px solid #ddd;
+            min-height: 300px;
+            background-color: #f9f9f9;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .block-code-area {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .code-block {
+            padding: 0.75rem;
+            border-radius: 4px;
+            color: white;
+            display: inline-block;
+            margin-left: 20px;
+            cursor: move;
+        }
+
+        .code-block.yellow {
+            background-color: #ffc107;
+        }
+
+        .code-block.blue {
+            background-color: #4285f4;
+        }
+
+        .code-block.red {
+            background-color: #f44336;
+        }
+
+        .code-block.green {
+            background-color: #4caf50;
+        }
+
+        #blocklyDiv {
+            height: 100%;
+            min-height: 300px;
+            width: 100%;
+        }
+
+        .code-view {
+            display: none;
+            height: 300px;
+            width: 100%;
+            padding: 0.5rem;
+            font-family: monospace;
+            white-space: pre;
+            overflow: auto;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+        }
+
+        .btn-run {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-test {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .btn-submit {
+            background-color: #4285f4;
+            color: white;
+        }
+
+        .code-panel {
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f0f0f0;
+            padding: 0.5rem;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .code-title {
+            font-weight: bold;
+        }
+
+        .language-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .language-button {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .active-language {
+            background-color: #4285f4;
+            color: white;
+        }
+
+        .inactive-language {
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+
+        .code-content {
+            height: 200px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre;
+            border: 1px solid #ddd;
+        }
+
+        .output-panel {
+            margin-top: 1rem;
+        }
+
+        .output-header {
+            background-color: #f0f0f0;
+            padding: 0.5rem;
+            font-weight: bold;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .output-content {
+            height: 150px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre;
+            border: 1px solid #ddd;
+        }
+
+        .test-case-panel {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .test-case-header {
+            background-color: #f0f0f0;
+            padding: 0.5rem;
+            font-weight: bold;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .test-case-content {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .test-case-item {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .test-case-badge {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .badge-success {
+            background-color: #4caf50;
+        }
+
+        .badge-error {
+            background-color: #f44336;
+        }
+
+        .badge-pending {
+            background-color: #9e9e9e;
+        }
+
+        .output-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .score-badge {
+            background-color: #4285f4;
+        }
+
+        .feedback-badge {
+            background-color: #ff9800;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 60%;
+            max-width: 600px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            margin-bottom: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .result-summary {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .result-pass {
+            color: #4caf50;
+        }
+
+        .result-fail {
+            color: #f44336;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    <header>
+        <div class="logo">코딩스타트: 코딩 과제</div>
+        <div class="user-profile">
+            <span>김준호</span>
+            <div class="avatar">김</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- 좌측 과제 목록 -->
+        <div class="task-list">
+            <h3>과제 목록</h3>
+
+            <!-- 과제 카테고리 탭 -->
+            <div class="task-categories">
+                <div class="category-tab active" data-category="all">전체</div>
+                <div class="category-tab" data-category="incomplete">미완료</div>
+            </div>
+
+            <!-- 과제 검색 -->
+            <input type="text" class="search-box" placeholder="과제 검색..." id="searchBox">
+
+            <!-- 과제 목록 항목들 -->
+            <div class="task-items" id="taskItems">
+                <div class="task-item active" data-task-id="1">
+                    <div class="task-title">반복문으로 사각형 그리기</div>
+                    <div class="task-meta">난이도: 초급 | 마감: 2일 후</div>
+                </div>
+
+                <div class="task-item" data-task-id="2">
+                    <div class="task-title">조건문으로 성적 계산하기</div>
+                    <div class="task-meta">난이도: 초급 | 마감: 5일 후</div>
+                </div>
+
+                <div class="task-item" data-task-id="3">
+                    <div class="task-title">함수로 계산기 만들기</div>
+                    <div class="task-meta">난이도: 중급 | 마감: 7일 후</div>
+                </div>
+
+                <div class="task-item" data-task-id="4">
+                    <div class="task-title">배열로 데이터 분석하기</div>
+                    <div class="task-meta">난이도: 중급 | 마감: 미정</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 우측 과제 상세 패널 -->
+        <div class="task-details" id="taskDetails">
+            <!-- 과제 제목 및 정보 -->
+            <div class="task-header">
+                <h2 id="currentTaskTitle">반복문으로 사각형 그리기</h2>
+                <div class="task-meta" id="currentTaskMeta">난이도: 초급 | 배정: 유승훈 교수 | 마감: 2025-04-10 23:59</div>
+            </div>
+
+            <!-- 과제 설명 영역 -->
+            <div class="task-description">
+                <div class="description-title">문제 설명</div>
+                <p id="taskDescription">반복문을 사용하여 N x N 크기의 사각형을 그리는 프로그램을 작성하세요.</p>
+                <p>사용자로부터 N 값을 입력받아 '*' 문자로 채워진 사각형을 출력합니다.</p>
+                <p>이중 반복문을 사용하여 구현해야 합니다.</p>
+
+                <div class="description-title" style="margin-top: 1rem;">입출력 예시</div>
+                <div class="example-box" id="taskExample">입력: 4
+                    출력:
+                    ****
+                    ****
+                    ****
+                    ****</div>
+            </div>
+
+            <!-- 코드 에디터 영역 -->
+            <div class="editor-tabs">
+                <div class="editor-tab active" data-editor="block">블록</div>
+                <div class="editor-tab" data-editor="code">코드</div>
+            </div>
+
+            <div class="code-editor">
+                <!-- 블록 코드 영역 -->
+                <div id="blocklyDiv"></div>
+                <div id="codeView" class="code-view"></div>
+            </div>
+
+            <!-- 코드 표시 영역 -->
+            <div class="code-panel">
+                <div class="code-header">
+                    <div class="code-title">실제 코드</div>
+                    <div class="language-buttons">
+                        <div class="language-button active-language" id="pythonButton">Python</div>
+                        <div class="language-button inactive-language" id="javascriptButton">JavaScript</div>
+                    </div>
+                </div>
+                <div class="code-content" id="codeContent"></div>
+            </div>
+
+            <!-- 출력 영역 -->
+            <div class="output-panel">
+                <div class="output-header">
+                    <span>실행 결과</span>
+                    <div>
+                        <span class="output-badge score-badge" id="scoreDisplay" style="display: none;">점수: 0/100</span>
+                        <span class="output-badge feedback-badge" id="feedbackButton" style="display: none;">피드백
+                            보기</span>
+                    </div>
+                </div>
+                <div class="output-content" id="outputContent"></div>
+            </div>
+
+            <!-- 테스트 케이스 패널 -->
+            <div class="test-case-panel" id="testCasePanel">
+                <div class="test-case-header">테스트 케이스 결과</div>
+                <div class="test-case-content" id="testCaseContent">
+                    <!-- 여기에 테스트 케이스 결과가 표시됩니다 -->
+                </div>
+            </div>
+
+            <!-- 실행 및 제출 버튼 -->
+            <div class="action-buttons">
+                <button class="btn btn-run" id="runButton">실행</button>
+                <button class="btn btn-test" id="testButton">테스트</button>
+                <button class="btn btn-submit" id="submitButton">제출</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 피드백 모달 -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">코드 피드백</div>
+                <span class="modal-close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body" id="feedbackContent">
+                <!-- 여기에 피드백 내용이 표시됩니다 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-submit" id="confirmModal">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- XML 정의 (Blockly 툴박스) -->
+    <xml id="toolbox" style="display: none">
+        <category name="제어" colour="#ffc107">
+            <block type="controls_if"></block>
+            <block type="controls_repeat_ext">
+                <value name="TIMES">
+                    <shadow type="math_number">
+                        <field name="NUM">10</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="controls_for">
+                <value name="FROM">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+                <value name="TO">
+                    <shadow type="math_number">
+                        <field name="NUM">10</field>
+                    </shadow>
+                </value>
+                <value name="BY">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="controls_forEach"></block>
+        </category>
+        <category name="입출력" colour="#4285f4">
+            <block type="text_print">
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT">abc</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="text_prompt_ext">
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT">숫자를 입력하세요</field>
+                    </shadow>
+                </value>
+            </block>
+        </category>
+        <category name="논리" colour="#34a853">
+            <block type="logic_compare"></block>
+            <block type="logic_operation"></block>
+            <block type="logic_boolean"></block>
+        </category>
+        <category name="수학" colour="#ea4335">
+            <block type="math_number">
+                <field name="NUM">0</field>
+            </block>
+            <block type="math_arithmetic">
+                <value name="A">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+                <value name="B">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+            </block>
+        </category>
+        <category name="텍스트" colour="#9c27b0">
+            <block type="text">
+                <field name="TEXT"></field>
+            </block>
+            <block type="text_join"></block>
+            <block type="text_append">
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT"></field>
+                    </shadow>
+                </value>
+            </block>
+        </category>
+        <category name="변수" colour="#ff5722" custom="VARIABLE"></category>
+        <category name="함수" colour="#795548" custom="PROCEDURE"></category>
+    </xml>
+
+    <script>
+        // 전역 변수 선언
+        let workspace;
+        let currentTaskId = '1';
+        let currentEditorMode = 'block';
+        let testResults = [];
+
+        // 과제 데이터 (실제로는 서버에서 가져올 것)
+        const tasks = {
+            '1': {
+                title: '반복문으로 사각형 그리기',
+                meta: '난이도: 초급 | 배정: 유승훈 교수 | 마감: 2025-04-10 23:59',
+                description: '반복문을 사용하여 N x N 크기의 사각형을 그리는 프로그램을 작성하세요. 사용자로부터 N 값을 입력받아 \'*\' 문자로 채워진 사각형을 출력합니다. 이중 반복문을 사용하여 구현해야 합니다.',
+                example: '입력: 4\n출력:\n****\n****\n****\n****',
+                testCases: [
+                    { input: '3', expectedOutput: '***\n***\n***' },
+                    { input: '5', expectedOutput: '*****\n*****\n*****\n*****\n*****' },
+                    { input: '1', expectedOutput: '*' }
+                ],
+                validationRules: [
+                    { type: 'contains_block', blockType: 'controls_repeat_ext', message: '반복문 블록을 사용해야 합니다.' },
+                    { type: 'min_blocks', count: 5, message: '최소 5개 이상의 블록을 사용해야 합니다.' },
+                    { type: 'nested_loop', message: '이중 반복문을 사용해야 합니다.' }
+                ],
+                solutionCode: {
+                    js: `// 사각형 그리기 해답 코드 (JavaScript)
+const n = parseInt(prompt("N을 입력하세요:"));
+for (let i = 0; i < n; i++) {
+  let row = "";
+  for (let j = 0; j < n; j++) {
+    row += "*";
+  }
+  console.log(row);
+}`,
+                    python: `# 사각형 그리기 해답 코드 (Python)
+n = int(input("N을 입력하세요:"))
+for i in range(n):
+    row = ""
+    for j in range(n):
+        row += "*"
+    print(row)`
+                }
+            },
+            '2': {
+                title: '조건문으로 성적 계산하기',
+                meta: '난이도: 초급 | 배정: 이미진 교수 | 마감: 2025-04-15 23:59',
+                description: '점수를 입력받아 등급을 출력하는 프로그램을 작성하세요. 90점 이상은 A, 80점 이상은 B, 70점 이상은 C, 60점 이상은 D, 그 미만은 F입니다. 조건문을 사용하여 구현해야 합니다.',
+                example: '입력: 85\n출력: B',
+                testCases: [
+                    { input: '95', expectedOutput: 'A' },
+                    { input: '80', expectedOutput: 'B' },
+                    { input: '75', expectedOutput: 'C' },
+                    { input: '60', expectedOutput: 'D' },
+                    { input: '45', expectedOutput: 'F' }
+                ],
+                validationRules: [
+                    { type: 'contains_block', blockType: 'controls_if', message: '조건문 블록을 사용해야 합니다.' },
+                    { type: 'min_blocks', count: 5, message: '최소 5개 이상의 블록을 사용해야 합니다.' }
+                ],
+                solutionCode: {
+                    js: `// 성적 계산하기 해답 코드 (JavaScript)
+const score = parseInt(prompt("점수를 입력하세요:"));
+let grade;
+
+if (score >= 90) {
+  grade = "A";
+} else if (score >= 80) {
+  grade = "B";
+} else if (score >= 70) {
+  grade = "C";
+} else if (score >= 60) {
+  grade = "D";
+} else {
+  grade = "F";
+}
+
+console.log(grade);`,
+                    python: `# 성적 계산하기 해답 코드 (Python)
+score = int(input("점수를 입력하세요:"))
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "F"
+
+print(grade)`
+                }
+            },
+            '3': {
+                title: '함수로 계산기 만들기',
+                meta: '난이도: 중급 | 배정: 박지성 교수 | 마감: 2025-04-17 23:59',
+                description: '두 수와 연산자(+, -, *, /)를 입력받아 계산 결과를 출력하는 계산기 프로그램을 작성하세요. 각 연산을 수행하는 함수를 만들고 이를 호출하여 결과를 출력해야 합니다.',
+                example: '입력: 10 + 5\n출력: 15',
+                testCases: [
+                    { input: '10 + 5', expectedOutput: '15' },
+                    { input: '10 - 5', expectedOutput: '5' },
+                    { input: '10 * 5', expectedOutput: '50' },
+                    { input: '10 / 5', expectedOutput: '2' }
+                ],
+                validationRules: [
+                    { type: 'contains_block', blockType: 'procedures_defnoreturn', message: '함수 블록을 사용해야 합니다.' },
+                    { type: 'min_blocks', count: 10, message: '최소 10개 이상의 블록을 사용해야 합니다.' }
+                ],
+                solutionCode: {
+                    js: `// 계산기 해답 코드 (JavaScript)
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+function multiply(a, b) {
+  return a * b;
+}
+
+function divide(a, b) {
+  return a / b;
+}
+
+const input = prompt("두 수와 연산자를 입력하세요 (예: 10 + 5):");
+const parts = input.split(" ");
+const num1 = parseFloat(parts[0]);
+const operator = parts[1];
+const num2 = parseFloat(parts[2]);
+
+let result;
+
+if (operator === "+") {
+result = add(num1, num2);
+} else if (operator === "-") {
+  result = subtract(num1, num2);
+} else if (operator === "*") {
+  result = multiply(num1, num2);
+} else if (operator === "/") {
+  result = divide(num1, num2);
+}
+
+console.log(result);`,
+                    python: `# 계산기 해답 코드 (Python)
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b
+
+input_str = input("두 수와 연산자를 입력하세요 (예: 10 + 5):")
+parts = input_str.split()
+num1 = float(parts[0])
+operator = parts[1]
+num2 = float(parts[2])
+
+if operator == "+":
+    result = add(num1, num2)
+elif operator == "-":
+    result = subtract(num1, num2)
+elif operator == "*":
+    result = multiply(num1, num2)
+elif operator == "/":
+    result = divide(num1, num2)
+
+print(result)`
+                }
+            },
+            '4': {
+                title: '배열로 데이터 분석하기',
+                meta: '난이도: 중급 | 배정: 최수영 교수 | 마감: 미정',
+                description: '숫자 배열을 입력받아 최댓값, 최솟값, 평균값을 계산하는 프로그램을 작성하세요. 배열과 반복문을 사용하여 구현해야 합니다.',
+                example: '입력: [10, 5, 8, 20, 3]\n출력:\n최댓값: 20\n최솟값: 3\n평균값: 9.2',
+                testCases: [
+                    { input: '[10, 5, 8, 20, 3]', expectedOutput: '최댓값: 20\n최솟값: 3\n평균값: 9.2' },
+                    { input: '[1, 2, 3, 4, 5]', expectedOutput: '최댓값: 5\n최솟값: 1\n평균값: 3' },
+                    { input: '[100]', expectedOutput: '최댓값: 100\n최솟값: 100\n평균값: 100' }
+                ],
+                validationRules: [
+                    { type: 'contains_block', blockType: 'controls_forEach', message: '반복문 블록을 사용해야 합니다.' },
+                    { type: 'min_blocks', count: 8, message: '최소 8개 이상의 블록을 사용해야 합니다.' }
+                ],
+                solutionCode: {
+                    js: `// 데이터 분석 해답 코드 (JavaScript)
+const input = prompt("숫자 배열을 입력하세요 (예: [10, 5, 8, 20, 3]):");
+// 문자열을 실제 배열로 변환
+const nums = JSON.parse(input);
+
+let max = nums[0];
+let min = nums[0];
+let sum = 0;
+
+for (let i = 0; i < nums.length; i++) {
+  if (nums[i] > max) {
+    max = nums[i];
+  }
+  if (nums[i] < min) {
+    min = nums[i];
+  }
+  sum += nums[i];
+}
+
+const avg = sum / nums.length;
+
+console.log("최댓값: " + max);
+console.log("최솟값: " + min);
+console.log("평균값: " + avg);`,
+                    python: `# 데이터 분석 해답 코드 (Python)
+import json
+
+input_str = input("숫자 배열을 입력하세요 (예: [10, 5, 8, 20, 3]):")
+nums = json.loads(input_str)
+
+max_val = nums[0]
+min_val = nums[0]
+sum_val = 0
+
+for num in nums:
+    if num > max_val:
+        max_val = num
+    if num < min_val:
+        min_val = num
+    sum_val += num
+
+avg = sum_val / len(nums)
+
+print(f"최댓값: {max_val}")
+print(f"최솟값: {min_val}")
+print(f"평균값: {avg}")`
+                }
+            }
+        };
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function () {
+            initBlockly();
+            initTaskItems();
+            initEditorTabs();
+            initLanguageButtons();
+            initRunButton();
+            initTestButton();
+            initSubmitButton();
+            initSearchBox();
+            initModal();
+
+            // 처음에는 첫 번째 과제 활성화
+            loadTask('1');
+        });
+
+        // Blockly 초기화
+        function initBlockly() {
+            workspace = Blockly.inject('blocklyDiv', {
+                toolbox: document.getElementById('toolbox'),
+                grid: {
+                    spacing: 20,
+                    length: 3,
+                    colour: '#ccc',
+                    snap: true
+                },
+                zoom: {
+                    controls: true,
+                    wheel: true,
+                    startScale: 1.0,
+                    maxScale: 3,
+                    minScale: 0.3,
+                    scaleSpeed: 1.2
+                },
+                trashcan: true
+            });
+
+            // 코드 변경 이벤트 리스너
+            workspace.addChangeListener(updateCode);
+        }
+
+        // 과제 항목 이벤트 리스너 초기화
+        function initTaskItems() {
+            const taskItems = document.querySelectorAll('.task-item');
+
+            taskItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    // 기존 활성화된 항목 비활성화
+                    const activeItem = document.querySelector('.task-item.active');
+                    if (activeItem) {
+                        activeItem.classList.remove('active');
+                    }
+
+                    // 선택한 항목 활성화
+                    this.classList.add('active');
+
+                    // 과제 로드
+                    const taskId = this.getAttribute('data-task-id');
+                    loadTask(taskId);
+                });
+            });
+        }
+
+        // 에디터 탭 이벤트 리스너 초기화
+        function initEditorTabs() {
+            const editorTabs = document.querySelectorAll('.editor-tab');
+
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    // 기존 활성화된 탭 비활성화
+                    const activeTab = document.querySelector('.editor-tab.active');
+                    if (activeTab) {
+                        activeTab.classList.remove('active');
+                    }
+
+                    // 선택한 탭 활성화
+                    this.classList.add('active');
+
+                    // 에디터 모드 전환
+                    const mode = this.getAttribute('data-editor');
+                    switchEditorMode(mode);
+                });
+            });
+        }
+
+        // 언어 버튼 이벤트 리스너 초기화
+        function initLanguageButtons() {
+            const languageButtons = document.querySelectorAll('.language-button');
+
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // 기존 활성화된 버튼 비활성화
+                    const activeButton = document.querySelector('.language-button.active-language');
+                    if (activeButton) {
+                        activeButton.classList.remove('active-language');
+                        activeButton.classList.add('inactive-language');
+                    }
+
+                    // 선택한 버튼 활성화
+                    this.classList.remove('inactive-language');
+                    this.classList.add('active-language');
+
+                    // 코드 업데이트
+                    updateCode();
+                });
+            });
+        }
+
+        // 실행 버튼 이벤트 리스너 초기화
+        function initRunButton() {
+            const runButton = document.getElementById('runButton');
+
+            runButton.addEventListener('click', function () {
+                runCode();
+            });
+        }
+
+        // 테스트 버튼 이벤트 리스너 초기화
+        function initTestButton() {
+            const testButton = document.getElementById('testButton');
+
+            testButton.addEventListener('click', function () {
+                runTests();
+            });
+        }
+
+        // 제출 버튼 이벤트 리스너 초기화
+        function initSubmitButton() {
+            const submitButton = document.getElementById('submitButton');
+
+            submitButton.addEventListener('click', function () {
+                submitTask();
+            });
+        }
+
+        // 검색 상자 이벤트 리스너 초기화
+        function initSearchBox() {
+            const searchBox = document.getElementById('searchBox');
+
+            searchBox.addEventListener('input', function () {
+                searchTasks(this.value);
+            });
+        }
+
+        // 모달 초기화
+        function initModal() {
+            const modal = document.getElementById('feedbackModal');
+            const closeModal = document.getElementById('closeModal');
+            const confirmModal = document.getElementById('confirmModal');
+            const feedbackButton = document.getElementById('feedbackButton');
+
+            feedbackButton.addEventListener('click', function () {
+                modal.style.display = 'block';
+            });
+
+            closeModal.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            confirmModal.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function (event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // 에디터 모드 전환
+        function switchEditorMode(mode) {
+            const blocklyDiv = document.getElementById('blocklyDiv');
+            const codeView = document.getElementById('codeView');
+
+            if (mode === 'block') {
+                blocklyDiv.style.display = 'block';
+                codeView.style.display = 'none';
+                currentEditorMode = 'block';
+            } else if (mode === 'code') {
+                blocklyDiv.style.display = 'none';
+                codeView.style.display = 'block';
+                currentEditorMode = 'code';
+
+                // 코드 뷰 업데이트
+                const code = getGeneratedCode();
+                codeView.textContent = code;
+            }
+        }
+
+        // 과제 로드
+        function loadTask(taskId) {
+            currentTaskId = taskId;
+
+            // 과제 정보 업데이트
+            const task = tasks[taskId];
+            document.getElementById('currentTaskTitle').textContent = task.title;
+            document.getElementById('currentTaskMeta').textContent = task.meta;
+            document.getElementById('taskDescription').textContent = task.description;
+            document.getElementById('taskExample').textContent = task.example;
+
+            // 결과 패널 초기화
+            document.getElementById('outputContent').textContent = '';
+            document.getElementById('testCasePanel').style.display = 'none';
+            document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('feedbackButton').style.display = 'none';
+
+            // 과제에 맞는 기본 블록 로드
+            loadTaskBlocks(taskId);
+        }
+
+        // 과제별 기본 블록 로드
+        function loadTaskBlocks(taskId) {
+            // 기존 블록 모두 제거
+            workspace.clear();
+
+            // 과제별로 필요한 초기 블록 추가
+            let xml;
+
+            if (taskId === '1') {
+                // 사각형 그리기 과제용 초기 블록
+                xml = `
+          <xml xmlns="https://developers.google.com/blockly/xml">
+            <block type="text_prompt_ext" x="50" y="50">
+              <value name="TEXT">
+                <shadow type="text">
+                  <field name="TEXT">N을 입력하세요:</field>
+                </shadow>
+              </value>
+            </block>
+          </xml>
+        `;
+            } else if (taskId === '2') {
+                // 성적 계산 과제용 초기 블록
+                xml = `
+          <xml xmlns="https://developers.google.com/blockly/xml">
+            <block type="text_prompt_ext" x="50" y="50">
+              <value name="TEXT">
+                <shadow type="text">
+                  <field name="TEXT">점수를 입력하세요:</field>
+                </shadow>
+              </value>
+            </block>
+          </xml>
+        `;
+            } else if (taskId === '3') {
+                // 계산기 과제용 초기 블록
+                xml = `
+          <xml xmlns="https://developers.google.com/blockly/xml">
+            <block type="procedures_defnoreturn" x="50" y="50">
+              <field name="NAME">계산하기</field>
+            </block>
+          </xml>
+        `;
+            } else if (taskId === '4') {
+                // 데이터 분석 과제용 초기 블록
+                xml = `
+          <xml xmlns="https://developers.google.com/blockly/xml">
+            <block type="variables_set" x="50" y="50">
+              <field name="VAR" id="listsId">리스트</field>
+              <value name="VALUE">
+                <block type="text_prompt_ext">
+                  <value name="TEXT">
+                    <shadow type="text">
+                      <field name="TEXT">숫자 배열을 입력하세요:</field>
+                    </shadow>
+                  </value>
+                </block>
+              </value>
+            </block>
+          </xml>
+        `;
+            }
+
+            if (xml) {
+                const dom = Blockly.Xml.textToDom(xml);
+                Blockly.Xml.domToWorkspace(dom, workspace);
+            }
+
+            // 코드 업데이트
+            updateCode();
+        }
+
+        // 현재 선택된 언어에 따라 코드 생성
+        function getGeneratedCode() {
+            const pythonButton = document.getElementById('pythonButton');
+            let code = '';
+
+            if (pythonButton.classList.contains('active-language')) {
+                // Python 코드 생성
+                try {
+                    code = Blockly.Python.workspaceToCode(workspace);
+                } catch (e) {
+                    code = '# 코드 생성 중 오류가 발생했습니다.\n# ' + e.message;
+                }
+            } else {
+                // JavaScript 코드 생성
+                try {
+                    code = Blockly.JavaScript.workspaceToCode(workspace);
+                } catch (e) {
+                    code = '// 코드 생성 중 오류가 발생했습니다.\n// ' + e.message;
+                }
+            }
+
+            return code;
+        }
+
+        // 코드 업데이트
+        function updateCode() {
+            const code = getGeneratedCode();
+            document.getElementById('codeContent').textContent = code;
+
+            // 코드 뷰 모드인 경우 코드 뷰도 업데이트
+            if (currentEditorMode === 'code') {
+                document.getElementById('codeView').textContent = code;
+            }
+        }
+
+        // 코드 실행
+        function runCode() {
+            const outputContent = document.getElementById('outputContent');
+            let code;
+
+            // 출력 영역 초기화
+            outputContent.textContent = '';
+
+            // 점수 및 피드백 숨기기
+            document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('feedbackButton').style.display = 'none';
+            document.getElementById('testCasePanel').style.display = 'none';
+
+            // 실행 시도
+            try {
+                // 현재 선택된 언어 확인
+                const isPython = document.getElementById('pythonButton').classList.contains('active-language');
+                
+                if (isPython) {
+                    // Python 코드 표시
+                    const pythonCode = Blockly.Python.workspaceToCode(workspace);
+                    outputContent.textContent += '※ Python 코드는 직접 보여드립니다:\n\n' + pythonCode + '\n\n';
+                    outputContent.textContent += '※ 실행 결과는 JavaScript로 보여드립니다:\n\n';
+                    
+                    // JavaScript 코드로 실행
+                    code = Blockly.JavaScript.workspaceToCode(workspace);
+                } else {
+                    // JavaScript 코드
+                    code = Blockly.JavaScript.workspaceToCode(workspace);
+                }
+
+                // 콘솔 출력을 캡처하기 위해 console.log 임시 재정의
+                const originalConsoleLog = console.log;
+                console.log = function () {
+                    const args = Array.from(arguments);
+                    outputContent.textContent += args.join(' ') + '\n';
+                    originalConsoleLog.apply(console, arguments);
+                };
+
+                // 사용자 입력을 시뮬레이션하기 위한 prompt 재정의
+                const originalPrompt = window.prompt;
+                window.prompt = function (text) {
+                    const result = originalPrompt(text);
+                    outputContent.textContent += `입력: ${result}\n`;
+                    return result;
+                };
+
+                // JavaScript 코드 실행
+                // 안전하게 코드 실행 (eval 대신 Function 사용)
+                new Function(code)();
+
+                // 원래 함수 복원
+                console.log = originalConsoleLog;
+                window.prompt = originalPrompt;
+            } catch (e) {
+                // 오류가 발생한 경우
+                outputContent.textContent += '실행 중 오류 발생: ' + e.message;
+                console.error('Code execution error:', e);
+            }
+        }
+
+        // 테스트 케이스 실행
+        function runTests() {
+            const task = tasks[currentTaskId];
+            const testCases = task.testCases;
+            const outputContent = document.getElementById('outputContent');
+            const testCaseContent = document.getElementById('testCaseContent');
+            
+            // 언어에 관계없이 항상 JavaScript 코드를 얻어서 실행
+            const code = Blockly.JavaScript.workspaceToCode(workspace);
+
+            // 출력 영역 초기화
+            outputContent.textContent = '';
+            testCaseContent.innerHTML = '';
+
+            // Python 모드인 경우 Python 코드도 표시
+            const isPython = document.getElementById('pythonButton').classList.contains('active-language');
+            if (isPython) {
+                const pythonCode = Blockly.Python.workspaceToCode(workspace);
+                outputContent.textContent += '※ Python 코드:\n\n' + pythonCode + '\n\n';
+                outputContent.textContent += '※ 테스트 결과 (JavaScript로 실행):\n\n';
+            }
+
+            // 테스트 패널 표시
+            document.getElementById('testCasePanel').style.display = 'block';
+
+            // 테스트 결과 저장 배열 초기화
+            testResults = [];
+
+            // 각 테스트 케이스 실행
+            let passedCount = 0;
+
+            for (let i = 0; i < testCases.length; i++) {
+                const testCase = testCases[i];
+
+                try {
+                    // 테스트 케이스 항목 생성
+                    const testItem = document.createElement('div');
+                    testItem.className = 'test-case-item';
+
+                    // 콘솔 출력 캡처
+                    const originalConsoleLog = console.log;
+                    let outputLines = [];
+                    console.log = function () {
+                        const args = Array.from(arguments);
+                        outputLines.push(args.join(' '));
+                        originalConsoleLog.apply(console, arguments);
+                    };
+
+                    // 프롬프트 대체 (테스트 케이스의 입력 사용)
+                    const originalPrompt = window.prompt;
+                    window.prompt = function () {
+                        return testCase.input;
+                    };
+
+                    // 코드 실행
+                    new Function(code)();
+
+                    // 원래 함수 복원
+                    console.log = originalConsoleLog;
+                    window.prompt = originalPrompt;
+
+                    // 출력 비교
+                    const output = outputLines.join('\n');
+                    const expected = testCase.expectedOutput;
+                    const isPassed = compareOutputs(output, expected);
+
+                    // 결과 저장
+                    testResults.push({
+                        input: testCase.input,
+                        output: output,
+                        expected: expected,
+                        passed: isPassed
+                    });
+
+                    // 통과 여부에 따라 UI 업데이트
+                    const badgeDiv = document.createElement('div');
+                    badgeDiv.className = 'test-case-badge ' + (isPassed ? 'badge-success' : 'badge-error');
+
+                    const textDiv = document.createElement('div');
+                    textDiv.textContent = `테스트 케이스 ${i + 1}: ${testCase.input} => ${isPassed ? '통과' : '실패'}`;
+
+                    testItem.appendChild(badgeDiv);
+                    testItem.appendChild(textDiv);
+                    testCaseContent.appendChild(testItem);
+
+                    if (isPassed) {
+                        passedCount++;
+                    }
+                } catch (e) {
+                    // 오류 발생 시
+                    const testItem = document.createElement('div');
+                    testItem.className = 'test-case-item';
+
+                    const badgeDiv = document.createElement('div');
+                    badgeDiv.className = 'test-case-badge badge-error';
+
+                    const textDiv = document.createElement('div');
+                    textDiv.textContent = `테스트 케이스 ${i + 1}: 오류 발생 - ${e.message}`;
+
+                    testItem.appendChild(badgeDiv);
+                    testItem.appendChild(textDiv);
+                    testCaseContent.appendChild(testItem);
+
+                    // 결과 저장
+                    testResults.push({
+                        input: testCase.input,
+                        output: '오류: ' + e.message,
+                        expected: testCase.expectedOutput,
+                        passed: false
+                    });
+                }
+            }
+
+            // 점수 계산 및 표시
+            const score = Math.round((passedCount / testCases.length) * 100);
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.textContent = `점수: ${score}/100`;
+            scoreDisplay.style.display = 'inline-block';
+
+            // 피드백 버튼 표시
+            document.getElementById('feedbackButton').style.display = 'inline-block';
+
+            // 피드백 내용 생성
+            generateFeedback(score);
+
+            // 결과 요약 표시
+            outputContent.textContent += `테스트 결과: ${passedCount}/${testCases.length} 통과 (${score}점)\n\n`;
+            outputContent.textContent += '※ 자세한 결과는 테스트 케이스 패널을 확인하세요.';
+        }
+
+        // 출력 결과 비교
+        function compareOutputs(actual, expected) {
+            // 공백 및 줄바꿈 정규화
+            const normalizeString = (str) => str.trim().replace(/\s+/g, ' ');
+
+            // 숫자 형식 차이 허용 (예: 9.2와 9.20)
+            const actualNormalized = normalizeString(actual);
+            const expectedNormalized = normalizeString(expected);
+
+            // 직접 비교
+            if (actualNormalized === expectedNormalized) {
+                return true;
+            }
+
+            // 숫자만 추출하여 비교 (형식 차이 허용)
+            const extractNumbers = (str) => {
+                const matches = str.match(/[-+]?\d*\.?\d+/g);
+                return matches ? matches.map(Number) : [];
+            };
+
+            const actualNumbers = extractNumbers(actual);
+            const expectedNumbers = extractNumbers(expected);
+
+            if (actualNumbers.length !== expectedNumbers.length) {
+                return false;
+            }
+
+            // 숫자 비교 (소수점 차이 허용)
+            for (let i = 0; i < actualNumbers.length; i++) {
+                if (Math.abs(actualNumbers[i] - expectedNumbers[i]) > 0.001) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // 피드백 생성
+        function generateFeedback(score) {
+            const task = tasks[currentTaskId];
+            const feedbackContent = document.getElementById('feedbackContent');
+            const code = getGeneratedCode();
+
+            let feedback = '';
+
+            // 점수에 따른 기본 피드백
+            if (score >= 90) {
+                feedback += '<p><strong>🎉 훌륭합니다!</strong> 모든 테스트 케이스를 성공적으로 통과했습니다.</p>';
+            } else if (score >= 70) {
+                feedback += '<p><strong>👍 좋은 시도입니다!</strong> 대부분의 테스트를 통과했습니다.</p>';
+            } else if (score >= 40) {
+                feedback += '<p><strong>🔍 개선이 필요합니다.</strong> 일부 테스트만 통과했습니다.</p>';
+            } else {
+                feedback += '<p><strong>❗ 다시 시도해보세요.</strong> 대부분의 테스트를 통과하지 못했습니다.</p>';
+            }
+
+            // 코드 검증 규칙 확인
+            const validationResults = validateCode(task.validationRules);
+
+            if (validationResults.length > 0) {
+                feedback += '<p><strong>📋 코드 구현 체크리스트:</strong></p>';
+                feedback += '<ul>';
+
+                for (const result of validationResults) {
+                    const icon = result.passed ? '✅' : '❌';
+                    feedback += `<li>${icon} ${result.message}</li>`;
+                }
+
+                feedback += '</ul>';
+            }
+
+            // 테스트 케이스 세부 결과
+            if (testResults.length > 0) {
+                feedback += '<p><strong>📊 테스트 케이스 결과:</strong></p>';
+                feedback += '<ul>';
+
+                for (let i = 0; i < testResults.length; i++) {
+                    const result = testResults[i];
+                    const icon = result.passed ? '✅' : '❌';
+
+                    feedback += `<li>${icon} 테스트 ${i + 1} (입력: ${result.input}):</li>`;
+
+                    if (!result.passed) {
+                        feedback += `<ul>`;
+                        feedback += `<li>기대 출력: ${result.expected}</li>`;
+                        feedback += `<li>실제 출력: ${result.output}</li>`;
+                        feedback += `</ul>`;
+                    }
+                }
+
+                feedback += '</ul>';
+            }
+
+            // 코드 개선 제안
+            if (score < 100) {
+                feedback += '<p><strong>💡 개선 제안:</strong></p>';
+                feedback += '<ul>';
+
+                // 과제 유형별 개선 제안
+                if (currentTaskId === '1') {
+                    if (!code.includes('for') && !code.includes('while')) {
+                        feedback += '<li>반복문(for 또는 while)을 사용해 문제를 해결해보세요.</li>';
+                    }
+                    if (validationResults.find(r => r.type === 'nested_loop' && !r.passed)) {
+                        feedback += '<li>중첩 반복문을 사용하는 것이 이 문제에 적합합니다.</li>';
+                    }
+                } else if (currentTaskId === '2') {
+                    if (!code.includes('if') || !code.includes('else')) {
+                        feedback += '<li>조건문(if-else)을 사용해 다양한 성적 범위를 처리하세요.</li>';
+                    }
+                } else if (currentTaskId === '3') {
+                    if (!code.includes('function') && !code.includes('def')) {
+                        feedback += '<li>각 연산을 수행하는 함수를 만들어보세요.</li>';
+                    }
+                } else if (currentTaskId === '4') {
+                    if (!code.includes('for') && !code.includes('while')) {
+                        feedback += '<li>배열 반복에는 for 또는 while 반복문을 사용하세요.</li>';
+                    }
+                }
+
+                feedback += '</ul>';
+            }
+
+            // 해답 코드 힌트 (선택적)
+            if (score < 50) {
+                const language = document.getElementById('pythonButton').classList.contains('active-language') ? 'python' : 'js';
+                const solutionHint = getSolutionHint(task.solutionCode[language]);
+
+                feedback += '<p><strong>🔎 힌트:</strong></p>';
+                feedback += `<pre style="background-color: #f5f5f5; padding: 0.5rem; border-radius: 4px;">${solutionHint}</pre>`;
+            }
+
+            feedbackContent.innerHTML = feedback;
+        }
+
+        // 솔루션 코드 힌트 얻기 (일부만 제공)
+        function getSolutionHint(solutionCode) {
+            // 전체 코드의 약 30%만 제공 (나머지는 ...으로 대체)
+            const lines = solutionCode.split('\n');
+            const hintLineCount = Math.floor(lines.length * 0.3);
+
+            // 상단 코드의 일부만 표시
+            let hint = lines.slice(0, hintLineCount).join('\n');
+            hint += '\n...\n';
+
+            return hint;
+        }
+
+        // 코드 검증 (과제의 요구사항 충족 여부 확인)
+        function validateCode(validationRules) {
+            const results = [];
+
+            for (const rule of validationRules) {
+                let passed = false;
+
+                switch (rule.type) {
+                    case 'contains_block':
+                        // 특정 블록 타입이 사용되었는지 확인
+                        passed = workspace.getAllBlocks().some(block => block.type === rule.blockType);
+                        break;
+
+                    case 'min_blocks':
+                        // 최소 블록 개수 확인
+                        passed = workspace.getAllBlocks().length >= rule.count;
+                        break;
+
+                    case 'nested_loop':
+                        // 중첩 반복문 확인
+                        passed = checkNestedLoop();
+                        break;
+                }
+
+                results.push({
+                    type: rule.type,
+                    message: rule.message,
+                    passed: passed
+                });
+            }
+
+            return results;
+        }
+
+        // 중첩 반복문 확인 함수
+        function checkNestedLoop() {
+            const blocks = workspace.getAllBlocks();
+
+            // 모든 반복문 블록 찾기
+            const loopBlocks = blocks.filter(block =>
+                block.type === 'controls_repeat_ext' ||
+                block.type === 'controls_forEach' ||
+                block.type === 'controls_for' ||
+                block.type === 'controls_whileUntil'
+            );
+
+            // 중첩 반복문 확인
+            for (const outerLoop of loopBlocks) {
+                // 반복문 내부의 모든 블록 찾기
+                const innerBlocks = outerLoop.getDescendants();
+
+                // 내부 블록 중에 다른 반복문이 있는지 확인
+                const hasNestedLoop = innerBlocks.some(block =>
+                    block !== outerLoop && (
+                        block.type === 'controls_repeat_ext' ||
+                        block.type === 'controls_forEach' ||
+                        block.type === 'controls_for' ||
+                        block.type === 'controls_whileUntil'
+                    )
+                );
+
+                if (hasNestedLoop) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // 과제 제출
+        function submitTask() {
+            // 먼저 테스트 실행
+            runTests();
+
+            // 테스트 결과와 검증 결과로 최종 점수 계산
+            const task = tasks[currentTaskId];
+            const validationResults = validateCode(task.validationRules);
+
+            // 테스트 케이스 점수 (70%)
+            let testScore = 0;
+            if (testResults.length > 0) {
+                const passedCount = testResults.filter(result => result.passed).length;
+                testScore = Math.round((passedCount / testResults.length) * 70);
+            }
+
+            // 코드 검증 점수 (30%)
+            const passedValidations = validationResults.filter(result => result.passed).length;
+            const validationScore = Math.round((passedValidations / validationResults.length) * 30);
+
+            // 최종 점수
+            const finalScore = testScore + validationScore;
+
+            // 결과 모달 표시
+            showSubmitResult(finalScore, validationResults);
+            
+            // 현재 선택된 언어가 Python이면 Python 코드도 출력
+            const isPython = document.getElementById('pythonButton').classList.contains('active-language');
+            if (isPython) {
+                const pythonCode = Blockly.Python.workspaceToCode(workspace);
+                const outputContent = document.getElementById('outputContent');
+                const currentContent = outputContent.innerHTML;
+                outputContent.innerHTML = `<div style="margin-bottom: 10px;">Python 코드:<pre style="background-color: #f5f5f5; padding: 8px; border-radius: 4px;">${pythonCode}</pre></div>` + currentContent;
+            }
+        }
+
+        // 제출 결과 표시
+        function showSubmitResult(score, validationResults) {
+            const code = getGeneratedCode();
+            const outputContent = document.getElementById('outputContent');
+            const modal = document.getElementById('feedbackModal');
+            const feedbackContent = document.getElementById('feedbackContent');
+
+            // 출력 내용 업데이트
+            outputContent.innerHTML = '';
+
+            // 결과 요약 생성
+            const resultSummary = document.createElement('div');
+            resultSummary.className = 'result-summary';
+
+            const scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'result-score';
+
+            if (score >= 80) {
+                scoreDisplay.textContent = `축하합니다! 최종 점수: ${score}점`;
+                scoreDisplay.classList.add('result-pass');
+            } else {
+                scoreDisplay.textContent = `최종 점수: ${score}점`;
+                scoreDisplay.classList.add('result-fail');
+            }
+
+            resultSummary.appendChild(scoreDisplay);
+
+            const message = document.createElement('p');
+            if (score >= 80) {
+                message.textContent = '과제가 성공적으로 제출되었습니다!';
+            } else {
+                message.textContent = '점수가 80점 미만입니다. 코드를 개선하고 다시 제출해보세요.';
+            }
+            resultSummary.appendChild(message);
+
+            outputContent.appendChild(resultSummary);
+
+            // 피드백 버튼 표시
+            document.getElementById('feedbackButton').style.display = 'inline-block';
+            document.getElementById('scoreDisplay').textContent = `점수: ${score}/100`;
+            document.getElementById('scoreDisplay').style.display = 'inline-block';
+
+            // 콘솔 로그
+            console.log('제출된 코드:', code);
+            console.log('최종 점수:', score);
+
+            // 점수에 따라 사운드 효과 (실제 구현 시)
+            // playSound(score >= 80 ? 'success.mp3' : 'try-again.mp3');
+        }
+
+        // 과제 검색
+        function searchTasks(keyword) {
+            const taskItems = document.querySelectorAll('.task-item');
+
+            if (!keyword) {
+                // 검색어가 없으면 모든 과제 표시
+                taskItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+                return;
+            }
+
+            keyword = keyword.toLowerCase();
+
+            // 검색어로 과제 필터링
+            taskItems.forEach(item => {
+                const title = item.querySelector('.task-title').textContent.toLowerCase();
+                const meta = item.querySelector('.task-meta').textContent.toLowerCase();
+
+                if (title.includes(keyword) || meta.includes(keyword)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // 카테고리 탭 전환
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                // 기존 활성화된 탭 비활성화
+                document.querySelector('.category-tab.active').classList.remove('active');
+
+                // 선택한 탭 활성화
+                this.classList.add('active');
+
+                // 카테고리에 따라 과제 필터링
+                const category = this.getAttribute('data-category');
+                filterTasksByCategory(category);
+            });
+        });
+
+        // 카테고리별 과제 필터링
+        function filterTasksByCategory(category) {
+            const taskItems = document.querySelectorAll('.task-item');
+
+            if (category === 'all') {
+                // '전체' 카테고리: 모든 과제 표시
+                taskItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+            } else if (category === 'incomplete') {
+                // '미완료' 카테고리: 미완료 과제만 표시 (여기서는 예시로 1, 2번만 미완료로 가정)
+                taskItems.forEach(item => {
+                    const taskId = item.getAttribute('data-task-id');
+                    if (taskId === '1' || taskId === '2') {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // 헤더 로고 클릭 시 대시보드로 이동
+        document.querySelector('.logo').addEventListener('click', function() {
+            window.location.href = '/dashboard';
+        });
+
+        // 사용자 프로필 클릭 시 처리
+        document.querySelector('.user-profile').addEventListener('click', function() {
+            // 로그아웃 확인
+            if (confirm('로그아웃 하시겠습니까?')) {
+                sessionStorage.removeItem('user');
+                window.location.href = '/login';
+            }
+        });
+
+        // Blockly 웹페이지 크기 조정 시 자동 리사이징
+        window.addEventListener('resize', function () {
+            Blockly.svgResize(workspace);
+        });
+
+        // 페이지 로드 시 로그인 상태 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            // 로그인 상태 확인
+            const userJSON = sessionStorage.getItem('user');
+            if (!userJSON) {
+                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+                window.location.href = '/login';
+                return;
+            }
+            
+            // 로그인된 경우 사용자 정보 사용
+            const user = JSON.parse(userJSON);
+            // 사용자 이름 표시 (예: S05의 경우)
+            document.querySelector('.user-profile span').textContent = user.name;
+            // 프로필 아바타 업데이트 (예: S05의 경우)
+            document.querySelector('.avatar').textContent = user.name.charAt(0);
+        });
+    </script>
+    <script src="/js/animations.js"></script>
+</body>
+</html>
