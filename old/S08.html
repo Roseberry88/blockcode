@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코딩스타트 - 제출물 평가</title>
+    <!-- 공통 애니메이션 CSS 추가 -->
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            height: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 50px;
+            cursor: pointer;
+        }
+        .profile-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #4285f4;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #ffffff;
+            padding: 30px 0;
+            position: fixed;
+            left: 50px;
+            top: 80px;
+            bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .profile-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: #4285f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(66, 133, 244, 0.2);
+        }
+        .teacher-badge {
+            background-color: #34a853;
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+        .menu-item {
+            padding: 12px 20px;
+            margin: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .menu-item.active {
+            background-color: #4285f4;
+            color: white;
+            box-shadow: 0 4px 8px rgba(66, 133, 244, 0.2);
+        }
+        .menu-item:hover:not(.active) {
+            background-color: #f1f8ff;
+        }
+        .content {
+            margin-left: 280px;
+            margin-top: 90px;
+            padding: 20px;
+            width: calc(100% - 320px);
+        }
+        .page-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333333;
+            border-bottom: 2px solid #4285f4;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        /* 필터 섹션 */
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .filter-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333333;
+        }
+        .filter-options {
+            display: flex;
+            gap: 20px;
+        }
+        .filter-group {
+            flex: 1;
+        }
+        .filter-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555555;
+            font-size: 14px;
+        }
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333333;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .apply-filter-btn {
+            background-color: #4285f4;
+            color: white;
+        }
+        .reset-filter-btn {
+            background-color: #f1f3f4;
+            color: #333333;
+        }
+        
+        /* 제출물 목록 */
+        .submissions-section {
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .submissions-header {
+            padding: 20px;
+            border-bottom: 1px solid #eeeeee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .submissions-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333333;
+        }
+        .submissions-count {
+            color: #666666;
+            font-size: 14px;
+        }
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .submissions-table th, .submissions-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .submissions-table th {
+            font-weight: 500;
+            color: #666666;
+            background-color: #f9f9f9;
+        }
+        .submissions-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .submissions-table tr:last-child td {
+            border-bottom: none;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: white;
+        }
+        .status-new {
+            background-color: #4285f4;
+        }
+        .status-graded {
+            background-color: #34a853;
+        }
+        .status-pending {
+            background-color: #ff9800;
+        }
+        .action-link {
+            color: #4285f4;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .action-link:hover {
+            text-decoration: underline;
+            color: #3b78e7;
+        }
+        
+        /* 페이지네이션 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+        .page-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .page-btn.active {
+            background-color: #4285f4;
+            color: white;
+        }
+        .page-btn:not(.active) {
+            background-color: #f1f3f4;
+            color: #333333;
+        }
+        .page-btn:not(.active):hover {
+            background-color: #e3f2fd;
+        }
+        
+        /* 평가 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            overflow: auto;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover {
+            color: #333333;
+            transform: scale(1.1);
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+        .modal-subtitle {
+            color: #666666;
+            font-size: 14px;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .submission-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .info-group {
+            flex: 1;
+        }
+        .info-label {
+            font-weight: 500;
+            color: #666666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .info-value {
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .submission-code {
+            margin-bottom: 30px;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .code-title {
+            font-weight: 500;
+            color: #333333;
+        }
+        .language-selector {
+            display: flex;
+            gap: 10px;
+        }
+        .language-btn {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .language-btn.active {
+            background-color: #4285f4;
+            color: white;
+        }
+        .language-btn:not(.active) {
+            background-color: #f1f3f4;
+            color: #333333;
+        }
+        .code-block {
+            background-color: #f9f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eeeeee;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        .test-results {
+            margin-bottom: 30px;
+        }
+        .test-result-header {
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+        .test-case {
+            background-color: #f9f9fa;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .test-case-header {
+            padding: 10px 15px;
+            background-color: #f1f3f4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-case-title {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .test-case-result {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+        .test-passed {
+            background-color: #e8f5e9;
+            color: #34a853;
+        }
+        .test-failed {
+            background-color: #ffebee;
+            color: #ea4335;
+        }
+        .test-case-details {
+            padding: 15px;
+            display: flex;
+            gap: 20px;
+        }
+        .input-output {
+            flex: 1;
+        }
+        .io-label {
+            font-weight: 500;
+            color: #666666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .io-content {
+            background-color: white;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .grading-section {
+            margin-bottom: 30px;
+        }
+        .grading-title {
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+        .criteria-list {
+            margin-bottom: 20px;
+        }
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .criteria-item:last-child {
+            border-bottom: none;
+        }
+        .criteria-name {
+            flex: 2;
+            font-weight: 500;
+        }
+        .criteria-weight {
+            flex: 1;
+            color: #666666;
+        }
+        .criteria-score {
+            flex: 1;
+        }
+        .criteria-score select {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+        }
+        
+        .feedback-section {
+            margin-bottom: 30px;
+        }
+        .feedback-textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eeeeee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #4285f4;
+            color: white;
+            box-shadow: 0 4px 6px rgba(66, 133, 244, 0.25);
+        }
+        .btn-primary:hover {
+            background-color: #3b78e7;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(66, 133, 244, 0.35);
+        }
+        .btn-secondary {
+            background-color: #f1f3f4;
+            color: #333333;
+        }
+        .btn-secondary:hover {
+            background-color: #e4e6e7;
+            transform: translateY(-2px);
+        }
+        
+        .final-score {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .final-score-label {
+            font-weight: 500;
+            margin-right: 20px;
+        }
+        .final-score-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .final-score-max {
+            color: #666666;
+            margin-left: 5px;
+        }
+        
+        /* 대량 평가 모드 */
+        .batch-grading-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            margin-left: 10px;
+        }
+        .batch-grading-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .batch-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cccccc;
+            transition: 0.4s;
+            border-radius: 26px;
+        }
+        .batch-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .batch-toggle-slider {
+            background-color: #4285f4;
+        }
+        input:checked + .batch-toggle-slider:before {
+            transform: translateX(24px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 로딩 오버레이 추가 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container">
+        <div class="navbar fade-in-down">
+            <div class="logo" id="logoLink">코딩스타트</div>
+            <div class="profile-icon profile-hover" id="profileMenu">
+                <span id="userInitial">유</span>
+            </div>
+        </div>
+        
+        <div class="sidebar fade-in-left delay-300">
+            <div class="profile-section fade-in delay-500">
+                <div class="profile-image profile-hover">
+                    <span id="userInitial">유</span>
+                </div>
+                <span id="userName">유승훈</span>
+                <span class="teacher-badge">교수</span>
+            </div>
+            
+            <div class="menu-item slide-in delay-600 tab-hover" id="dashboardMenu">대시보드</div>
+            <div class="menu-item slide-in delay-700 tab-hover" id="createAssignmentMenu">과제 출제</div>
+            <div class="menu-item active slide-in delay-800 tab-hover" id="reviewSubmissionsMenu">제출물 평가</div>
+            <div class="menu-item slide-in delay-900 tab-hover" id="studentAnalyticsMenu">학생 성취도</div>
+            <div class="menu-item slide-in delay-1000 tab-hover" id="managementMenu">학생 관리</div>
+        </div>
+        
+        <div class="content">
+            <h1 class="page-title fade-in delay-400">제출물 평가</h1>
+            
+            <!-- 필터 섹션 -->
+            <div class="filter-section fade-in-up delay-500">
+                <div class="filter-header">
+                    <div class="filter-title">필터</div>
+                    <div style="display: flex; align-items: center;">
+                        <span style="margin-right: 10px;">대량 평가 모드</span>
+                        <label class="batch-grading-switch">
+                            <input type="checkbox" id="batchGradingToggle">
+                            <span class="batch-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-group">
+                        <label for="assignmentFilter">과제</label>
+                        <select id="assignmentFilter">
+                            <option value="all">모든 과제</option>
+                            <option value="1">반복문으로 사각형 그리기</option>
+                            <option value="2">조건문으로 성적 계산하기</option>
+                            <option value="3">함수로 계산기 만들기</option>
+                            <option value="4">배열로 데이터 분석하기</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="studentFilter">학생</label>
+                        <select id="studentFilter">
+                            <option value="all">모든 학생</option>
+                            <option value="1">김준호</option>
+                            <option value="2">이미진</option>
+                            <option value="3">박지성</option>
+                            <option value="4">최수영</option>
+                            <option value="5">장민호</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="statusFilter">상태</label>
+                        <select id="statusFilter">
+                            <option value="all">모든 상태</option>
+                            <option value="new">신규</option>
+                            <option value="pending">검토 중</option>
+                            <option value="graded">평가 완료</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFilter">제출일</label>
+                        <input type="date" id="dateFilter">
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn reset-filter-btn" id="resetFilterBtn">초기화</button>
+                    <button class="filter-btn apply-filter-btn" id="applyFilterBtn">적용</button>
+                </div>
+            </div>
+            
+            <!-- 제출물 목록 -->
+            <div class="submissions-section fade-in-up delay-700">
+                <div class="submissions-header">
+                    <div class="submissions-title">제출물 목록</div>
+                    <div class="submissions-count">총 18개 항목</div>
+                </div>
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>학생명</th>
+                            <th>과제명</th>
+                            <th>제출일</th>
+                            <th>상태</th>
+                            <th>점수</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>김준호</td>
+                            <td>반복문으로 사각형 그리기</td>
+                            <td>2025-04-22 14:30</td>
+                            <td><span class="status-badge status-new">신규</span></td>
+                            <td>-</td>
+                            <td><a class="action-link grade-btn" data-id="1">평가</a></td>
+                        </tr>
+                        <tr>
+                            <td>이미진</td>
+                            <td>조건문으로 성적 계산하기</td>
+                            <td>2025-04-22 11:45</td>
+                            <td><span class="status-badge status-new">신규</span></td>
+                            <td>-</td>
+                            <td><a class="action-link grade-btn" data-id="2">평가</a></td>
+                        </tr>
+                        <tr>
+                            <td>박지성</td>
+                            <td>함수로 계산기 만들기</td>
+                            <td>2025-04-21 16:20</td>
+                            <td><span class="status-badge status-pending">검토 중</span></td>
+                            <td>-</td>
+                            <td><a class="action-link grade-btn" data-id="3">평가</a></td>
+                        </tr>
+                        <tr>
+                            <td>최수영</td>
+                            <td>배열로 데이터 분석하기</td>
+                            <td>2025-04-21 09:10</td>
+                            <td><span class="status-badge status-graded">평가 완료</span></td>
+                            <td>92</td>
+                            <td><a class="action-link grade-btn" data-id="4">상세보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>장민호</td>
+                            <td>반복문으로 사각형 그리기</td>
+                            <td>2025-04-20 13:55</td>
+                            <td><span class="status-badge status-graded">평가 완료</span></td>
+                            <td>85</td>
+                            <td><a class="action-link grade-btn" data-id="5">상세보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>강지원</td>
+                            <td>조건문으로 성적 계산하기</td>
+                            <td>2025-04-20 10:25</td>
+                            <td><span class="status-badge status-new">신규</span></td>
+                            <td>-</td>
+                            <td><a class="action-link grade-btn" data-id="6">평가</a></td>
+                        </tr>
+                        <tr>
+                            <td>이현우</td>
+                            <td>함수로 계산기 만들기</td>
+                            <td>2025-04-19 15:40</td>
+                            <td><span class="status-badge status-new">신규</span></td>
+                            <td>-</td>
+                            <td><a class="action-link grade-btn" data-id="7">평가</a></td>
+                        </tr>
+                        <tr>
+                            <td>정다은</td>
+                            <td>배열로 데이터 분석하기</td>
+                            <td>2025-04-19 11:20</td>
+                            <td><span class="status-badge status-pending">검토 중</span></td>
+                            <td>-</td>
+                            <td><a class="action-link grade-btn" data-id="8">평가</a></td>
+                        </tr>
+                        <tr>
+                            <td>윤서연</td>
+                            <td>반복문으로 사각형 그리기</td>
+                            <td>2025-04-18 16:30</td>
+                            <td><span class="status-badge status-graded">평가 완료</span></td>
+                            <td>95</td>
+                            <td><a class="action-link grade-btn" data-id="9">상세보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>임준영</td>
+                            <td>조건문으로 성적 계산하기</td>
+                            <td>2025-04-18 09:45</td>
+                            <td><span class="status-badge status-graded">평가 완료</span></td>
+                            <td>88</td>
+                            <td><a class="action-link grade-btn" data-id="10">상세보기</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <div class="page-btn active">1</div>
+                    <div class="page-btn">2</div>
+                    <div class="page-btn">3</div>
+                    <div class="page-btn">4</div>
+                    <div class="page-btn">5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 평가 모달 -->
+    <div class="modal" id="gradeModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">✕</span>
+            <div class="modal-header">
+                <h3 class="modal-title">김준호님의 "반복문으로 사각형 그리기" 과제</h3>
+                <div class="modal-subtitle">제출일: 2025-04-22 14:30</div>
+            </div>
+            <div class="modal-body">
+                <div class="submission-info">
+                    <div class="info-group">
+                        <div class="info-label">학생</div>
+                        <div class="info-value">김준호</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">학번</div>
+                        <div class="info-value">20250001</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">과제</div>
+                        <div class="info-value">반복문으로 사각형 그리기</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">상태</div>
+                        <div class="info-value"><span class="status-badge status-new">신규</span></div>
+                    </div>
+                </div>
+                
+                <div class="submission-code">
+                    <div class="code-header">
+                        <div class="code-title">제출된 코드</div>
+                        <div class="language-selector">
+                            <div class="language-btn active">Python</div>
+                            <div class="language-btn">JavaScript</div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+# 사각형 그리기 코드
+n = int(input("N을 입력하세요:"))
+for i in range(n):
+    row = ""
+    for j in range(n):
+        row += "*"
+    print(row)
+                    </div>
+                </div>
+                
+                <div class="test-results">
+                    <div class="test-result-header">테스트 케이스 결과</div>
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <div class="test-case-title">테스트 케이스 #1</div>
+                            <div class="test-case-result test-passed">통과</div>
+                        </div>
+                        <div class="test-case-details">
+                            <div class="input-output">
+                                <div class="io-label">입력</div>
+                                <div class="io-content">3</div>
+                            </div>
+                            <div class="input-output">
+                                <div class="io-label">기대 출력</div>
+                                <div class="io-content">***
+***
+***</div>
+                            </div>
+                            <div class="input-output">
+                                <div class="io-label">실제 출력</div>
+                                <div class="io-content">***
+***
+***</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <div class="test-case-title">테스트 케이스 #2</div>
+                            <div class="test-case-result test-passed">통과</div>
+                        </div>
+                        <div class="test-case-details">
+                            <div class="input-output">
+                                <div class="io-label">입력</div>
+                                <div class="io-content">5</div>
+                            </div>
+                            <div class="input-output">
+                                <div class="io-label">기대 출력</div>
+                                <div class="io-content">*****
+*****
+*****
+*****
+*****</div>
+                            </div>
+                            <div class="input-output">
+                                <div class="io-label">실제 출력</div>
+                                <div class="io-content">*****
+*****
+*****
+*****
+*****</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <div class="test-case-title">테스트 케이스 #3</div>
+                            <div class="test-case-result test-passed">통과</div>
+                        </div>
+                        <div class="test-case-details">
+                            <div class="input-output">
+                                <div class="io-label">입력</div>
+                                <div class="io-content">1</div>
+                            </div>
+                            <div class="input-output">
+                                <div class="io-label">기대 출력</div>
+                                <div class="io-content">*</div>
+                            </div>
+                            <div class="input-output">
+                                <div class="io-label">실제 출력</div>
+                                <div class="io-content">*</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grading-section">
+                    <div class="grading-title">채점 기준</div>
+                    <div class="criteria-list">
+                        <div class="criteria-item">
+                            <div class="criteria-name">정확성 (테스트 케이스 통과)</div>
+                            <div class="criteria-weight">50%</div>
+                            <div class="criteria-score">
+                                <select>
+                                    <option value="50">50/50</option>
+                                    <option value="45">45/50</option>
+                                    <option value="40">40/50</option>
+                                    <option value="35">35/50</option>
+                                    <option value="30">30/50</option>
+                                    <option value="25">25/50</option>
+                                    <option value="20">20/50</option>
+                                    <option value="15">15/50</option>
+                                    <option value="10">10/50</option>
+                                    <option value="5">5/50</option>
+                                    <option value="0">0/50</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="criteria-item">
+                            <div class="criteria-name">코드 구조 및 가독성</div>
+                            <div class="criteria-weight">30%</div>
+                            <div class="criteria-score">
+                                <select>
+                                    <option value="30">30/30</option>
+                                    <option value="27">27/30</option>
+                                    <option value="24">24/30</option>
+                                    <option value="21">21/30</option>
+                                    <option value="18">18/30</option>
+                                    <option value="15">15/30</option>
+                                    <option value="12">12/30</option>
+                                    <option value="9">9/30</option>
+                                    <option value="6">6/30</option>
+                                    <option value="3">3/30</option>
+                                    <option value="0">0/30</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="criteria-item">
+                            <div class="criteria-name">효율성</div>
+                            <div class="criteria-weight">20%</div>
+                            <div class="criteria-score">
+                                <select>
+                                    <option value="20">20/20</option>
+                                    <option value="18">18/20</option>
+                                    <option value="16">16/20</option>
+                                    <option value="14">14/20</option>
+                                    <option value="12">12/20</option>
+                                    <option value="10">10/20</option>
+                                    <option value="8">8/20</option>
+                                    <option value="6">6/20</option>
+                                    <option value="4">4/20</option>
+                                    <option value="2">2/20</option>
+                                    <option value="0">0/20</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="final-score">
+                        <div class="final-score-label">최종 점수:</div>
+                        <div class="final-score-value">95</div>
+                        <div class="final-score-max">/100</div>
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <div class="grading-title">피드백</div>
+                    <textarea class="feedback-textarea" placeholder="학생에게 피드백을 작성하세요...">아주 잘 작성된 코드입니다. 모든 테스트 케이스를 통과했고, 코드 구조도 간결하고 이해하기 쉽게 작성되었습니다. 중첩 반복문을 효과적으로 사용하여 문제를 해결한 점이 인상적입니다. 
+
+다만, 효율성 측면에서는 'row' 변수를 매번 초기화하는 대신 '*' * n을 사용하면 더 효율적일 수 있습니다.</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="saveAsDraftBtn">임시저장</button>
+                <button class="btn btn-primary" id="submitGradeBtn">평가 제출</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 공통 애니메이션 JS 추가 -->
+    <script src="/js/animations.js"></script>
+    <script>
+        // 페이지 로드 시 세션에서 사용자 정보 가져오기
+        document.addEventListener('DOMContentLoaded', function() {
+            // 세션 스토리지에서 사용자 정보 가져오기
+            const userJSON = sessionStorage.getItem('user');
+            
+            // 로그인 상태 확인
+            if (!userJSON) {
+                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+                window.location.href = '/login';
+                return;
+            }
+            
+            // 사용자 정보 파싱
+            const user = JSON.parse(userJSON);
+            
+            // 사용자 역할 확인
+            if (user.role !== '교수') {
+                // 교수가 아닌 경우 학생 대시보드로 리디렉션
+                window.location.href = '/dashboard';
+                return;
+            }
+            
+            // 사용자 이름 표시
+            document.getElementById('userName').textContent = user.name;
+            
+            // 사용자 이니셜 표시
+            if (user.name) {
+                const initial = user.name.charAt(0);
+                document.getElementById('userInitial').textContent = initial;
+                document.querySelectorAll('#userInitial').forEach(el => {
+                    el.textContent = initial;
+                });
+            }
+            
+            // 메뉴 이벤트 리스너
+            document.getElementById('logoLink').addEventListener('click', function() {
+                window.location.href = '/teacher-dashboard';
+            });
+            
+            document.getElementById('dashboardMenu').addEventListener('click', function() {
+                window.location.href = '/teacher-dashboard';
+            });
+            
+            document.getElementById('createAssignmentMenu').addEventListener('click', function() {
+                window.location.href = '/create-assignment';
+            });
+            
+            document.getElementById('reviewSubmissionsMenu').addEventListener('click', function() {
+                window.location.href = '/review-submissions';
+            });
+            
+            document.getElementById('studentAnalyticsMenu').addEventListener('click', function() {
+                window.location.href = '/student-analytics';
+            });
+            
+            document.getElementById('managementMenu').addEventListener('click', function() {
+                alert('준비 중인 기능입니다.');
+            });
+            
+            // 프로필 메뉴 클릭 이벤트
+            document.getElementById('profileMenu').addEventListener('click', function() {
+                // 로그아웃 확인
+                if (confirm('로그아웃 하시겠습니까?')) {
+                    // 세션 정보 삭제
+                    sessionStorage.removeItem('user');
+                    // 로그인 페이지로 리디렉션
+                    window.location.href = '/login';
+                }
+            });
+            
+            // 필터 버튼 이벤트
+            document.getElementById('applyFilterBtn').addEventListener('click', function() {
+                alert('필터가 적용되었습니다.');
+            });
+            
+            document.getElementById('resetFilterBtn').addEventListener('click', function() {
+                // 모든 필터 초기화
+                document.getElementById('assignmentFilter').value = 'all';
+                document.getElementById('studentFilter').value = 'all';
+                document.getElementById('statusFilter').value = 'all';
+                document.getElementById('dateFilter').value = '';
+            });
+            
+            // 페이지네이션 이벤트
+            const pageButtons = document.querySelectorAll('.page-btn');
+            pageButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 현재 활성화된 버튼 비활성화
+                    document.querySelector('.page-btn.active').classList.remove('active');
+                    // 클릭한 버튼 활성화
+                    this.classList.add('active');
+                });
+            });
+            
+            // 모달 관련 이벤트
+            const gradeButtons = document.querySelectorAll('.grade-btn');
+            const gradeModal = document.getElementById('gradeModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            gradeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    gradeModal.style.display = 'flex';
+                });
+            });
+            
+            closeModal.addEventListener('click', function() {
+                gradeModal.style.display = 'none';
+            });
+            
+            // 모달 외부 클릭 시 닫기
+            window.addEventListener('click', function(event) {
+                if (event.target === gradeModal) {
+                    gradeModal.style.display = 'none';
+                }
+            });
+            
+            // 언어 선택 이벤트
+            const languageBtns = document.querySelectorAll('.language-btn');
+            languageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 현재 활성화된 버튼 비활성화
+                    document.querySelector('.language-btn.active').classList.remove('active');
+                    // 클릭한 버튼 활성화
+                    this.classList.add('active');
+                });
+            });
+            
+            // 점수 계산 이벤트
+            const criteriaScores = document.querySelectorAll('.criteria-score select');
+            const finalScoreValue = document.querySelector('.final-score-value');
+            
+            criteriaScores.forEach(select => {
+                select.addEventListener('change', function() {
+                    // 모든 점수 합산
+                    let totalScore = 0;
+                    criteriaScores.forEach(s => {
+                        totalScore += parseInt(s.value);
+                    });
+                    finalScoreValue.textContent = totalScore;
+                });
+            });
+            
+            // 평가 제출 버튼 이벤트
+            document.getElementById('submitGradeBtn').addEventListener('click', function() {
+                alert('평가가 성공적으로 제출되었습니다.');
+                gradeModal.style.display = 'none';
+                
+                // 여기에서 실제로는 서버에 평가 제출 로직이 들어갑니다
+            });
+            
+            // 임시저장 버튼 이벤트
+            document.getElementById('saveAsDraftBtn').addEventListener('click', function() {
+                alert('평가가 임시저장되었습니다.');
+                // 여기에서 실제로는 임시저장 로직이 들어갑니다
+            });
+            
+            // 대량 평가 모드 토글 이벤트
+            document.getElementById('batchGradingToggle').addEventListener('change', function() {
+                if (this.checked) {
+                    alert('대량 평가 모드가 활성화되었습니다. 여러 학생들의 과제를 한번에 평가할 수 있습니다.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

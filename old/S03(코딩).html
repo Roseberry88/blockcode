@@ -1,0 +1,318 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1050">
+    <!-- 배경 -->
+    <rect width="1200" height="1050" fill="#f5f5f5"/>
+    
+    <!-- 메인 컨테이너 -->
+    <rect x="10" y="10" width="1180" height="1030" rx="10" fill="white" stroke="#ddd" stroke-width="1"/>
+    
+    <!-- 헤더 -->
+    <rect x="10" y="10" width="1180" height="60" rx="10 10 0 0" fill="#4285f4"/>
+    <text x="40" y="45" font-family="Arial" font-size="22" fill="white" font-weight="bold">코딩스타트: 블록 코딩 환경</text>
+    
+    <!-- 프로젝트 이름 입력 -->
+    <rect x="350" y="25" width="200" height="30" rx="5" fill="white"/>
+    <text x="365" y="45" font-family="Arial" font-size="14" fill="#666">내 프로젝트</text>
+    
+    <!-- 메뉴 버튼 -->
+    <rect x="860" y="25" width="80" height="30" rx="15" fill="#3b78e7"/>
+    <text x="900" y="45" font-family="Arial" font-size="14" fill="white" text-anchor="middle">실행</text>
+    
+    <rect x="950" y="25" width="80" height="30" rx="15" fill="#3b78e7"/>
+    <text x="990" y="45" font-family="Arial" font-size="14" fill="white" text-anchor="middle">저장</text>
+    
+    <rect x="1040" y="25" width="100" height="30" rx="15" fill="#3b78e7"/>
+    <text x="1090" y="45" font-family="Arial" font-size="14" fill="white" text-anchor="middle">불러오기</text>
+    
+    <!-- 왼쪽 패널 - 블록 팔레트 -->
+    <rect x="10" y="70" width="230" height="700" fill="#f8f9fa"/>
+    
+    <!-- 카테고리 탭 -->
+    <rect x="10" y="70" width="230" height="40" fill="#eee"/>
+    
+    <rect x="20" y="75" width="40" height="30" rx="5" fill="#fbbc05"/>
+    <rect x="70" y="75" width="40" height="30" rx="5" fill="#4285f4"/>
+    <rect x="120" y="75" width="40" height="30" rx="5" fill="#34a853"/>
+    <rect x="170" y="75" width="40" height="30" rx="5" fill="#ea4335"/>
+    
+    <!-- 검색창 -->
+    <rect x="20" y="120" width="210" height="30" rx="15" fill="white" stroke="#ddd"/>
+    <text x="40" y="140" font-family="Arial" font-size="12" fill="#888">블록 검색...</text>
+    
+    <!-- 카테고리 제목 -->
+    <rect x="10" y="160" width="230" height="30" fill="#fbbc05"/>
+    <text x="25" y="180" font-family="Arial" font-size="14" font-weight="bold" fill="white">제어</text>
+    
+    <!-- 제어 카테고리 블록 목록 -->
+    <!-- 1. 시작하기 블록 -->
+    <g>
+      <path d="M30,200 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-150 l-20,10 l-10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <circle cx="50" cy="225" r="5" fill="white"/>
+      <text x="70" y="228" font-family="Arial" font-size="14" fill="white">시작하기</text>
+    </g>
+    
+    <!-- 2. 반복하기 블록 -->
+    <g>
+      <path d="M30,260 h170 a10,10 0 0 1 10,10 v50 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-50 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <rect x="40" y="280" width="30" height="20" rx="3" fill="white"/>
+      <text x="55" y="295" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">10</text>
+      <text x="80" y="280" font-family="Arial" font-size="14" fill="white">번 반복하기</text>
+      <path d="M100,290 v20 h50 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-90 a5,5 0 0 1 -5,-5 v-15 a5,5 0 0 1 5,-5 h20" fill="none" stroke="white" stroke-width="2" stroke-dasharray="3,3"/>
+    </g>
+    
+    <!-- 3. 만약 블록 -->
+    <g>
+      <path d="M30,330 h170 a10,10 0 0 1 10,10 v50 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-50 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <text x="50" y="350" font-family="Arial" font-size="14" fill="white">만약</text>
+      <rect x="90" y="340" width="30" height="20" rx="10" fill="white" stroke="#d9a203"/>
+      <text x="145" y="350" font-family="Arial" font-size="14" fill="white">이라면</text>
+      <path d="M100,360 v20 h50 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-90 a5,5 0 0 1 -5,-5 v-15 a5,5 0 0 1 5,-5 h20" fill="none" stroke="white" stroke-width="2" stroke-dasharray="3,3"/>
+    </g>
+    
+    <!-- 4. 기다리기 블록 -->
+    <g>
+      <path d="M30,400 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <rect x="100" y="410" width="30" height="20" rx="3" fill="white"/>
+      <text x="115" y="425" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">1</text>
+      <text x="60" y="425" font-family="Arial" font-size="14" fill="white">기다리기</text>
+      <text x="140" y="425" font-family="Arial" font-size="14" fill="white">초</text>
+    </g>
+    
+    <!-- 카테고리 제목 -->
+    <rect x="10" y="450" width="230" height="30" fill="#4285f4"/>
+    <text x="25" y="470" font-family="Arial" font-size="14" font-weight="bold" fill="white">움직임</text>
+    
+    <!-- 움직임 카테고리 블록 -->
+    <!-- 1. 앞으로 이동 블록 -->
+    <g>
+      <path d="M30,490 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#4285f4" stroke="#3b78e7" stroke-width="1"/>
+      <rect x="130" y="500" width="30" height="20" rx="3" fill="white"/>
+      <text x="145" y="515" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">10</text>
+      <text x="60" y="515" font-family="Arial" font-size="14" fill="white">앞으로 이동</text>
+      <text x="170" y="515" font-family="Arial" font-size="14" fill="white">만큼</text>
+    </g>
+    
+    <!-- 2. 오른쪽 회전 블록 -->
+    <g>
+      <path d="M30,540 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#4285f4" stroke="#3b78e7" stroke-width="1"/>
+      <rect x="130" y="550" width="30" height="20" rx="3" fill="white"/>
+      <text x="145" y="565" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">90</text>
+      <text x="60" y="565" font-family="Arial" font-size="14" fill="white">오른쪽으로</text>
+      <text x="170" y="565" font-family="Arial" font-size="14" fill="white">도</text>
+    </g>
+    
+    <!-- 3. 왼쪽 회전 블록 -->
+    <g>
+      <path d="M30,590 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#4285f4" stroke="#3b78e7" stroke-width="1"/>
+      <rect x="130" y="600" width="30" height="20" rx="3" fill="white"/>
+      <text x="145" y="615" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">90</text>
+      <text x="60" y="615" font-family="Arial" font-size="14" fill="white">왼쪽으로</text>
+      <text x="170" y="615" font-family="Arial" font-size="14" fill="white">도</text>
+    </g>
+    
+    <!-- 변수 카테고리 -->
+    <rect x="10" y="640" width="230" height="30" fill="#ea4335"/>
+    <text x="25" y="660" font-family="Arial" font-size="14" font-weight="bold" fill="white">변수</text>
+    
+    <!-- 변수 블록 -->
+    <g>
+      <path d="M30,680 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#ea4335" stroke="#d62516" stroke-width="1"/>
+      <text x="50" y="705" font-family="Arial" font-size="14" fill="white">변수 '점수' 설정</text>
+      <rect x="170" y="690" width="30" height="20" rx="3" fill="white"/>
+      <text x="185" y="705" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">0</text>
+    </g>
+    
+    <!-- 오른쪽 패널 - 실행 결과 영역 -->
+    <rect x="910" y="70" width="280" height="700" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    <rect x="910" y="70" width="280" height="40" fill="#eee"/>
+    <text x="935" y="95" font-family="Arial" font-size="16" font-weight="bold" fill="#333">실행 결과</text>
+    
+    <!-- 실행 컨트롤 -->
+    <rect x="1050" y="75" width="30" height="30" rx="15" fill="#4285f4"/>
+    <text x="1065" y="95" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">▶</text>
+    
+    <rect x="1090" y="75" width="30" height="30" rx="15" fill="#fbbc05"/>
+    <text x="1105" y="95" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">■</text>
+    
+    <rect x="1130" y="75" width="30" height="30" rx="15" fill="#34a853"/>
+    <text x="1145" y="95" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">↻</text>
+    
+    <!-- 실행 화면 -->
+    <rect x="920" y="120" width="260" height="260" fill="#f8f9fa" stroke="#ddd" stroke-width="1"/>
+    
+    <!-- 캐릭터 -->
+    <polygon points="1040,250 1055,230 1070,250 1055,245" fill="#3b78e7"/>
+    
+    <!-- 결과 콘솔 -->
+    <rect x="920" y="390" width="260" height="150" fill="#f1f1f1" stroke="#ddd" stroke-width="1"/>
+    <text x="935" y="410" font-family="Arial" font-size="12" fill="#666">콘솔:</text>
+    <text x="935" y="430" font-family="Arial" font-size="12" fill="#333">> 프로그램 시작</text>
+    <text x="935" y="450" font-family="Arial" font-size="12" fill="#333">> 점수 변수 생성: 0</text>
+    <text x="935" y="470" font-family="Arial" font-size="12" fill="#333">> 앞으로 10만큼 이동</text>
+    <text x="935" y="490" font-family="Arial" font-size="12" fill="#333">> 4번 반복 시작...</text>
+    
+    <!-- 변수 모니터링 -->
+    <rect x="920" y="550" width="260" height="120" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    <text x="935" y="570" font-family="Arial" font-size="14" font-weight="bold" fill="#333">변수 모니터</text>
+    <rect x="935" y="580" width="230" height="30" fill="#f8f9fa" stroke="#ddd" stroke-width="1"/>
+    <text x="950" y="600" font-family="Arial" font-size="12" fill="#333">점수: 0</text>
+    <rect x="935" y="620" width="230" height="30" fill="#f8f9fa" stroke="#ddd" stroke-width="1"/>
+    <text x="950" y="640" font-family="Arial" font-size="12" fill="#333">위치X: 10</text>
+    
+    <!-- 중앙 패널 - 코드 작성 영역 -->
+    <rect x="240" y="70" width="670" height="700" fill="#fff"/>
+    <rect x="240" y="70" width="670" height="40" fill="#eee"/>
+    <text x="265" y="95" font-family="Arial" font-size="16" font-weight="bold" fill="#333">코드 작성 영역</text>
+    
+    <!-- 그리드 표시 (배경) -->
+    <defs>
+      <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#f0f0f0" stroke-width="0.5"/>
+      </pattern>
+      <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+        <rect width="100" height="100" fill="url(#smallGrid)"/>
+        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect x="240" y="110" width="670" height="660" fill="url(#grid)"/>
+    
+    <!-- 코드 블록 스택 -->
+    <!-- 1. 시작하기 블록 -->
+    <g>
+      <path d="M300,150 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-150 l-20,10 l-10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <circle cx="320" cy="175" r="5" fill="white"/>
+      <text x="340" y="178" font-family="Arial" font-size="14" fill="white">시작하기</text>
+    </g>
+    
+    <!-- 2. 변수 설정 블록 -->
+    <g>
+      <path d="M300,200 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#ea4335" stroke="#d62516" stroke-width="1"/>
+      <text x="320" y="225" font-family="Arial" font-size="14" fill="white">변수 '점수' 설정</text>
+      <rect x="440" y="210" width="30" height="20" rx="3" fill="white"/>
+      <text x="455" y="225" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">0</text>
+    </g>
+    
+    <!-- 3. 앞으로 이동 블록 -->
+    <g>
+      <path d="M300,250 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#4285f4" stroke="#3b78e7" stroke-width="1"/>
+      <rect x="400" y="260" width="30" height="20" rx="3" fill="white"/>
+      <text x="415" y="275" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">10</text>
+      <text x="330" y="275" font-family="Arial" font-size="14" fill="white">앞으로 이동</text>
+      <text x="440" y="275" font-family="Arial" font-size="14" fill="white">만큼</text>
+    </g>
+    
+    <!-- 4. 반복하기 블록 시작 -->
+    <g>
+      <path d="M300,300 h170 a10,10 0 0 1 10,10 v40 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-40 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <rect x="310" y="320" width="30" height="20" rx="3" fill="white"/>
+      <text x="325" y="335" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">4</text>
+      <text x="350" y="320" font-family="Arial" font-size="14" fill="white">번 반복하기</text>
+      <path d="M370,330 v20 h50 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-90 a5,5 0 0 1 -5,-5 v-15 a5,5 0 0 1 5,-5 h20" fill="none" stroke="white" stroke-width="2" stroke-dasharray="3,3"/>
+    </g>
+    
+    <!-- 5. 오른쪽 회전 블록 (반복 내부) -->
+    <g>
+      <path d="M320,360 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#4285f4" stroke="#3b78e7" stroke-width="1"/>
+      <rect x="420" y="370" width="30" height="20" rx="3" fill="white"/>
+      <text x="435" y="385" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">90</text>
+      <text x="350" y="385" font-family="Arial" font-size="14" fill="white">오른쪽으로</text>
+      <text x="460" y="385" font-family="Arial" font-size="14" fill="white">도</text>
+    </g>
+    
+    <!-- 6. 앞으로 이동 블록 (반복 내부) -->
+    <g>
+      <path d="M320,410 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#4285f4" stroke="#3b78e7" stroke-width="1"/>
+      <rect x="420" y="420" width="30" height="20" rx="3" fill="white"/>
+      <text x="435" y="435" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">10</text>
+      <text x="350" y="435" font-family="Arial" font-size="14" fill="white">앞으로 이동</text>
+      <text x="460" y="435" font-family="Arial" font-size="14" fill="white">만큼</text>
+    </g>
+    
+    <!-- 7. 변수 증가 블록 (반복 내부) -->
+    <g>
+      <path d="M320,460 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#ea4335" stroke="#d62516" stroke-width="1"/>
+      <text x="340" y="485" font-family="Arial" font-size="14" fill="white">변수 '점수' 증가</text>
+      <rect x="450" y="470" width="30" height="20" rx="3" fill="white"/>
+      <text x="465" y="485" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">1</text>
+    </g>
+    
+    <!-- 8. 반복하기 블록 끝 -->
+    <g>
+      <path d="M300,510 h170 a10,10 0 0 1 10,10 v10 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-10 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+    </g>
+    
+    <!-- 9. 기다리기 블록 -->
+    <g>
+      <path d="M300,540 h170 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-170 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" fill="#fbbc05" stroke="#d9a203" stroke-width="1"/>
+      <rect x="370" y="550" width="30" height="20" rx="3" fill="white"/>
+      <text x="385" y="565" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">1</text>
+      <text x="330" y="565" font-family="Arial" font-size="14" fill="white">기다리기</text>
+      <text x="410" y="565" font-family="Arial" font-size="14" fill="white">초</text>
+    </g>
+    
+    <!-- 미니맵 -->
+    <rect x="800" y="75" width="100" height="30" rx="5" fill="#f1f3f4" stroke="#ddd" stroke-width="1"/>
+    <text x="850" y="95" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">미니맵</text>
+    
+    <!-- 하단 상태 표시줄 -->
+    <rect x="240" y="770" width="670" height="30" fill="#f8f9fa"/>
+    <text x="260" y="790" font-family="Arial" font-size="12" fill="#666">블록 수: 9 | 마지막 저장: 10:30 AM</text>
+    
+    <!-- 실제 코드 변환 패널 -->
+    <rect x="10" y="780" width="1180" height="260" fill="#292d3e" stroke="#1e2132" stroke-width="1"/>
+    
+    <!-- 패널 헤더 -->
+    <rect x="10" y="780" width="1180" height="40" fill="#1e2132"/>
+    <text x="40" y="805" font-family="Arial" font-size="16" fill="white" font-weight="bold">실제 코드 (Python)</text>
+    
+    <!-- 코드 언어 선택 버튼 -->
+    <rect x="900" y="785" width="80" height="30" rx="5" fill="#3b78e7"/>
+    <text x="940" y="805" font-family="Arial" font-size="12" fill="white" text-anchor="middle">Python</text>
+    
+    <rect x="990" y="785" width="80" height="30" rx="5" fill="#292d3e" stroke="#3b78e7" stroke-width="1"/>
+    <text x="1030" y="805" font-family="Arial" font-size="12" fill="white" text-anchor="middle">JavaScript</text>
+    
+    <rect x="1080" y="785" width="80" height="30" rx="5" fill="#292d3e" stroke="#3b78e7" stroke-width="1"/>
+    <text x="1120" y="805" font-family="Arial" font-size="12" fill="white" text-anchor="middle">C++</text>
+    
+    <!-- 실제 코드 콘텐츠 -->
+    <text x="40" y="840" font-family="Consolas, monospace" font-size="14" fill="#a6accd"># 생성된 Python 코드</text>
+    <text x="40" y="870" font-family="Consolas, monospace" font-size="14" fill="#c792ea">def</text>
+    <text x="67" y="870" font-family="Consolas, monospace" font-size="14" fill="#82aaff">main</text>
+    <text x="100" y="870" font-family="Consolas, monospace" font-size="14" fill="#a6accd">():</text>
+    <text x="60" y="900" font-family="Consolas, monospace" font-size="14" fill="#a6accd">    </text>
+    <text x="90" y="900" font-family="Consolas, monospace" font-size="14" fill="#c792ea">global</text>
+    <text x="140" y="900" font-family="Consolas, monospace" font-size="14" fill="#a6accd">점수</text>
+    
+    <!-- 추가된 Python 코드 부분 (미완성 부분을 채움) -->
+    <text x="60" y="930" font-family="Consolas, monospace" font-size="14" fill="#a6accd">    점수 = 0</text>
+    <text x="60" y="960" font-family="Consolas, monospace" font-size="14" fill="#a6accd">    </text>
+    <text x="90" y="960" font-family="Consolas, monospace" font-size="14" fill="#82aaff">move_forward</text>
+    <text x="175" y="960" font-family="Consolas, monospace" font-size="14" fill="#a6accd">(10)</text>
+    <text x="60" y="990" font-family="Consolas, monospace" font-size="14" fill="#a6accd">    </text>
+    <text x="90" y="990" font-family="Consolas, monospace" font-size="14" fill="#c792ea">for</text>
+    <text x="115" y="990" font-family="Consolas, monospace" font-size="14" fill="#a6accd">i</text>
+    <text x="125" y="990" font-family="Consolas, monospace" font-size="14" fill="#c792ea">in</text>
+    <text x="140" y="990" font-family="Consolas, monospace" font-size="14" fill="#82aaff">range</text>
+    <text x="180" y="990" font-family="Consolas, monospace" font-size="14" fill="#a6accd">(4):</text>
+    <text x="60" y="1020" font-family="Consolas, monospace" font-size="14" fill="#a6accd">        </text>
+    <text x="120" y="1020" font-family="Consolas, monospace" font-size="14" fill="#82aaff">turn_right</text>
+    <text x="190" y="1020" font-family="Consolas, monospace" font-size="14" fill="#a6accd">(90)</text>
+    <text x="60" y="1050" font-family="Consolas, monospace" font-size="14" fill="#a6accd">        </text>
+    <text x="120" y="1050" font-family="Consolas, monospace" font-size="14" fill="#82aaff">move_forward</text>
+    <text x="220" y="1050" font-family="Consolas, monospace" font-size="14" fill="#a6accd">(10)</text>
+    <text x="60" y="1080" font-family="Consolas, monospace" font-size="14" fill="#a6accd">        점수 += 1</text>
+    <text x="60" y="1110" font-family="Consolas, monospace" font-size="14" fill="#a6accd">    </text>
+    <text x="90" y="1110" font-family="Consolas, monospace" font-size="14" fill="#82aaff">wait</text>
+    <text x="120" y="1110" font-family="Consolas, monospace" font-size="14" fill="#a6accd">(1)</text>
+    <text x="40" y="1140" font-family="Consolas, monospace" font-size="14" fill="#c792ea">if</text>
+    <text x="55" y="1140" font-family="Consolas, monospace" font-size="14" fill="#a6accd">__name__ == </text>
+    <text x="145" y="1140" font-family="Consolas, monospace" font-size="14" fill="#89ddff">"__main__"</text>
+    <text x="235" y="1140" font-family="Consolas, monospace" font-size="14" fill="#a6accd">:</text>
+    <text x="60" y="1170" font-family="Consolas, monospace" font-size="14" fill="#a6accd">    </text>
+    <text x="90" y="1170" font-family="Consolas, monospace" font-size="14" fill="#82aaff">main</text>
+    <text x="120" y="1170" font-family="Consolas, monospace" font-size="14" fill="#a6accd">()</text>
+
+    <!-- 코드 설명 또는 힌트 -->
+    <rect x="40" y="1200" width="1120" height="30" rx="5" fill="#333652" stroke="#23293e" stroke-width="1"/>
+    <text x="60" y="1220" font-family="Arial" font-size="12" fill="#a6accd">TIP: 이 코드는 캐릭터가 사각형을 그리며 점수를 올리는 알고리즘입니다.</text>
+    </svg>
