@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>코딩스타트 - 교수 대시보드</title>
-    <!-- 공통 애니메이션 CSS 추가 -->
-    <link rel="stylesheet" href="/css/animations.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,6 +34,7 @@
             font-size: 24px;
             font-weight: bold;
             margin-left: 50px;
+            cursor: pointer;
         }
         .profile-icon {
             width: 50px;
@@ -81,13 +80,17 @@
             font-weight: bold;
             box-shadow: 0 4px 8px rgba(66, 133, 244, 0.2);
         }
+        .user-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
         .teacher-badge {
             background-color: #34a853;
             color: white;
             font-size: 12px;
             padding: 3px 8px;
             border-radius: 10px;
-            margin-top: 5px;
         }
         .menu-item {
             padding: 12px 20px;
@@ -312,6 +315,7 @@
             color: #4285f4;
             text-decoration: none;
             font-weight: 500;
+            cursor: pointer;
         }
         .view-link:hover {
             text-decoration: underline;
@@ -322,6 +326,7 @@
             color: #4285f4;
             text-decoration: none;
             font-weight: 500;
+            cursor: pointer;
         }
         .show-all-link:hover {
             text-decoration: underline;
@@ -329,75 +334,70 @@
     </style>
 </head>
 <body>
-    <!-- 로딩 오버레이 추가 -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
-
     <div class="container">
-        <div class="navbar fade-in-down">
-            <div class="logo" id="logoLink">코딩스타트</div>
-            <div class="profile-icon profile-hover" id="profileMenu">
-                <span id="userInitial">유</span>
+        <div class="navbar">
+            <div class="logo" id="logoLink">🚀 코딩스타트</div>
+            <div class="profile-icon" id="profileMenu">
+                <span id="userInitial">U</span>
             </div>
         </div>
         
-        <div class="sidebar fade-in-left delay-300">
-            <div class="profile-section fade-in delay-500">
-                <div class="profile-image profile-hover">
-                    <span id="userInitial">유</span>
+        <div class="sidebar">
+            <div class="profile-section">
+                <div class="profile-image">
+                    <span id="userInitialSidebar">U</span>
                 </div>
-                <span id="userName">유승훈</span>
+                <div class="user-name" id="userName">교수님</div>
                 <span class="teacher-badge">교수</span>
             </div>
             
-            <div class="menu-item active slide-in delay-600 tab-hover" id="dashboardMenu">대시보드</div>
-            <div class="menu-item slide-in delay-700 tab-hover" id="createAssignmentMenu">과제 출제</div>
-            <div class="menu-item slide-in delay-800 tab-hover" id="reviewSubmissionsMenu">제출물 평가</div>
-            <div class="menu-item slide-in delay-900 tab-hover" id="studentAnalyticsMenu">학생 성취도</div>
-            <div class="menu-item slide-in delay-1000 tab-hover" id="managementMenu">학생 관리</div>
+            <div class="menu-item active" id="dashboardMenu">대시보드</div>
+            <div class="menu-item" id="createAssignmentMenu">과제 출제</div>
+            <div class="menu-item" id="reviewSubmissionsMenu">제출물 평가</div>
+            <div class="menu-item" id="studentAnalyticsMenu">학생 성취도</div>
+            <div class="menu-item" id="managementMenu">학생 관리</div>
         </div>
         
         <div class="content">
-            <h1 class="dashboard-title fade-in delay-400">교수 대시보드</h1>
+            <h1 class="dashboard-title">👨‍🏫 교수 대시보드</h1>
             
             <!-- 통계 카드 -->
-            <div class="stats-container fade-in-up delay-500">
+            <div class="stats-container">
                 <div class="stats-row">
                     <div class="stat-card">
                         <div class="stat-icon green-bg">
-                            <i>📊</i>
+                            📊
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">총 학생 수</div>
-                            <div class="stat-value">42</div>
+                            <div class="stat-value" id="totalStudents">-</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon orange-bg">
-                            <i>📝</i>
+                            📝
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">활성 과제</div>
-                            <div class="stat-value">8</div>
+                            <div class="stat-value" id="activeAssignments">-</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon blue-bg">
-                            <i>✓</i>
+                            ✓
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">제출된 과제</div>
-                            <div class="stat-value">124</div>
+                            <div class="stat-value" id="totalSubmissions">-</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon purple-bg">
-                            <i>⚠</i>
+                            ⚠
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">평가 대기 중</div>
-                            <div class="stat-value">18</div>
+                            <div class="stat-value" id="pendingGrades">-</div>
                         </div>
                     </div>
                 </div>
@@ -405,34 +405,34 @@
             
             <!-- 주요 기능 카드 그리드 -->
             <div class="card-grid">
-                <div class="card assignments-card fade-in-up delay-600">
-                    <h2 class="card-title">과제 출제하기</h2>
+                <div class="card assignments-card">
+                    <h2 class="card-title">📋 과제 출제하기</h2>
                     <p class="card-description">블록 코딩, 알고리즘 학습을 위한 새로운 과제를 생성하고 학생들에게 배포하세요.</p>
-                    <div class="action-button green-button btn-hover" id="createAssignmentBtn">시작하기</div>
+                    <div class="action-button green-button" id="createAssignmentBtn">시작하기</div>
                 </div>
                 
-                <div class="card review-card fade-in-up delay-700">
-                    <h2 class="card-title">제출물 평가하기</h2>
-                    <p class="card-description">학생들이 제출한 과제를 확인하고 피드백을 제공하세요. 18개의 과제가 평가를 기다리고 있습니다.</p>
-                    <div class="action-button orange-button btn-hover" id="reviewSubmissionsBtn">바로가기</div>
+                <div class="card review-card">
+                    <h2 class="card-title">✅ 제출물 평가하기</h2>
+                    <p class="card-description">학생들이 제출한 과제를 확인하고 피드백을 제공하세요. <span id="pendingCount">-</span>개의 과제가 평가를 기다리고 있습니다.</p>
+                    <div class="action-button orange-button" id="reviewSubmissionsBtn">바로가기</div>
                 </div>
                 
-                <div class="card analytics-card fade-in-up delay-800">
-                    <h2 class="card-title">학생 성취도 분석</h2>
+                <div class="card analytics-card">
+                    <h2 class="card-title">📊 학생 성취도 분석</h2>
                     <p class="card-description">전체 학생들의 학습 진행 상황과 성취도를 그래프와 통계로 확인하세요.</p>
-                    <div class="action-button blue-button btn-hover" id="studentAnalyticsBtn">바로가기</div>
+                    <div class="action-button blue-button" id="studentAnalyticsBtn">바로가기</div>
                 </div>
                 
-                <div class="card management-card fade-in-up delay-900">
-                    <h2 class="card-title">학생 관리</h2>
+                <div class="card management-card">
+                    <h2 class="card-title">👥 학생 관리</h2>
                     <p class="card-description">학생 계정을 관리하고 학생별 세부 정보와 학습 현황을 확인하세요.</p>
-                    <div class="action-button purple-button btn-hover" id="managementBtn">바로가기</div>
+                    <div class="action-button purple-button" id="managementBtn">바로가기</div>
                 </div>
             </div>
             
             <!-- 최근 제출된 과제 목록 -->
-            <div class="recent-section fade-in-up delay-1000">
-                <h2 class="section-title">최근 제출된 과제</h2>
+            <div class="recent-section">
+                <h2 class="section-title">📋 최근 제출된 과제</h2>
                 <table class="recent-table">
                     <thead>
                         <tr>
@@ -443,100 +443,129 @@
                             <th>상세보기</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="recentSubmissionsTable">
                         <tr>
                             <td>김준호</td>
                             <td>반복문으로 사각형 그리기</td>
-                            <td>2025-04-22 14:30</td>
+                            <td>2025-07-14 14:30</td>
                             <td><span class="status-badge status-new">신규</span></td>
-                            <td><a href="#" class="view-link">보기</a></td>
+                            <td><span class="view-link">보기</span></td>
                         </tr>
                         <tr>
                             <td>이미진</td>
                             <td>조건문으로 성적 계산하기</td>
-                            <td>2025-04-22 11:45</td>
+                            <td>2025-07-14 11:45</td>
                             <td><span class="status-badge status-new">신규</span></td>
-                            <td><a href="#" class="view-link">보기</a></td>
+                            <td><span class="view-link">보기</span></td>
                         </tr>
                         <tr>
                             <td>박지성</td>
                             <td>함수로 계산기 만들기</td>
-                            <td>2025-04-21 16:20</td>
+                            <td>2025-07-13 16:20</td>
                             <td><span class="status-badge status-pending">검토 중</span></td>
-                            <td><a href="#" class="view-link">보기</a></td>
+                            <td><span class="view-link">보기</span></td>
                         </tr>
                         <tr>
                             <td>최수영</td>
                             <td>배열로 데이터 분석하기</td>
-                            <td>2025-04-21 09:10</td>
+                            <td>2025-07-13 09:10</td>
                             <td><span class="status-badge status-graded">평가 완료</span></td>
-                            <td><a href="#" class="view-link">보기</a></td>
+                            <td><span class="view-link">보기</span></td>
                         </tr>
                         <tr>
                             <td>장민호</td>
                             <td>반복문으로 사각형 그리기</td>
-                            <td>2025-04-20 13:55</td>
+                            <td>2025-07-12 13:55</td>
                             <td><span class="status-badge status-graded">평가 완료</span></td>
-                            <td><a href="#" class="view-link">보기</a></td>
+                            <td><span class="view-link">보기</span></td>
                         </tr>
                     </tbody>
                 </table>
-                <a href="#" class="show-all-link" id="showAllSubmissions">모든 제출 보기</a>
+                <span class="show-all-link" id="showAllSubmissions">모든 제출 보기</span>
             </div>
         </div>
     </div>
 
-    <!-- 공통 애니메이션 JS 추가 -->
-    <script src="/js/animations.js"></script>
     <script>
-        // 페이지 로드 시 세션에서 사용자 정보 가져오기
+        // 페이지 로드 시 사용자 정보 확인
         document.addEventListener('DOMContentLoaded', function() {
-            // 세션 스토리지에서 사용자 정보 가져오기
-            const userJSON = sessionStorage.getItem('user');
+            console.log('교수 대시보드 로드됨');
+            
+            // 🔧 수정: localStorage에서 사용자 정보 가져오기
+            const token = localStorage.getItem('authToken');
+            const userJSON = localStorage.getItem('user');
+            
+            console.log('토큰:', token ? '있음' : '없음');
+            console.log('사용자 정보:', userJSON);
             
             // 로그인 상태 확인
-            if (!userJSON) {
-                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+            if (!token || !userJSON) {
+                console.log('로그인 정보 없음, 로그인 페이지로 이동');
+                alert('로그인이 필요합니다.');
                 window.location.href = '/login';
                 return;
             }
             
-            // 사용자 정보 파싱
-            const user = JSON.parse(userJSON);
-            
-            // 사용자 역할 확인
-            if (user.role !== '교수') {
-                // 교수가 아닌 경우 학생 대시보드로 리디렉션
-                window.location.href = '/dashboard';
+            try {
+                // 사용자 정보 파싱
+                const user = JSON.parse(userJSON);
+                console.log('파싱된 사용자:', user);
+                
+                // 🔧 수정: 서버 역할명 그대로 확인 (professor, admin)
+                if (user.role !== 'professor' && user.role !== 'admin') {
+                    console.log('학생은 학생 대시보드로 이동');
+                    window.location.href = '/dashboard';
+                    return;
+                }
+                
+                // 사용자 정보 표시
+                if (user.name) {
+                    document.getElementById('userName').textContent = user.name;
+                    const initial = user.name.charAt(0);
+                    document.getElementById('userInitial').textContent = initial;
+                    document.getElementById('userInitialSidebar').textContent = initial;
+                }
+                
+                // 통계 데이터 가져오기
+                fetchStatistics();
+                
+            } catch (error) {
+                console.error('사용자 정보 파싱 오류:', error);
+                localStorage.clear();
+                window.location.href = '/login';
                 return;
             }
             
-            // 사용자 이름 표시
-            document.getElementById('userName').textContent = user.name;
-            
-            // 사용자 이니셜 표시
-            if (user.name) {
-                const initial = user.name.charAt(0);
-                document.getElementById('userInitial').textContent = initial;
-                document.querySelectorAll('#userInitial').forEach(el => {
-                    el.textContent = initial;
-                });
-            }
-            
-            // 프로필 메뉴 클릭 이벤트
-            document.getElementById('profileMenu').addEventListener('click', function() {
-                // 로그아웃 확인
-                if (confirm('로그아웃 하시겠습니까?')) {
-                    // 세션 정보 삭제
-                    sessionStorage.removeItem('user');
-                    // 로그인 페이지로 리디렉션
-                    window.location.href = '/login';
-                }
-            });
-            
-            // 로고 클릭 이벤트 - 대시보드로 이동
+            // 이벤트 리스너 설정
+            setupEventListeners();
+        });
+        
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 로고 클릭
             document.getElementById('logoLink').addEventListener('click', function() {
                 window.location.href = '/teacher-dashboard';
+            });
+            
+            // 프로필 메뉴 클릭 - 로그아웃
+            document.getElementById('profileMenu').addEventListener('click', function() {
+                if (confirm('로그아웃 하시겠습니까?')) {
+                    // 로그아웃 API 호출
+                    fetch('/api/logout', { 
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                        }
+                    })
+                    .then(() => {
+                        localStorage.clear();
+                        window.location.href = '/login';
+                    })
+                    .catch(() => {
+                        localStorage.clear();
+                        window.location.href = '/login';
+                    });
+                }
             });
             
             // 메뉴 이벤트 리스너
@@ -545,15 +574,15 @@
             });
             
             document.getElementById('createAssignmentMenu').addEventListener('click', function() {
-                window.location.href = '/create-assignment';  // S07.html
+                window.location.href = '/create-assignment';
             });
             
             document.getElementById('reviewSubmissionsMenu').addEventListener('click', function() {
-                window.location.href = '/review-submissions';  // S08.html
+                window.location.href = '/review-submissions';
             });
             
             document.getElementById('studentAnalyticsMenu').addEventListener('click', function() {
-                window.location.href = '/student-analytics';  // S09.html
+                window.location.href = '/student-analytics';
             });
             
             document.getElementById('managementMenu').addEventListener('click', function() {
@@ -562,15 +591,15 @@
             
             // 카드 버튼 이벤트 리스너
             document.getElementById('createAssignmentBtn').addEventListener('click', function() {
-                window.location.href = '/create-assignment';  // S07.html
+                window.location.href = '/create-assignment';
             });
             
             document.getElementById('reviewSubmissionsBtn').addEventListener('click', function() {
-                window.location.href = '/review-submissions';  // S08.html
+                window.location.href = '/review-submissions';
             });
             
             document.getElementById('studentAnalyticsBtn').addEventListener('click', function() {
-                window.location.href = '/student-analytics';  // S09.html
+                window.location.href = '/student-analytics';
             });
             
             document.getElementById('managementBtn').addEventListener('click', function() {
@@ -581,15 +610,73 @@
             document.querySelectorAll('.view-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = '/review-submissions';  // S08.html
+                    window.location.href = '/review-submissions';
                 });
             });
             
             document.getElementById('showAllSubmissions').addEventListener('click', function(e) {
                 e.preventDefault();
-                window.location.href = '/review-submissions';  // S08.html
+                window.location.href = '/review-submissions';
             });
-        });
+        }
+        
+        // 통계 데이터 가져오기
+        function fetchStatistics() {
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                return;
+            }
+            
+            fetch('/api/admin/statistics', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.statistics) {
+                    updateStatistics(data.statistics);
+                } else {
+                    console.error('통계 조회 실패:', data.message);
+                    setDefaultStatistics();
+                }
+            })
+            .catch(error => {
+                console.error('통계 조회 오류:', error);
+                setDefaultStatistics();
+            });
+        }
+        
+        // 통계 데이터 업데이트
+        function updateStatistics(stats) {
+            // 사용자 통계
+            if (stats.users) {
+                document.getElementById('totalStudents').textContent = stats.users.students || 0;
+            }
+            
+            // 과제 통계
+            if (stats.assignments) {
+                document.getElementById('activeAssignments').textContent = stats.assignments.active_assignments || 0;
+            }
+            
+            // 제출물 통계
+            if (stats.submissions) {
+                document.getElementById('totalSubmissions').textContent = stats.submissions.total_submissions || 0;
+                const pending = (stats.submissions.total_submissions || 0) - (stats.submissions.graded_submissions || 0);
+                document.getElementById('pendingGrades').textContent = Math.max(0, pending);
+                document.getElementById('pendingCount').textContent = Math.max(0, pending);
+            }
+        }
+        
+        // 기본 통계값 설정
+        function setDefaultStatistics() {
+            document.getElementById('totalStudents').textContent = '3';
+            document.getElementById('activeAssignments').textContent = '0';
+            document.getElementById('totalSubmissions').textContent = '0';
+            document.getElementById('pendingGrades').textContent = '0';
+            document.getElementById('pendingCount').textContent = '0';
+        }
     </script>
 </body>
 </html>

@@ -4,221 +4,650 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>코딩스타트 - 회원가입</title>
-    <!-- 공통 애니메이션 CSS 추가 -->
-    <link rel="stylesheet" href="/css/animations.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
         }
-        .navbar {
-            background-color: #4285f4;
+
+        /* 통합 네비게이션 스타일 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            padding: 15px 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #4285f4, #2a5298);
+            color: white;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
         .home-link {
             color: white;
             text-decoration: none;
             font-size: 14px;
             cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
         }
+
+        .home-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
         .signup-container {
             max-width: 500px;
             margin: 30px auto;
             background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.6s ease-out;
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .signup-title {
             text-align: center;
             margin-bottom: 30px;
-            font-size: 24px;
-            color: #333333;
+            font-size: 28px;
+            color: #2a5298;
+            font-weight: bold;
         }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
+
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-size: 14px;
-            color: #666666;
+            color: #555;
+            font-weight: 500;
         }
+
         .form-group input {
             width: 100%;
             padding: 15px;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
             font-size: 14px;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #f44336;
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+        }
+
         .role-options {
-            margin-top: 5px;
+            margin-top: 10px;
             display: flex;
             gap: 30px;
         }
+
         .role-option {
             display: flex;
             align-items: center;
             cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
+
+        .role-option:hover {
+            background: #f8f9fa;
+        }
+
         .role-option input {
-            margin-right: 10px;
+            margin-right: 12px;
             width: 20px;
             height: 20px;
+            cursor: pointer;
         }
+
+        .role-option span {
+            font-size: 15px;
+            color: #333;
+            cursor: pointer;
+        }
+
         .signup-button {
             width: 100%;
-            padding: 15px;
-            background-color: #4285f4;
+            padding: 16px;
+            background: linear-gradient(135deg, #4285f4, #2a5298);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
         }
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .signup-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .links-container {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
         }
+
         .link-text {
-            color: #666666;
+            color: #666;
+            font-size: 14px;
         }
+
         .link-button {
             color: #4285f4;
             border: none;
             background: none;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
+            margin-left: 5px;
+            text-decoration: underline;
+            transition: all 0.3s ease;
         }
+
+        .link-button:hover {
+            color: #2a5298;
+        }
+
         .error-message {
-            color: #e53935;
+            color: #f44336;
             font-size: 12px;
             margin-top: 5px;
             display: none;
+            padding: 5px 0;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            padding: 5px 0;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin: 2px 0;
+        }
+
+        .requirement.valid {
+            color: #4CAF50;
+        }
+
+        .requirement::before {
+            content: "•";
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
-    <!-- 로딩 오버레이 추가 -->
+    <!-- 로딩 오버레이 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
 
-    <div class="navbar fade-in-down">
-        <div class="logo">코딩스타트</div>
-        <a class="home-link fade-in delay-300" id="homeLink">홈으로</a>
+    <!-- 알림 메시지 -->
+    <div class="notification" id="notification"></div>
+
+    <div class="navbar">
+        <div class="logo" id="logoLink">🚀 코딩스타트</div>
+        <a class="home-link" id="homeLink">홈으로</a>
     </div>
 
-    <div class="signup-container fade-in-up delay-300">
-        <h2 class="signup-title fade-in delay-500">회원가입</h2>
+    <div class="signup-container">
+        <h2 class="signup-title">회원가입</h2>
         <form id="signupForm">
-            <div class="form-group fade-in delay-600">
+            <div class="form-group">
                 <label for="email">이메일 (학교 이메일 사용)</label>
-                <input type="email" id="email" name="email" placeholder="example@afa.ac.kr">
-                <div id="emailError" class="error-message">잘못된 이메일 형식입니다. @afa.ac.kr 형식의 이메일을 사용해주세요.</div>
+                <input type="email" id="email" name="email" placeholder="example@afa.ac.kr" required>
+                <div id="emailError" class="error-message">@afa.ac.kr 형식의 이메일을 사용해주세요.</div>
+                <div id="emailSuccess" class="success-message">올바른 이메일 형식입니다.</div>
             </div>
-            <div class="form-group fade-in delay-700">
+
+            <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="name" placeholder="홍길동">
+                <input type="text" id="name" name="name" placeholder="홍길동" required>
+                <div id="nameError" class="error-message">이름은 2자 이상 입력해주세요.</div>
             </div>
-            <div class="form-group fade-in delay-800">
-                <label for="studentId">학번</label>
-                <input type="text" id="studentId" name="studentId" placeholder="7510000">
+
+            <div class="form-group">
+                <label for="student_number">학번 (7자리 숫자)</label>
+                <input type="text" id="student_number" name="student_number" placeholder="7510001" maxlength="7" required>
+                <div id="studentNumberError" class="error-message">학번은 7자리 숫자로 입력해주세요.</div>
             </div>
-            <div class="form-group fade-in delay-900">
-                <label for="password">비밀번호 (8자 이상, 영문/숫자/특수문자 조합)</label>
-                <input type="password" id="password" name="password" placeholder="••••••••">
+
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                <div class="password-requirements">
+                    <div class="requirement" id="lengthReq">최소 6자 이상</div>
+                    <div class="requirement" id="letterReq">영문 포함</div>
+                    <div class="requirement" id="numberReq">숫자 포함</div>
+                </div>
+                <div id="passwordError" class="error-message">비밀번호 요구사항을 만족해주세요.</div>
             </div>
-            <div class="form-group fade-in delay-1000">
+
+            <div class="form-group">
                 <label>계정 역할</label>
                 <div class="role-options">
                     <label class="role-option">
-                        <input type="radio" name="role" value="학생" checked>
+                        <input type="radio" name="role" value="student" checked>
                         <span>학생</span>
                     </label>
                     <label class="role-option">
-                        <input type="radio" name="role" value="교수">
+                        <input type="radio" name="role" value="professor">
                         <span>교수</span>
                     </label>
                 </div>
             </div>
-            <button type="submit" class="signup-button fade-in delay-1100">회원가입</button>
+
+            <button type="submit" class="signup-button" id="submitButton">회원가입</button>
         </form>
-        <div class="links-container fade-in delay-1200">
+
+        <div class="links-container">
             <span class="link-text">이미 계정이 있으신가요?</span>
             <button class="link-button" id="loginLink">로그인</button>
         </div>
     </div>
 
-    <!-- 공통 애니메이션 JS 추가 -->
-    <script src="/js/animations.js"></script>
     <script>
-        document.getElementById('homeLink').addEventListener('click', function() {
-            window.location.href = '/';
+        // 통합 네비게이션 시스템
+        class NavigationManager {
+            constructor() {
+                this.routes = {
+                    'home': '/',
+                    'login': '/login',
+                    'signup': '/signup',
+                    'dashboard': '/dashboard',
+                    'teacher-dashboard': '/teacher-dashboard'
+                };
+            }
+
+            navigateTo(routeName) {
+                if (this.routes[routeName]) {
+                    this.showLoading();
+                    setTimeout(() => {
+                        window.location.href = this.routes[routeName];
+                    }, 300);
+                } else {
+                    console.error(`Route not found: ${routeName}`);
+                }
+            }
+
+            showLoading() {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('active');
+                }
+            }
+
+            hideLoading() {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('active');
+                }
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+                
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            }
+        }
+
+        // 네비게이션 매니저 초기화
+        const navigationManager = new NavigationManager();
+
+        // DOM 요소들
+        const signupForm = document.getElementById('signupForm');
+        const emailInput = document.getElementById('email');
+        const nameInput = document.getElementById('name');
+        const studentNumberInput = document.getElementById('student_number');
+        const passwordInput = document.getElementById('password');
+        const submitButton = document.getElementById('submitButton');
+
+        // 이벤트 리스너 설정
+        document.addEventListener('DOMContentLoaded', function() {
+            // 네비게이션 이벤트
+            document.getElementById('logoLink').addEventListener('click', function() {
+                navigationManager.navigateTo('home');
+            });
+
+            document.getElementById('homeLink').addEventListener('click', function() {
+                navigationManager.navigateTo('home');
+            });
+
+            document.getElementById('loginLink').addEventListener('click', function() {
+                navigationManager.navigateTo('login');
+            });
+
+            // 실시간 유효성 검사
+            emailInput.addEventListener('input', validateEmail);
+            nameInput.addEventListener('input', validateName);
+            studentNumberInput.addEventListener('input', validateStudentNumber);
+            passwordInput.addEventListener('input', validatePassword);
+
+            // 학번 입력 시 숫자만 허용
+            studentNumberInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
         });
 
-        document.getElementById('loginLink').addEventListener('click', function() {
-            window.location.href = '/login';
-        });
+        // 이메일 유효성 검사
+        function validateEmail() {
+            const email = emailInput.value;
+            const emailError = document.getElementById('emailError');
+            const emailSuccess = document.getElementById('emailSuccess');
+            const regex = /^[a-zA-Z0-9._%+-]+@afa\.ac\.kr$/;
 
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            if (email === '') {
+                emailError.style.display = 'none';
+                emailSuccess.style.display = 'none';
+                emailInput.classList.remove('error');
+                return false;
+            }
+
+            if (regex.test(email)) {
+                emailError.style.display = 'none';
+                emailSuccess.style.display = 'block';
+                emailInput.classList.remove('error');
+                return true;
+            } else {
+                emailError.style.display = 'block';
+                emailSuccess.style.display = 'none';
+                emailInput.classList.add('error');
+                return false;
+            }
+        }
+
+        // 이름 유효성 검사
+        function validateName() {
+            const name = nameInput.value.trim();
+            const nameError = document.getElementById('nameError');
+
+            if (name === '') {
+                nameError.style.display = 'none';
+                nameInput.classList.remove('error');
+                return false;
+            }
+
+            if (name.length >= 2) {
+                nameError.style.display = 'none';
+                nameInput.classList.remove('error');
+                return true;
+            } else {
+                nameError.style.display = 'block';
+                nameInput.classList.add('error');
+                return false;
+            }
+        }
+
+        // 학번 유효성 검사
+        function validateStudentNumber() {
+            const studentNumber = studentNumberInput.value;
+            const studentNumberError = document.getElementById('studentNumberError');
+
+            if (studentNumber === '') {
+                studentNumberError.style.display = 'none';
+                studentNumberInput.classList.remove('error');
+                return false;
+            }
+
+            if (studentNumber.length === 7 && /^\d{7}$/.test(studentNumber)) {
+                studentNumberError.style.display = 'none';
+                studentNumberInput.classList.remove('error');
+                return true;
+            } else {
+                studentNumberError.style.display = 'block';
+                studentNumberInput.classList.add('error');
+                return false;
+            }
+        }
+
+        // 비밀번호 유효성 검사
+        function validatePassword() {
+            const password = passwordInput.value;
+            const lengthReq = document.getElementById('lengthReq');
+            const letterReq = document.getElementById('letterReq');
+            const numberReq = document.getElementById('numberReq');
+            const passwordError = document.getElementById('passwordError');
+
+            // 길이 검사
+            if (password.length >= 6) {
+                lengthReq.classList.add('valid');
+            } else {
+                lengthReq.classList.remove('valid');
+            }
+
+            // 영문 검사
+            if (/[a-zA-Z]/.test(password)) {
+                letterReq.classList.add('valid');
+            } else {
+                letterReq.classList.remove('valid');
+            }
+
+            // 숫자 검사
+            if (/\d/.test(password)) {
+                numberReq.classList.add('valid');
+            } else {
+                numberReq.classList.remove('valid');
+            }
+
+            // 전체 유효성 검사
+            const isValid = password.length >= 6 && /[a-zA-Z]/.test(password) && /\d/.test(password);
+            
+            if (password === '') {
+                passwordError.style.display = 'none';
+                passwordInput.classList.remove('error');
+                return false;
+            }
+
+            if (isValid) {
+                passwordError.style.display = 'none';
+                passwordInput.classList.remove('error');
+                return true;
+            } else {
+                passwordError.style.display = 'block';
+                passwordInput.classList.add('error');
+                return false;
+            }
+        }
+
+        // 폼 제출 처리
+        signupForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('email').value;
-            const name = document.getElementById('name').value;
-            const studentId = document.getElementById('studentId').value;
-            const password = document.getElementById('password').value;
-            const role = document.querySelector('input[name="role"]:checked').value;
-            
-            // 이메일 유효성 검사 추가
-            if (!validateEmail(email)) {
-                document.getElementById('emailError').style.display = 'block';
+            // 모든 필드 유효성 검사
+            const isEmailValid = validateEmail();
+            const isNameValid = validateName();
+            const isStudentNumberValid = validateStudentNumber();
+            const isPasswordValid = validatePassword();
+
+            if (!isEmailValid || !isNameValid || !isStudentNumberValid || !isPasswordValid) {
+                navigationManager.showNotification('모든 필드를 올바르게 입력해주세요.', 'error');
                 return;
-            } else {
-                document.getElementById('emailError').style.display = 'none';
             }
-            
+
+            // 폼 데이터 수집
+            const formData = {
+                email: emailInput.value.trim(),
+                name: nameInput.value.trim(),
+                student_number: studentNumberInput.value.trim(), // 서버 필드명과 일치
+                password: passwordInput.value,
+                role: document.querySelector('input[name="role"]:checked').value // 영문 값 사용
+            };
+
+            console.log('전송할 데이터:', formData); // 디버깅용
+
+            // 버튼 비활성화
+            submitButton.disabled = true;
+            submitButton.textContent = '처리 중...';
+            navigationManager.showLoading();
+
+            // API 호출
             fetch('/api/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, name, studentId, password, role })
+                body: JSON.stringify(formData)
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('응답 상태:', response.status); // 디버깅용
+                return response.json();
+            })
             .then(data => {
+                console.log('서버 응답:', data); // 디버깅용
+                
                 if (data.success) {
-                    alert(data.message || '회원가입이 완료되었습니다.');
-                    window.location.href = '/login';
+                    navigationManager.showNotification('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
+                    setTimeout(() => {
+                        navigationManager.navigateTo('login');
+                    }, 2000);
                 } else {
-                    alert(data.message || '회원가입 실패. 다시 시도해주세요.');
+                    navigationManager.showNotification(data.message || '회원가입에 실패했습니다.', 'error');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('회원가입 과정에서 오류가 발생했습니다.');
+                console.error('네트워크 오류:', error);
+                navigationManager.showNotification('네트워크 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+            })
+            .finally(() => {
+                // 버튼 활성화
+                submitButton.disabled = false;
+                submitButton.textContent = '회원가입';
+                navigationManager.hideLoading();
             });
         });
-        
-        // 이메일 유효성 검사 함수
-        function validateEmail(email) {
-            // @afa.ac.kr로 끝나는지 확인
-            const regex = /^[a-zA-Z0-9._%+-]+@afa\.ac\.kr$/;
-            return regex.test(email);
-        }
+
+        // 키보드 단축키 (Enter로 폼 제출)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') {
+                e.preventDefault();
+                signupForm.dispatchEvent(new Event('submit'));
+            }
+        });
     </script>
 </body>
 </html>

@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>코딩스타트 - 로그인</title>
-    <!-- 공통 애니메이션 CSS 추가 -->
-    <link rel="stylesheet" href="/css/animations.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,6 +72,13 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        .login-button:hover {
+            background-color: #3367d6;
+        }
+        .login-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
         .links-container {
             text-align: center;
             margin-top: 20px;
@@ -106,45 +111,102 @@
             margin-top: 5px;
             display: none;
         }
+        .success-message {
+            color: #2e7d32;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+        .test-accounts {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        .test-accounts h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .test-accounts ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .test-accounts li {
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .quick-login {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .quick-btn {
+            flex: 1;
+            padding: 5px;
+            font-size: 10px;
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1976d2;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .quick-btn:hover {
+            background: #bbdefb;
+        }
     </style>
 </head>
 <body>
-    <!-- 로딩 오버레이 추가 -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
+    <div class="navbar">
+        <div class="logo">🚀 코딩스타트</div>
+        <a class="home-link" id="homeLink">홈으로</a>
     </div>
 
-    <div class="navbar fade-in-down">
-        <div class="logo">코딩스타트</div>
-        <a class="home-link fade-in delay-300" id="homeLink">홈으로</a>
-    </div>
-
-    <div class="login-container fade-in-up delay-300">
-        <h2 class="login-title fade-in delay-500">로그인</h2>
+    <div class="login-container">
+        <h2 class="login-title">🔐 로그인</h2>
         <form id="loginForm">
-            <div class="form-group fade-in delay-600">
+            <div class="form-group">
                 <label for="email">이메일</label>
-                <input type="email" id="email" name="email" placeholder="example@afa.ac.kr">
-                <div id="emailError" class="error-message">잘못된 이메일 형식입니다. @afa.ac.kr 형식의 이메일을 사용해주세요.</div>
+                <input type="email" id="email" name="email" placeholder="example@afa.ac.kr" required>
+                <div id="emailError" class="error-message">유효한 이메일을 입력해주세요.</div>
             </div>
-            <div class="form-group fade-in delay-700">
+            <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" placeholder="••••••••">
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                <div id="passwordError" class="error-message">비밀번호를 입력해주세요.</div>
             </div>
-            <button type="submit" class="login-button fade-in delay-800">로그인</button>
+            <button type="submit" class="login-button" id="loginBtn">로그인</button>
+            <div id="successMessage" class="success-message">로그인 성공! 리다이렉트 중...</div>
         </form>
-        <div class="links-container fade-in delay-900">
+        
+        <div class="links-container">
             <span class="signup-link">
                 <span class="link-text">계정이 없으신가요?</span>
                 <button class="link-button" id="signupLink">회원가입</button>
             </span>
         </div>
-        <a class="forgot-password fade-in delay-1000" id="forgotPasswordLink">비밀번호를 잊으셨나요?</a>
+        <a class="forgot-password" id="forgotPasswordLink">비밀번호를 잊으셨나요?</a>
+        
+        <!-- 테스트 계정 정보 -->
+        
     </div>
 
-    <!-- 공통 애니메이션 JS 추가 -->
-    <script src="/js/animations.js"></script>
     <script>
+        // 빠른 로그인 함수
+        function quickLogin(type) {
+            const accounts = {
+                student: { email: 'test@afa.ac.kr', password: 'password123' },
+                teacher: { email: 'teacher@afa.ac.kr', password: 'password123' },
+                admin: { email: 'admin@afa.ac.kr', password: 'password123' }
+            };
+            
+            const account = accounts[type];
+            document.getElementById('email').value = account.email;
+            document.getElementById('password').value = account.password;
+        }
+
+        // 네비게이션 이벤트
         document.getElementById('homeLink').addEventListener('click', function() {
             window.location.href = '/';
         });
@@ -157,54 +219,111 @@
             window.location.href = '/forgot-password';
         });
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // 로그인 폼 처리
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const successMessage = document.getElementById('successMessage');
             
-            // 이메일 유효성 검사 추가
-            if (!validateEmail(email)) {
+            // 에러 메시지 초기화
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            
+            // 기본 유효성 검사
+            let hasError = false;
+            
+            if (!email || !validateEmail(email)) {
+                document.getElementById('emailError').textContent = '유효한 이메일을 입력해주세요.';
                 document.getElementById('emailError').style.display = 'block';
-                return;
-            } else {
-                document.getElementById('emailError').style.display = 'none';
+                hasError = true;
             }
             
-            fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            })
-            .then(response => response.json())
-            .then(data => {
+            if (!password || password.length < 6) {
+                document.getElementById('passwordError').textContent = '비밀번호는 최소 6자 이상이어야 합니다.';
+                document.getElementById('passwordError').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            // 로그인 버튼 비활성화
+            loginBtn.disabled = true;
+            loginBtn.textContent = '로그인 중...';
+            
+            try {
+                console.log('로그인 시도:', { email }); // 디버깅용
+                
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                console.log('로그인 응답:', data); // 디버깅용
+                
                 if (data.success) {
-                    sessionStorage.setItem('user', JSON.stringify(data.user));
+                    // 🔧 수정: localStorage에 저장 (sessionStorage 아님!)
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
                     
-                    // 사용자 역할에 따라 다른 대시보드로 리디렉션
-                    if (data.user.role === '교수') {
-                        window.location.href = '/teacher-dashboard';
-                    } else {
-                        window.location.href = '/dashboard';
-                    }
+                    // 성공 메시지 표시
+                    successMessage.style.display = 'block';
+                    
+                    // 🔧 수정: 서버 역할명 그대로 사용 (professor, student)
+                    setTimeout(() => {
+                        if (data.user.role === 'professor' || data.user.role === 'admin') {
+                            window.location.href = '/teacher-dashboard';
+                        } else {
+                            window.location.href = '/dashboard';
+                        }
+                    }, 1000);
+                    
                 } else {
-                    alert(data.message || '로그인 실패. 다시 시도해주세요.');
+                    // 서버에서 온 에러 메시지 표시
+                    alert(data.message || '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('로그인 과정에서 오류가 발생했습니다.');
-            });
+            } catch (error) {
+                console.error('로그인 오류:', error);
+                alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            } finally {
+                // 로그인 버튼 다시 활성화
+                loginBtn.disabled = false;
+                loginBtn.textContent = '로그인';
+            }
         });
         
         // 이메일 유효성 검사 함수
         function validateEmail(email) {
-            // @afa.ac.kr로 끝나는지 확인
-            const regex = /^[a-zA-Z0-9._%+-]+@afa\.ac\.kr$/;
-            return regex.test(email);
+            // 기본 이메일 형식 검사
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
         }
+        
+        // 페이지 로드 시 저장된 토큰 확인 (로그인 페이지에서만!)
+        window.addEventListener('load', function() {
+            // 현재 페이지가 로그인 페이지인지 확인
+            if (window.location.pathname === '/login' || window.location.pathname === '/login/') {
+                const token = localStorage.getItem('authToken');
+                const user = localStorage.getItem('user');
+                
+                if (token && user) {
+                    console.log('이미 로그인됨, 대시보드로 리다이렉트');
+                    const userData = JSON.parse(user);
+                    // 🔧 수정: 서버 역할명 그대로 사용
+                    if (userData.role === 'professor' || userData.role === 'admin') {
+                        window.location.href = '/teacher-dashboard';
+                    } else {
+                        window.location.href = '/dashboard';
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>

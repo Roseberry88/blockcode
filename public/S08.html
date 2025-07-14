@@ -22,7 +22,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background-color: #4285f4;
+            background: linear-gradient(135deg, #4285f4, #2a5298);
             color: white;
             padding: 10px 20px;
             display: flex;
@@ -37,6 +37,10 @@
             font-weight: bold;
             margin-left: 50px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.05);
         }
         .profile-icon {
             width: 50px;
@@ -50,6 +54,10 @@
             color: #4285f4;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .profile-icon:hover {
+            transform: scale(1.1);
         }
         .sidebar {
             width: 200px;
@@ -81,6 +89,10 @@
             font-size: 24px;
             font-weight: bold;
             box-shadow: 0 4px 8px rgba(66, 133, 244, 0.2);
+            transition: all 0.3s ease;
+        }
+        .profile-image:hover {
+            transform: scale(1.1);
         }
         .teacher-badge {
             background-color: #34a853;
@@ -106,6 +118,7 @@
         }
         .menu-item:hover:not(.active) {
             background-color: #f1f8ff;
+            transform: translateX(5px);
         }
         .content {
             margin-left: 280px;
@@ -130,6 +143,10 @@
             padding: 20px;
             margin-bottom: 30px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .filter-section:hover {
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
         .filter-header {
             display: flex;
@@ -163,6 +180,11 @@
             border-radius: 5px;
             font-size: 14px;
             color: #333333;
+            transition: all 0.3s ease;
+        }
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
         }
         .filter-buttons {
             display: flex;
@@ -178,13 +200,22 @@
             transition: all 0.3s ease;
             border: none;
         }
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
         .apply-filter-btn {
             background-color: #4285f4;
             color: white;
         }
+        .apply-filter-btn:hover {
+            background-color: #3b78e7;
+        }
         .reset-filter-btn {
             background-color: #f1f3f4;
             color: #333333;
+        }
+        .reset-filter-btn:hover {
+            background-color: #e4e6e7;
         }
         
         /* 제출물 목록 */
@@ -194,6 +225,10 @@
             margin-bottom: 30px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .submissions-section:hover {
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
         .submissions-header {
             padding: 20px;
@@ -225,8 +260,12 @@
             color: #666666;
             background-color: #f9f9f9;
         }
+        .submissions-table tr {
+            transition: all 0.3s ease;
+        }
         .submissions-table tr:hover {
             background-color: #f9f9f9;
+            transform: scale(1.01);
         }
         .submissions-table tr:last-child td {
             border-bottom: none;
@@ -257,6 +296,7 @@
         .action-link:hover {
             text-decoration: underline;
             color: #3b78e7;
+            transform: scale(1.05);
         }
         
         /* 페이지네이션 */
@@ -277,6 +317,9 @@
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s ease;
+        }
+        .page-btn:hover {
+            transform: translateY(-2px);
         }
         .page-btn.active {
             background-color: #4285f4;
@@ -302,6 +345,7 @@
             z-index: 999;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
         .modal-content {
             background-color: white;
@@ -312,7 +356,20 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             overflow: auto;
             position: relative;
+            animation: modalSlideIn 0.3s ease;
         }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .modal-close {
             position: absolute;
             top: 20px;
@@ -386,6 +443,10 @@
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .language-btn:hover {
+            transform: translateY(-2px);
         }
         .language-btn.active {
             background-color: #4285f4;
@@ -420,6 +481,10 @@
             border-radius: 5px;
             margin-bottom: 10px;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .test-case:hover {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .test-case-header {
             padding: 10px 15px;
@@ -507,6 +572,11 @@
             padding: 8px;
             border: 1px solid #dddddd;
             border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .criteria-score select:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
         }
         
         .feedback-section {
@@ -521,6 +591,11 @@
             font-family: Arial, sans-serif;
             font-size: 14px;
             resize: vertical;
+            transition: all 0.3s ease;
+        }
+        .feedback-textarea:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
         }
         
         .modal-footer {
@@ -540,6 +615,9 @@
             transition: all 0.3s ease;
             border: none;
         }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
         .btn-primary {
             background-color: #4285f4;
             color: white;
@@ -547,7 +625,6 @@
         }
         .btn-primary:hover {
             background-color: #3b78e7;
-            transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(66, 133, 244, 0.35);
         }
         .btn-secondary {
@@ -556,7 +633,6 @@
         }
         .btn-secondary:hover {
             background-color: #e4e6e7;
-            transform: translateY(-2px);
         }
         
         .final-score {
@@ -619,6 +695,57 @@
         input:checked + .batch-toggle-slider:before {
             transform: translateX(24px);
         }
+
+        /* 통합 네비게이션 스타일 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .navigation-notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -629,18 +756,18 @@
 
     <div class="container">
         <div class="navbar fade-in-down">
-            <div class="logo" id="logoLink">코딩스타트</div>
+            <div class="logo" id="logoLink">🚀 코딩스타트</div>
             <div class="profile-icon profile-hover" id="profileMenu">
-                <span id="userInitial">유</span>
+                <span id="userInitial">U</span>
             </div>
         </div>
         
         <div class="sidebar fade-in-left delay-300">
             <div class="profile-section fade-in delay-500">
                 <div class="profile-image profile-hover">
-                    <span id="userInitial">유</span>
+                    <span id="userInitialSidebar">U</span>
                 </div>
-                <span id="userName">유승훈</span>
+                <span id="userName">사용자</span>
                 <span class="teacher-badge">교수</span>
             </div>
             
@@ -652,7 +779,7 @@
         </div>
         
         <div class="content">
-            <h1 class="page-title fade-in delay-400">제출물 평가</h1>
+            <h1 class="page-title fade-in delay-400">✅ 제출물 평가</h1>
             
             <!-- 필터 섹션 -->
             <div class="filter-section fade-in-up delay-500">
@@ -1028,79 +1155,223 @@ for i in range(n):
     <!-- 공통 애니메이션 JS 추가 -->
     <script src="/js/animations.js"></script>
     <script>
-        // 페이지 로드 시 세션에서 사용자 정보 가져오기
-        document.addEventListener('DOMContentLoaded', function() {
-            // 세션 스토리지에서 사용자 정보 가져오기
-            const userJSON = sessionStorage.getItem('user');
-            
-            // 로그인 상태 확인
-            if (!userJSON) {
-                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
-                window.location.href = '/login';
-                return;
+        // 통합 네비게이션 시스템
+        class NavigationManager {
+            constructor() {
+                this.currentUser = null;
+                this.routes = {
+                    'dashboard': '/dashboard',
+                    'teacher-dashboard': '/teacher-dashboard',
+                    'block-coding': '/block-coding', 
+                    'algorithm': '/algorithm',
+                    'assignments': '/assignments',
+                    'progress': '/progress',
+                    'create-assignment': '/create-assignment',
+                    'review-submissions': '/review-submissions',
+                    'student-analytics': '/student-analytics',
+                    'student-management': '/student-management',
+                    'login': '/login'
+                };
+                
+                this.init();
             }
-            
-            // 사용자 정보 파싱
-            const user = JSON.parse(userJSON);
-            
-            // 사용자 역할 확인
-            if (user.role !== '교수') {
-                // 교수가 아닌 경우 학생 대시보드로 리디렉션
-                window.location.href = '/dashboard';
-                return;
+
+            init() {
+                this.loadUserInfo();
+                this.setupEventListeners();
             }
-            
-            // 사용자 이름 표시
-            document.getElementById('userName').textContent = user.name;
-            
-            // 사용자 이니셜 표시
-            if (user.name) {
-                const initial = user.name.charAt(0);
-                document.getElementById('userInitial').textContent = initial;
-                document.querySelectorAll('#userInitial').forEach(el => {
-                    el.textContent = initial;
-                });
-            }
-            
-            // 메뉴 이벤트 리스너
-            document.getElementById('logoLink').addEventListener('click', function() {
-                window.location.href = '/teacher-dashboard';
-            });
-            
-            document.getElementById('dashboardMenu').addEventListener('click', function() {
-                window.location.href = '/teacher-dashboard';
-            });
-            
-            document.getElementById('createAssignmentMenu').addEventListener('click', function() {
-                window.location.href = '/create-assignment';
-            });
-            
-            document.getElementById('reviewSubmissionsMenu').addEventListener('click', function() {
-                window.location.href = '/review-submissions';
-            });
-            
-            document.getElementById('studentAnalyticsMenu').addEventListener('click', function() {
-                window.location.href = '/student-analytics';
-            });
-            
-            document.getElementById('managementMenu').addEventListener('click', function() {
-                alert('준비 중인 기능입니다.');
-            });
-            
-            // 프로필 메뉴 클릭 이벤트
-            document.getElementById('profileMenu').addEventListener('click', function() {
-                // 로그아웃 확인
-                if (confirm('로그아웃 하시겠습니까?')) {
-                    // 세션 정보 삭제
-                    sessionStorage.removeItem('user');
-                    // 로그인 페이지로 리디렉션
-                    window.location.href = '/login';
+
+            loadUserInfo() {
+                const token = localStorage.getItem('authToken');
+                const userJSON = localStorage.getItem('user');
+
+                if (!token || !userJSON) {
+                    this.redirectToLogin();
+                    return false;
                 }
-            });
+
+                try {
+                    this.currentUser = JSON.parse(userJSON);
+                    
+                    // 교수/관리자 권한 확인
+                    if (this.currentUser.role !== 'professor' && this.currentUser.role !== 'admin') {
+                        this.showNotification('교수 권한이 필요합니다.', 'error');
+                        setTimeout(() => {
+                            this.navigateTo('dashboard');
+                        }, 1500);
+                        return false;
+                    }
+                    
+                    this.updateUserDisplay();
+                    return true;
+                } catch (error) {
+                    console.error('사용자 정보 파싱 오류:', error);
+                    this.clearAuthAndRedirect();
+                    return false;
+                }
+            }
+
+            updateUserDisplay() {
+                if (this.currentUser) {
+                    const userNameEl = document.getElementById('userName');
+                    const userInitialEl = document.getElementById('userInitial');
+                    const userInitialSidebarEl = document.getElementById('userInitialSidebar');
+                    
+                    if (userNameEl) userNameEl.textContent = this.currentUser.name || '사용자';
+                    
+                    const initial = (this.currentUser.name || 'U').charAt(0).toUpperCase();
+                    if (userInitialEl) userInitialEl.textContent = initial;
+                    if (userInitialSidebarEl) userInitialSidebarEl.textContent = initial;
+                }
+            }
+
+            setupEventListeners() {
+                // 로고 클릭 이벤트
+                const logoLink = document.getElementById('logoLink');
+                if (logoLink) {
+                    logoLink.addEventListener('click', () => {
+                        this.navigateTo('teacher-dashboard');
+                    });
+                }
+
+                // 메뉴 이벤트 리스너
+                const menuEvents = {
+                    'dashboardMenu': () => this.navigateTo('teacher-dashboard'),
+                    'createAssignmentMenu': () => this.navigateTo('create-assignment'),
+                    'reviewSubmissionsMenu': () => this.navigateTo('review-submissions'),
+                    'studentAnalyticsMenu': () => this.navigateTo('student-analytics'),
+                    'managementMenu': () => this.navigateTo('student-management')
+                };
+
+                Object.keys(menuEvents).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener('click', menuEvents[id]);
+                    }
+                });
+
+                // 프로필 메뉴 클릭 이벤트
+                const profileMenu = document.getElementById('profileMenu');
+                if (profileMenu) {
+                    profileMenu.addEventListener('click', () => {
+                        this.handleLogout();
+                    });
+                }
+            }
+
+            navigateTo(routeName) {
+                if (this.routes[routeName]) {
+                    this.showLoading();
+                    
+                    setTimeout(() => {
+                        window.location.href = this.routes[routeName];
+                    }, 300);
+                } else {
+                    console.error(`Route not found: ${routeName}`);
+                }
+            }
+
+            redirectToLogin() {
+                this.showNotification('로그인이 필요합니다.', 'error');
+                setTimeout(() => {
+                    window.location.href = this.routes.login;
+                }, 1500);
+            }
+
+            clearAuthAndRedirect() {
+                localStorage.clear();
+                this.redirectToLogin();
+            }
+
+            handleLogout() {
+                if (confirm('로그아웃 하시겠습니까?')) {
+                    this.showLoading();
+                    
+                    const token = localStorage.getItem('authToken');
+                    
+                    fetch('/api/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(() => {
+                        localStorage.clear();
+                        this.showNotification('로그아웃되었습니다.');
+                        setTimeout(() => {
+                            window.location.href = this.routes.login;
+                        }, 1000);
+                    })
+                    .catch((error) => {
+                        console.error('로그아웃 오류:', error);
+                        localStorage.clear();
+                        window.location.href = this.routes.login;
+                    })
+                    .finally(() => {
+                        this.hideLoading();
+                    });
+                }
+            }
+
+            showLoading() {
+                let loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('active');
+                }
+            }
+
+            hideLoading() {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('active');
+                }
+            }
+
+            showNotification(message, type = 'success') {
+                const existingNotification = document.getElementById('navigationNotification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+
+                const notification = document.createElement('div');
+                notification.id = 'navigationNotification';
+                notification.className = 'navigation-notification';
+                notification.textContent = message;
+
+                const backgroundColor = type === 'error' 
+                    ? 'linear-gradient(135deg, #f44336, #d32f2f)' 
+                    : 'linear-gradient(135deg, #4CAF50, #45a049)';
+
+                notification.style.background = backgroundColor;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // 네비게이션 매니저 초기화
+        let navigationManager;
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 네비게이션 매니저 초기화
+            navigationManager = new NavigationManager();
             
             // 필터 버튼 이벤트
             document.getElementById('applyFilterBtn').addEventListener('click', function() {
-                alert('필터가 적용되었습니다.');
+                navigationManager.showNotification('필터가 적용되었습니다.');
             });
             
             document.getElementById('resetFilterBtn').addEventListener('click', function() {
@@ -1109,6 +1380,7 @@ for i in range(n):
                 document.getElementById('studentFilter').value = 'all';
                 document.getElementById('statusFilter').value = 'all';
                 document.getElementById('dateFilter').value = '';
+                navigationManager.showNotification('필터가 초기화되었습니다.');
             });
             
             // 페이지네이션 이벤트
@@ -1119,6 +1391,7 @@ for i in range(n):
                     document.querySelector('.page-btn.active').classList.remove('active');
                     // 클릭한 버튼 활성화
                     this.classList.add('active');
+                    navigationManager.showNotification(`페이지 ${this.textContent}로 이동`);
                 });
             });
             
@@ -1172,7 +1445,7 @@ for i in range(n):
             
             // 평가 제출 버튼 이벤트
             document.getElementById('submitGradeBtn').addEventListener('click', function() {
-                alert('평가가 성공적으로 제출되었습니다.');
+                navigationManager.showNotification('평가가 성공적으로 제출되었습니다!');
                 gradeModal.style.display = 'none';
                 
                 // 여기에서 실제로는 서버에 평가 제출 로직이 들어갑니다
@@ -1180,14 +1453,50 @@ for i in range(n):
             
             // 임시저장 버튼 이벤트
             document.getElementById('saveAsDraftBtn').addEventListener('click', function() {
-                alert('평가가 임시저장되었습니다.');
-                // 여기에서 실제로는 임시저장 로직이 들어갑니다
+                navigationManager.showNotification('평가가 임시저장되었습니다.');
             });
             
             // 대량 평가 모드 토글 이벤트
             document.getElementById('batchGradingToggle').addEventListener('change', function() {
                 if (this.checked) {
-                    alert('대량 평가 모드가 활성화되었습니다. 여러 학생들의 과제를 한번에 평가할 수 있습니다.');
+                    navigationManager.showNotification('대량 평가 모드가 활성화되었습니다.');
+                } else {
+                    navigationManager.showNotification('대량 평가 모드가 비활성화되었습니다.');
+                }
+            });
+
+            // 키보드 단축키 설정
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            e.preventDefault();
+                            navigationManager.navigateTo('teacher-dashboard');
+                            break;
+                        case '7':
+                            e.preventDefault();
+                            navigationManager.navigateTo('create-assignment');
+                            break;
+                        case '8':
+                            e.preventDefault();
+                            // 현재 페이지이므로 아무것도 하지 않음
+                            break;
+                        case '9':
+                            e.preventDefault();
+                            navigationManager.navigateTo('student-analytics');
+                            break;
+                        case 'f':
+                            e.preventDefault();
+                            document.getElementById('assignmentFilter').focus();
+                            break;
+                    }
+                }
+
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('gradeModal');
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                    }
                 }
             });
         });

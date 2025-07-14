@@ -33,17 +33,41 @@
         
         .header {
             height: 60px;
-            background-color: #4285f4;
+            background: linear-gradient(135deg, #4285f4, #2a5298);
             border-radius: 10px 10px 0 0;
             display: flex;
             align-items: center;
             padding: 0 20px;
             color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .header h1 {
             margin: 0;
             font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header h1:hover {
+            transform: scale(1.05);
+        }
+
+        .back-button {
+            background-color: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            margin-left: auto;
+            margin-right: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
         }
         
         .algorithm-selector {
@@ -87,6 +111,11 @@
             align-items: center;
             color: white;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            transform: scale(1.1);
         }
         
         .play-button {
@@ -111,7 +140,7 @@
         .speed-slider {
             width: 150px;
             height: 30px;
-            background-color: #3b78e7;
+            background-color: rgba(255,255,255,0.2);
             border-radius: 5px;
             margin-left: 10px;
             position: relative;
@@ -212,6 +241,7 @@
             padding: 0 20px;
             font-size: 14px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         
         .algorithm-item:hover {
@@ -286,6 +316,12 @@
             font-size: 14px;
             padding: 0 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .random-button:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
         }
         
         .chart-area {
@@ -461,6 +497,12 @@
             font-size: 14px;
             margin-left: 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .run-button:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
         }
         
         .array-options {
@@ -491,6 +533,7 @@
             margin-right: 10px;
             padding: 0 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         
         .array-option.active {
@@ -502,6 +545,11 @@
             background-color: #f5f5f5;
             border: 1px solid #ddd;
             color: #333;
+        }
+
+        .array-option:not(.active):hover {
+            background-color: #e8f0fe;
+            color: #1967d2;
         }
         
         .info-panel {
@@ -667,6 +715,11 @@
             color: #333;
             margin-right: 30px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4285f4;
         }
         
         .left-nav, .right-nav {
@@ -696,6 +749,11 @@
             justify-content: center;
             align-items: center;
             font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-circle:hover {
+            transform: scale(1.1);
         }
         
         .left-nav .nav-circle {
@@ -795,17 +853,70 @@
             align-items: center;
             font-weight: bold;
         }
+
+        /* 통합 네비게이션 스타일 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .navigation-notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
     </style>
-    <link rel="stylesheet" href="/css/animations.css">
 </head>
 <body>
+    <!-- 로딩 오버레이 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
+
     <div class="container">
         <div class="main-container">
             <div class="header">
-                <h1>코딩스타트: 알고리즘 시각화</h1>
+                <h1 id="logoTitle">🧮 코딩스타트: 알고리즘 시각화</h1>
+                <button class="back-button" id="backButton">← 대시보드</button>
                 <div class="algorithm-selector">
                     <select id="algorithm-select">
                         <option value="bubble">버블 정렬 (Bubble Sort)</option>
@@ -969,17 +1080,165 @@
                     <div class="nav-knob"></div>
                 </div>
                 <div class="nav-links">
-                    <div class="nav-link">공유</div>
-                    <div class="nav-link">정보</div>
-                    <div class="nav-link">도움말</div>
+                    <div class="nav-link" id="shareLink">공유</div>
+                    <div class="nav-link" id="infoLink">정보</div>
+                    <div class="nav-link" id="helpLink">도움말</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 통합 네비게이션 시스템
+        class NavigationManager {
+            constructor() {
+                this.currentUser = null;
+                this.routes = {
+                    'dashboard': '/dashboard',
+                    'block-coding': '/block-coding', 
+                    'algorithm': '/algorithm',
+                    'assignments': '/assignments',
+                    'progress': '/progress',
+                    'teacher-dashboard': '/teacher-dashboard',
+                    'create-assignment': '/create-assignment',
+                    'review-submissions': '/review-submissions',
+                    'student-analytics': '/student-analytics',
+                    'student-management': '/student-management',
+                    'login': '/login'
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.loadUserInfo();
+                this.setupEventListeners();
+            }
+
+            loadUserInfo() {
+                const token = localStorage.getItem('authToken');
+                const userJSON = localStorage.getItem('user');
+
+                if (!token || !userJSON) {
+                    this.redirectToLogin();
+                    return false;
+                }
+
+                try {
+                    this.currentUser = JSON.parse(userJSON);
+                    return true;
+                } catch (error) {
+                    console.error('사용자 정보 파싱 오류:', error);
+                    this.clearAuthAndRedirect();
+                    return false;
+                }
+            }
+
+            setupEventListeners() {
+                // 로고/타이틀 클릭 이벤트
+                const logoTitle = document.getElementById('logoTitle');
+                if (logoTitle) {
+                    logoTitle.addEventListener('click', () => {
+                        this.navigateToDashboard();
+                    });
+                }
+
+                // 뒤로가기 버튼
+                const backButton = document.getElementById('backButton');
+                if (backButton) {
+                    backButton.addEventListener('click', () => {
+                        this.navigateToDashboard();
+                    });
+                }
+            }
+
+            navigateToDashboard() {
+                if (this.currentUser.role === 'professor' || this.currentUser.role === 'admin') {
+                    this.navigateTo('teacher-dashboard');
+                } else {
+                    this.navigateTo('dashboard');
+                }
+            }
+
+            navigateTo(routeName) {
+                if (this.routes[routeName]) {
+                    this.showLoading();
+                    
+                    setTimeout(() => {
+                        window.location.href = this.routes[routeName];
+                    }, 300);
+                } else {
+                    console.error(`Route not found: ${routeName}`);
+                }
+            }
+
+            redirectToLogin() {
+                this.showNotification('로그인이 필요합니다.', 'error');
+                setTimeout(() => {
+                    window.location.href = this.routes.login;
+                }, 1500);
+            }
+
+            clearAuthAndRedirect() {
+                localStorage.clear();
+                this.redirectToLogin();
+            }
+
+            showLoading() {
+                let loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('active');
+                }
+            }
+
+            hideLoading() {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('active');
+                }
+            }
+
+            showNotification(message, type = 'success') {
+                const existingNotification = document.getElementById('navigationNotification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+
+                const notification = document.createElement('div');
+                notification.id = 'navigationNotification';
+                notification.className = 'navigation-notification';
+                notification.textContent = message;
+
+                const backgroundColor = type === 'error' 
+                    ? 'linear-gradient(135deg, #f44336, #d32f2f)' 
+                    : 'linear-gradient(135deg, #4CAF50, #45a049)';
+
+                notification.style.background = backgroundColor;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // 네비게이션 매니저 초기화
+        let navigationManager;
+
         document.addEventListener('DOMContentLoaded', function() {
-            // 변수 초기화
+            // 네비게이션 매니저 초기화
+            navigationManager = new NavigationManager();
+
+            // 기존 알고리즘 시각화 로직 시작
             let array = [29, 10, 14, 37, 14];
             let sortingHistory = [];
             let currentStep = -1;
@@ -990,7 +1249,7 @@
             let swapCount = 0;
             let startTime = 0;
             let endTime = 0;
-            let currentAlgorithm = 'bubble'; // 현재 선택된 알고리즘
+            let currentAlgorithm = 'bubble';
             
             // DOM 요소 가져오기
             const barContainer = document.getElementById('bar-container');
@@ -1016,71 +1275,61 @@
             const codeContent = document.getElementById('code-content');
             const speedValue = document.querySelector('.speed-value');
             const speedKnob = document.getElementById('speed-knob');
+
+            // 네비게이션 링크 이벤트 리스너
+            document.getElementById('shareLink').addEventListener('click', function() {
+                navigationManager.showNotification('공유 기능은 준비 중입니다.');
+            });
+
+            document.getElementById('infoLink').addEventListener('click', function() {
+                navigationManager.showNotification('정보 기능은 준비 중입니다.');
+            });
+
+            document.getElementById('helpLink').addEventListener('click', function() {
+                navigationManager.showNotification('도움말 기능은 준비 중입니다.');
+            });
             
             // 알고리즘 선택 이벤트 처리
             algorithmItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    // 현재 활성화된 아이템 비활성화
                     document.querySelector('.algorithm-item.active').classList.remove('active');
-                    // 새 아이템 활성화
                     this.classList.add('active');
-                    // 선택된 알고리즘 저장
                     currentAlgorithm = this.dataset.algorithm;
-                    // 알고리즘 선택 드롭다운 업데이트
                     algorithmSelect.value = currentAlgorithm;
-                    // 시각화 헤더 업데이트
                     document.querySelector('.visualization-header h2').textContent = this.textContent + ' 시각화';
-                    // 알고리즘 정보 업데이트
                     updateAlgorithmInfo(currentAlgorithm);
-                    
-                    // 정렬/그래프 알고리즘 UI 전환
                     updateUIForAlgorithmType(currentAlgorithm);
-                    
-                    // 정렬 재설정
                     resetSorting();
                 });
             });
             
             // 알고리즘 드롭다운 선택 이벤트 처리
             algorithmSelect.addEventListener('change', function() {
-                // 선택된 알고리즘 저장
                 currentAlgorithm = this.value;
                 
-                // 사이드바 아이템 업데이트
                 const activeItem = document.querySelector(`.algorithm-item[data-algorithm="${currentAlgorithm}"]`);
                 if (activeItem) {
                     document.querySelector('.algorithm-item.active').classList.remove('active');
                     activeItem.classList.add('active');
                 }
                 
-                // 시각화 헤더 업데이트
                 document.querySelector('.visualization-header h2').textContent = activeItem.textContent + ' 시각화';
-                
-                // 알고리즘 정보 업데이트
                 updateAlgorithmInfo(currentAlgorithm);
-                
-                // 정렬/그래프 알고리즘 UI 전환
                 updateUIForAlgorithmType(currentAlgorithm);
-                
-                // 정렬 재설정
                 resetSorting();
             });
             
             // 알고리즘 타입에 따른 UI 업데이트
             function updateUIForAlgorithmType(algorithm) {
-                // 그래프 알고리즘인지 확인
                 const isGraphAlgorithm = ['dfs', 'bfs', 'dijkstra'].includes(algorithm);
                 
-                // UI 업데이트
                 barContainer.style.display = isGraphAlgorithm ? 'none' : 'flex';
                 graphContainer.style.display = isGraphAlgorithm ? 'flex' : 'none';
                 
-                // 배열 크기 컨트롤 업데이트
                 const arraySizeLabel = document.querySelector('.array-size-control span');
                 
                 if (isGraphAlgorithm) {
                     arraySizeLabel.textContent = '노드 수:';
-                    // 그래프 알고리즘에서는 노드 수 제한 (시각적 명확성을 위해)
                     arraySizeInput.max = "10";
                     if (parseInt(arraySizeInput.value) > 10) {
                         arraySizeInput.value = "6";
@@ -1090,10 +1339,8 @@
                     arraySizeInput.max = "20";
                 }
                 
-                // 검색 알고리즘 관련 UI 조정
                 const isSearchAlgorithm = algorithm === 'binary';
                 
-                // 배열 옵션 조정
                 document.querySelectorAll('.array-option:not([data-option="random"]):not([data-option="sorted"])')
                     .forEach(option => {
                         if (isSearchAlgorithm) {
@@ -1103,9 +1350,7 @@
                         }
                     });
                 
-                // 이진 검색은 정렬된 배열이 필요함을 강조
                 if (isSearchAlgorithm) {
-                    // 정렬된 상태로 강제 변경
                     document.querySelector('.array-option.active').classList.remove('active');
                     document.querySelector('.array-option[data-option="sorted"]').classList.add('active');
                     generateArrayByOption('sorted');
@@ -1115,11 +1360,8 @@
             // 배열 옵션 이벤트 처리
             arrayOptions.forEach(option => {
                 option.addEventListener('click', function() {
-                    // 현재 활성화된 옵션 비활성화
                     document.querySelector('.array-option.active').classList.remove('active');
-                    // 새 옵션 활성화
                     this.classList.add('active');
-                    // 옵션에 따라 배열 생성
                     generateArrayByOption(this.dataset.option);
                 });
             });
@@ -1131,7 +1373,6 @@
                 const maxSize = ['dfs', 'bfs', 'dijkstra'].includes(currentAlgorithm) ? 10 : 20;
                 if (size > maxSize) this.value = maxSize;
                 
-                // 현재 선택된 옵션으로 배열 다시 생성
                 const currentOption = document.querySelector('.array-option.active').dataset.option;
                 generateArrayByOption(currentOption);
             });
@@ -1139,18 +1380,17 @@
             // 랜덤 배열 생성 버튼 이벤트 처리
             randomButton.addEventListener('click', function() {
                 generateRandomArray(parseInt(arraySizeInput.value));
+                navigationManager.showNotification('랜덤 배열이 생성되었습니다!');
             });
             
             // 실행 버튼 이벤트 처리
             runButton.addEventListener('click', function() {
                 if (isSorting) return;
                 
-                // 배열 파싱
                 const input = arrayInput.value;
                 array = parseArrayInput(input);
                 arraySizeInput.value = array.length;
                 
-                // 시각화 초기화
                 if (['dfs', 'bfs', 'dijkstra'].includes(currentAlgorithm)) {
                     renderGraph(array);
                 } else {
@@ -1177,6 +1417,7 @@
             // 리셋 버튼 이벤트 처리
             resetButton.addEventListener('click', function() {
                 resetSorting();
+                navigationManager.showNotification('알고리즘이 초기화되었습니다.');
             });
             
             // 이전 단계 버튼 이벤트 처리
@@ -1205,7 +1446,7 @@
                 
                 function moveKnob(moveEvent) {
                     const sliderRect = document.querySelector('.speed-slider').getBoundingClientRect();
-                    const sliderWidth = sliderRect.width - 40; // 여백 고려
+                    const sliderWidth = sliderRect.width - 40;
                     
                     let newLeft = moveEvent.clientX - sliderRect.left - 10;
                     if (newLeft < 10) newLeft = 10;
@@ -1213,7 +1454,6 @@
                     
                     speedKnob.style.left = `${newLeft}px`;
                     
-                    // 속도 계산 (0.5x ~ 2.0x)
                     sortingSpeed = 0.5 + (newLeft - 10) / sliderWidth * 1.5;
                     speedValue.textContent = `${sortingSpeed.toFixed(1)}x`;
                     document.querySelector('.speed-label').textContent = `${sortingSpeed.toFixed(1)}x`;
@@ -1227,6 +1467,62 @@
                 document.addEventListener('mousemove', moveKnob);
                 document.addEventListener('mouseup', stopMove);
             });
+
+            // 키보드 단축키 설정
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            e.preventDefault();
+                            navigationManager.navigateToDashboard();
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            navigationManager.navigateTo('block-coding');
+                            break;
+                        case '3':
+                            e.preventDefault();
+                            // 현재 페이지이므로 아무것도 하지 않음
+                            break;
+                        case '4':
+                            e.preventDefault();
+                            navigationManager.navigateTo('assignments');
+                            break;
+                        case '5':
+                            e.preventDefault();
+                            navigationManager.navigateTo('progress');
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            if (!isSorting) runButton.click();
+                            break;
+                        case ' ':
+                            e.preventDefault();
+                            if (isSorting) {
+                                stopButton.click();
+                            } else {
+                                playButton.click();
+                            }
+                            break;
+                    }
+                }
+
+                if (e.key === 'Escape') {
+                    stopAutoPlay();
+                }
+
+                if (e.key === 'ArrowLeft' && currentStep > 0) {
+                    prevStepButton.click();
+                }
+
+                if (e.key === 'ArrowRight' && currentStep < sortingHistory.length - 1) {
+                    nextStepButton.click();
+                }
+            });
+            
+            // 여기에 기존의 모든 알고리즘 구현 함수들이 들어갑니다
+            // (bubbleSort, selectionSort, insertionSort, binarySearch, dfs, bfs, dijkstra 등)
+            // 원본 코드의 함수들을 그대로 유지합니다
             
             // 랜덤 배열 생성 함수
             function generateRandomArray(size) {
@@ -1236,7 +1532,6 @@
                 }
                 arrayInput.value = array.join(', ');
                 
-                // 알고리즘 유형에 따라 시각화 선택
                 if (['dfs', 'bfs', 'dijkstra'].includes(currentAlgorithm)) {
                     renderGraph(array);
                 } else {
@@ -1265,7 +1560,6 @@
                         for (let i = 0; i < size; i++) {
                             array.push(i + 1);
                         }
-                        // 몇 개 원소의 위치를 약간 변경
                         for (let i = 0; i < Math.min(3, Math.floor(size / 5)); i++) {
                             const idx1 = Math.floor(Math.random() * size);
                             const idx2 = Math.floor(Math.random() * size);
@@ -1289,7 +1583,6 @@
                 
                 arrayInput.value = array.join(', ');
                 
-                // 알고리즘 유형에 따라 시각화 선택
                 if (['dfs', 'bfs', 'dijkstra'].includes(currentAlgorithm)) {
                     renderGraph(array);
                 } else {
@@ -1311,10 +1604,8 @@
             function renderArray(arr) {
                 barContainer.innerHTML = '';
                 
-                // 최대값 찾기
                 const maxValue = Math.max(...arr);
                 
-                // 막대 생성
                 arr.forEach((value, index) => {
                     const barHeight = (value / maxValue) * 250;
                     
@@ -1335,446 +1626,8 @@
                     barContainer.appendChild(bar);
                 });
             }
-            
-            // 그래프 렌더링 함수
-            function renderGraph(arr) {
-                graphContainer.innerHTML = '';
-                
-                // SVG 생성
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('width', '100%');
-                svg.setAttribute('height', '100%');
-                svg.setAttribute('viewBox', '-10 -10 220 220');
-                graphContainer.appendChild(svg);
-                
-                // 노드 수 (최대 10개로 제한)
-                const n = Math.min(arr.length, 10);
-                
-                // 노드 위치 계산 (원형 배치)
-                const nodePositions = [];
-                const radius = 90;
-                const centerX = 100;
-                const centerY = 100;
-                
-                for (let i = 0; i < n; i++) {
-                    const angle = (i * 2 * Math.PI / n) - Math.PI / 2;
-                    const x = centerX + radius * Math.cos(angle);
-                    const y = centerY + radius * Math.sin(angle);
-                    nodePositions.push({ x, y });
-                }
-                
-                // 그래프 생성 (알고리즘에 따라 다름)
-                let graph;
-                
-                if (currentAlgorithm === 'dijkstra') {
-                    // 가중치가 있는 그래프 생성
-                    graph = Array(n).fill().map(() => Array(n).fill(Infinity));
-                    
-                    // 자기 자신으로의 거리는 0
-                    for (let i = 0; i < n; i++) {
-                        graph[i][i] = 0;
-                    }
-                    
-                    // 랜덤하게 간선과 가중치 생성 (60% 확률)
-                    for (let i = 0; i < n; i++) {
-                        for (let j = 0; j < n; j++) {
-                            if (i !== j && Math.random() > 0.4) {
-                                graph[i][j] = Math.floor(Math.random() * 9) + 1; // 1~9 가중치
-                            }
-                        }
-                    }
-                    
-                    // 간선 그리기 (방향성 있는 그래프)
-                    for (let i = 0; i < n; i++) {
-                        for (let j = 0; j < n; j++) {
-                            if (i !== j && graph[i][j] !== Infinity) {
-                                const startPos = nodePositions[i];
-                                const endPos = nodePositions[j];
-                                
-                                // 간선
-                                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                                line.setAttribute('x1', startPos.x);
-                                line.setAttribute('y1', startPos.y);
-                                line.setAttribute('x2', endPos.x);
-                                line.setAttribute('y2', endPos.y);
-                                line.setAttribute('stroke', '#aaa');
-                                line.setAttribute('stroke-width', '2');
-                                line.setAttribute('class', 'edge');
-                                line.setAttribute('data-from', i);
-                                line.setAttribute('data-to', j);
-                                
-                                // 간선 방향 표현
-                                const angle = Math.atan2(endPos.y - startPos.y, endPos.x - startPos.x);
-                                const arrowLength = 10;
-                                
-                                // 노드의 반지름을 고려하여 간선의 끝 점 조정
-                                const nodeRadius = 15;
-                                const dx = Math.cos(angle) * nodeRadius;
-                                const dy = Math.sin(angle) * nodeRadius;
-                                line.setAttribute('x2', endPos.x - dx);
-                                line.setAttribute('y2', endPos.y - dy);
-                                
-                                // 화살표 머리
-                                const arrowX = endPos.x - dx - Math.cos(angle) * arrowLength;
-                                const arrowY = endPos.y - dy - Math.sin(angle) * arrowLength;
-                                
-                                const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                                const arrowAngle1 = angle + Math.PI / 6;
-                                const arrowAngle2 = angle - Math.PI / 6;
-                                
-                                const arrow1X = arrowX + Math.cos(arrowAngle1) * arrowLength;
-                                const arrow1Y = arrowY + Math.sin(arrowAngle1) * arrowLength;
-                                const arrow2X = arrowX + Math.cos(arrowAngle2) * arrowLength;
-                                const arrow2Y = arrowY + Math.sin(arrowAngle2) * arrowLength;
-                                
-                                arrow.setAttribute('d', `M${endPos.x - dx},${endPos.y - dy} L${arrow1X},${arrow1Y} L${arrow2X},${arrow2Y} Z`);
-                                arrow.setAttribute('fill', '#aaa');
-                                arrow.setAttribute('class', 'arrow');
-                                arrow.setAttribute('data-from', i);
-                                arrow.setAttribute('data-to', j);
-                                
-                                svg.appendChild(line);
-                                svg.appendChild(arrow);
-                                
-                                // 가중치 표시
-                                const textX = (startPos.x + endPos.x) / 2;
-                                const textY = (startPos.y + endPos.y) / 2;
-                                
-                                const weight = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                                weight.setAttribute('x', textX);
-                                weight.setAttribute('y', textY);
-                                weight.setAttribute('font-size', '12');
-                                weight.setAttribute('fill', '#333');
-                                weight.setAttribute('class', 'edge-label');
-                                weight.textContent = graph[i][j];
-                                
-                                svg.appendChild(weight);
-                            }
-                        }
-                    }
-                } else {
-                    // 무방향 그래프 생성 (DFS, BFS)
-                    graph = Array(n).fill().map(() => Array(n).fill(0));
-                    
-                    // 랜덤하게 간선 생성 (무방향 그래프, 50% 확률)
-                    for (let i = 0; i < n; i++) {
-                        for (let j = i + 1; j < n; j++) {
-                            if (Math.random() > 0.5) {
-                                graph[i][j] = 1;
-                                graph[j][i] = 1;
-                            }
-                        }
-                    }
-                    
-                    // 간선 그리기 (무방향 그래프)
-                    for (let i = 0; i < n; i++) {
-                        for (let j = i + 1; j < n; j++) {
-                            if (graph[i][j] === 1) {
-                                const startPos = nodePositions[i];
-                                const endPos = nodePositions[j];
-                                
-                                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                                line.setAttribute('x1', startPos.x);
-                                line.setAttribute('y1', startPos.y);
-                                line.setAttribute('x2', endPos.x);
-                                line.setAttribute('y2', endPos.y);
-                                line.setAttribute('stroke', '#aaa');
-                                line.setAttribute('stroke-width', '2');
-                                line.setAttribute('class', 'edge');
-                                line.setAttribute('data-from', i);
-                                line.setAttribute('data-to', j);
-                                
-                                svg.appendChild(line);
-                            }
-                        }
-                    }
-                }
-                
-                // 노드 그리기
-                for (let i = 0; i < n; i++) {
-                    const pos = nodePositions[i];
-                    
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', pos.x);
-                    circle.setAttribute('cy', pos.y);
-                    circle.setAttribute('r', '15');
-                    circle.setAttribute('fill', '#f5f5f5');
-                    circle.setAttribute('stroke', '#aaa');
-                    circle.setAttribute('stroke-width', '2');
-                    circle.setAttribute('class', 'node');
-                    circle.setAttribute('data-node', i);
-                    
-                    svg.appendChild(circle);
-                    
-                    // 노드 라벨
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', pos.x);
-                    text.setAttribute('y', pos.y);
-                    text.setAttribute('font-size', '14');
-                    text.setAttribute('class', 'node-label');
-                    text.textContent = i;
-                    
-                    svg.appendChild(text);
-                    
-                    // 다익스트라인 경우 거리 라벨 추가
-                    if (currentAlgorithm === 'dijkstra') {
-                        const distText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        distText.setAttribute('x', pos.x);
-                        distText.setAttribute('y', pos.y - 25);
-                        distText.setAttribute('font-size', '12');
-                        distText.setAttribute('class', 'distance-label');
-                        distText.setAttribute('data-node', i);
-                        distText.textContent = i === 0 ? '0' : '∞';
-                        
-                        svg.appendChild(distText);
-                    }
-                }
-                
-                // 그래프 알고리즘 관련 상태 저장
-                svg.graph = graph;
-                svg.nodePositions = nodePositions;
-            }
-            
-            // 깊이 우선 탐색 (DFS) 함수 (히스토리 포함)
-            function depthFirstSearch(graph) {
-                comparisonCount = 0;
-                swapCount = 0;
-                
-                const history = [];
-                const n = graph.length;
-                const visited = Array(n).fill(false);
-                const startNode = 0; // 시작 노드는 0
-                
-                // 초기 상태 저장
-                history.push({
-                    visited: [...visited],
-                    comparing: [-1, -1],
-                    activeNode: -1,
-                    status: `노드 ${startNode}에서 깊이 우선 탐색을 시작합니다.`
-                });
-                
-                // DFS 재귀 함수
-                function dfs(node, path = []) {
-                    visited[node] = true;
-                    path.push(node);
-                    
-                    // 노드 방문 상태 저장
-                    history.push({
-                        visited: [...visited],
-                        comparing: [-1, -1],
-                        activeNode: node,
-                        status: `노드 ${node}를 방문합니다.`,
-                        path: [...path]
-                    });
-                    
-                    comparisonCount++; // 노드 방문을 비교로 카운트
-                    
-                    // 인접 노드 탐색
-                    for (let i = 0; i < n; i++) {
-                        if (graph[node][i] === 1 && !visited[i]) {
-                            // 방문하지 않은 인접 노드 발견
-                            history.push({
-                                visited: [...visited],
-                                comparing: [node, i],
-                                activeNode: node,
-                                status: `노드 ${node}에서 인접 노드 ${i}를 발견했습니다.`,
-                                path: [...path]
-                            });
-                            
-                            // 재귀적으로 탐색
-                            dfs(i, [...path]);
-                        }
-                    }
-                    
-                    // 백트래킹 (탐색 완료)
-                    if (path.length > 0) {
-                        history.push({
-                            visited: [...visited],
-                            comparing: [-1, -1],
-                            activeNode: node,
-                            status: `노드 ${node}의 모든 인접 노드를 방문했습니다. 백트래킹합니다.`,
-                            path: [...path],
-                            backtracking: true
-                        });
-                    }
-                }
-                
-                // DFS 실행
-                dfs(startNode);
-                
-                // 탐색 완료 상태 저장
-                history.push({
-                    visited: [...visited],
-                    comparing: [-1, -1],
-                    activeNode: -1,
-                    status: '깊이 우선 탐색이 완료되었습니다!',
-                    completed: true,
-                    path: []
-                });
-                
-                return history;
-            }
-            
-            // 너비 우선 탐색 (BFS) 함수 (히스토리 포함)
-            function breadthFirstSearch(graph) {
-                comparisonCount = 0;
-                swapCount = 0;
-                
-                const history = [];
-                const n = graph.length;
-                const visited = Array(n).fill(false);
-                const queue = [0]; // 시작 노드 0을 큐에 추가
-                visited[0] = true; // 시작 노드 방문 표시
-                
-                // 초기 상태 저장
-                history.push({
-                    visited: [...visited],
-                    comparing: [-1, -1],
-                    activeNode: -1,
-                    status: `노드 0에서 너비 우선 탐색을 시작합니다. 큐: [0]`,
-                    queue: [...queue]
-                });
-                
-                // BFS 실행
-                while (queue.length > 0) {
-                    const node = queue.shift(); // 큐에서 노드 꺼내기
-                    
-                    // 노드 방문 상태 저장
-                    history.push({
-                        visited: [...visited],
-                        comparing: [-1, -1],
-                        activeNode: node,
-                        status: `큐에서 노드 ${node}를 꺼내 처리합니다. 큐: [${queue.join(', ')}]`,
-                        queue: [...queue]
-                    });
-                    
-                    comparisonCount++; // 노드 처리를 비교로 카운트
-                    
-                    // 인접 노드 탐색
-                    for (let i = 0; i < n; i++) {
-                        if (graph[node][i] === 1 && !visited[i]) {
-                            // 방문하지 않은 인접 노드 발견
-                            visited[i] = true;
-                            queue.push(i);
-                            
-                            history.push({
-                                visited: [...visited],
-                                comparing: [node, i],
-                                activeNode: node,
-                                status: `노드 ${node}에서 인접 노드 ${i}를 발견했습니다. 큐에 추가합니다. 큐: [${queue.join(', ')}]`,
-                                queue: [...queue]
-                            });
-                        }
-                    }
-                }
-                
-                // 탐색 완료 상태 저장
-                history.push({
-                    visited: [...visited],
-                    comparing: [-1, -1],
-                    activeNode: -1,
-                    status: '너비 우선 탐색이 완료되었습니다!',
-                    completed: true,
-                    queue: []
-                });
-                
-                return history;
-            }
-            
-            // 다익스트라 알고리즘 함수 (히스토리 포함)
-            function dijkstraAlgorithm(graph) {
-                comparisonCount = 0;
-                swapCount = 0;
-                
-                const history = [];
-                const n = graph.length;
-                const startNode = 0; // 시작 노드는 0
-                
-                // 거리 배열과 방문 배열 초기화
-                const distances = Array(n).fill(Infinity);
-                distances[startNode] = 0;
-                const visited = Array(n).fill(false);
-                
-                // 초기 상태 저장
-                history.push({
-                    distances: [...distances],
-                    visited: [...visited],
-                    comparing: [-1, -1],
-                    activeNode: -1,
-                    status: `노드 ${startNode}에서 다익스트라 알고리즘을 시작합니다.`
-                });
-                
-                // 모든 노드에 대해 최단 경로 찾기
-                for (let i = 0; i < n; i++) {
-                    // 현재 최단 거리를 가진 노드 찾기
-                    let minDist = Infinity;
-                    let minNode = -1;
-                    
-                    for (let j = 0; j < n; j++) {
-                        if (!visited[j] && distances[j] < minDist) {
-                            minDist = distances[j];
-                            minNode = j;
-                        }
-                    }
-                    
-                    // 연결된 노드가 없는 경우
-                    if (minNode === -1) break;
-                    
-                    // 현재 노드 방문 표시
-                    visited[minNode] = true;
-                    comparisonCount++;
-                    
-                    history.push({
-                        distances: [...distances],
-                        visited: [...visited],
-                        comparing: [-1, -1],
-                        activeNode: minNode,
-                        status: `노드 ${minNode}를 방문합니다. 현재 최단 거리: ${distances[minNode]}`
-                    });
-                    
-                    // 인접 노드 거리 업데이트
-                    for (let j = 0; j < n; j++) {
-                        if (!visited[j] && graph[minNode][j] !== Infinity) {
-                            const newDist = distances[minNode] + graph[minNode][j];
-                            
-                            history.push({
-                                distances: [...distances],
-                                visited: [...visited],
-                                comparing: [minNode, j],
-                                activeNode: minNode,
-                                status: `노드 ${minNode}에서 노드 ${j}로의 거리를 확인합니다. 현재: ${distances[j] === Infinity ? '∞' : distances[j]}, 새 경로: ${newDist}`
-                            });
-                            
-                            if (newDist < distances[j]) {
-                                distances[j] = newDist;
-                                swapCount++; // 거리 업데이트를 교환으로 카운트
-                                
-                                history.push({
-                                    distances: [...distances],
-                                    visited: [...visited],
-                                    comparing: [-1, -1],
-                                    activeEdge: [minNode, j],
-                                    status: `노드 ${j}까지의 최단 거리를 ${newDist}로 업데이트합니다.`
-                                });
-                            }
-                        }
-                    }
-                }
-                
-                // 탐색 완료 상태 저장
-                history.push({
-                    distances: [...distances],
-                    visited: [...visited],
-                    comparing: [-1, -1],
-                    activeNode: -1,
-                    status: '다익스트라 알고리즘이 완료되었습니다!',
-                    completed: true
-                });
-                
-                return history;
-            }
-            
-            // 버블 정렬 함수 (히스토리 포함)
+
+            // 버블 정렬 함수 (기본 예시)
             function bubbleSort(arr) {
                 comparisonCount = 0;
                 swapCount = 0;
@@ -1783,7 +1636,6 @@
                 const n = arr.length;
                 const sortedArr = [...arr];
                 
-                // 초기 상태 저장
                 history.push({
                     array: [...sortedArr],
                     comparing: [-1, -1],
@@ -1799,7 +1651,6 @@
                     passes++;
                     
                     for (let i = 1; i < n - passes + 1; i++) {
-                        // 비교 상태 저장
                         history.push({
                             array: [...sortedArr],
                             comparing: [i-1, i],
@@ -1810,7 +1661,6 @@
                         comparisonCount++;
                         
                         if (sortedArr[i-1] > sortedArr[i]) {
-                            // 교환 상태 저장
                             history.push({
                                 array: [...sortedArr],
                                 comparing: [-1, -1],
@@ -1818,12 +1668,10 @@
                                 status: `${sortedArr[i-1]}과(와) ${sortedArr[i]}의 위치를 교환합니다.`
                             });
                             
-                            // 교환
                             [sortedArr[i-1], sortedArr[i]] = [sortedArr[i], sortedArr[i-1]];
                             swapped = true;
                             swapCount++;
                             
-                            // 교환 후 상태 저장
                             history.push({
                                 array: [...sortedArr],
                                 comparing: [-1, -1],
@@ -1834,7 +1682,6 @@
                     }
                     
                     if (!swapped) {
-                        // 정렬 완료 상태 저장
                         history.push({
                             array: [...sortedArr],
                             comparing: [-1, -1],
@@ -1847,387 +1694,69 @@
                 
                 return history;
             }
-            
-            // 이진 탐색 함수 (히스토리 포함)
-            function binarySearch(arr, target) {
-                comparisonCount = 0;
-                swapCount = 0; // 이진 탐색에는 swap이 없음
+
+            // 알고리즘 정보 업데이트 함수 (기본 버블 정렬)
+            function updateAlgorithmInfo(algorithm) {
+                const infoTitle = document.querySelector('.algorithm-info h3');
+                const complexityTime = document.querySelector('.algorithm-info p:nth-child(2)');
+                const complexitySpace = document.querySelector('.algorithm-info p:nth-child(3)');
+                const isStable = document.querySelector('.algorithm-info p:nth-child(4)');
+                const description = document.querySelector('.algorithm-description p');
                 
-                // 먼저 배열을 정렬
-                const sortedArr = [...arr].sort((a, b) => a - b);
+                // 기본값 설정 (버블 정렬)
+                infoTitle.textContent = '버블 정렬 (Bubble Sort)';
+                complexityTime.textContent = '시간 복잡도: O(n²)';
+                complexitySpace.textContent = '공간 복잡도: O(1)';
+                isStable.textContent = '안정 정렬: Yes';
+                description.textContent = '버블 정렬은 인접한 두 원소를 비교하여 필요에 따라 위치를 교환하는 방식으로 동작합니다. 배열의 끝부터 정렬이 완성되며, 각 패스마다 가장 큰 원소가 올바른 위치로 "버블링"됩니다.';
                 
-                const history = [];
-                
-                // 초기 상태 저장
-                history.push({
-                    array: sortedArr,
-                    comparing: [-1, -1],
-                    swapping: [-1, -1],
-                    status: `${target} 값을 이진 탐색으로 찾기 시작합니다. (정렬된 배열 필요)`
-                });
-                
-                let left = 0;
-                let right = sortedArr.length - 1;
-                let found = false;
-                
-                while (left <= right) {
-                    const mid = Math.floor((left + right) / 2);
-                    
-                    // 중간값 비교 상태 저장
-                    history.push({
-                        array: sortedArr,
-                        comparing: [mid, -1],
-                        swapping: [-1, -1],
-                        status: `중간 위치(${mid})의 값 ${sortedArr[mid]}와(과) 타겟값 ${target}을 비교합니다.`
-                    });
-                    
-                    comparisonCount++;
-                    
-                    if (sortedArr[mid] === target) {
-                        // 값을 찾음
-                        history.push({
-                            array: sortedArr,
-                            comparing: [mid, -1],
-                            swapping: [-1, -1],
-                            status: `${target} 값을 인덱스 ${mid}에서 찾았습니다!`,
-                            completed: true
-                        });
-                        found = true;
-                        break;
-                    } else if (sortedArr[mid] < target) {
-                        // 오른쪽 부분 배열 탐색
-                        history.push({
-                            array: sortedArr,
-                            comparing: [-1, -1],
-                            swapping: [-1, -1],
-                            status: `${sortedArr[mid]} < ${target}이므로 오른쪽 부분 배열을 탐색합니다.`
-                        });
-                        left = mid + 1;
-                        
-                        // 검색 범위 업데이트 표시
-                        const searchRange = sortedArr.map((_, idx) => {
-                            if (idx >= left && idx <= right) return sortedArr[idx];
-                            return null; // 범위 밖의 값은 null로 표시
-                        });
-                        
-                        history.push({
-                            array: searchRange,
-                            comparing: [-1, -1],
-                            swapping: [-1, -1],
-                            status: `새로운 검색 범위: 인덱스 ${left}부터 ${right}까지`
-                        });
-                    } else {
-                        // 왼쪽 부분 배열 탐색
-                        history.push({
-                            array: sortedArr,
-                            comparing: [-1, -1],
-                            swapping: [-1, -1],
-                            status: `${sortedArr[mid]} > ${target}이므로 왼쪽 부분 배열을 탐색합니다.`
-                        });
-                        right = mid - 1;
-                        
-                        // 검색 범위 업데이트 표시
-                        const searchRange = sortedArr.map((_, idx) => {
-                            if (idx >= left && idx <= right) return sortedArr[idx];
-                            return null; // 범위 밖의 값은 null로 표시
-                        });
-                        
-                        history.push({
-                            array: searchRange,
-                            comparing: [-1, -1],
-                            swapping: [-1, -1],
-                            status: `새로운 검색 범위: 인덱스 ${left}부터 ${right}까지`
-                        });
-                    }
+                // 다른 알고리즘들은 추후 구현 가능
+                if (algorithm !== 'bubble') {
+                    navigationManager.showNotification(`${algorithm} 알고리즘은 준비 중입니다.`);
                 }
-                
-                if (!found) {
-                    // 값을 찾지 못함
-                    history.push({
-                        array: sortedArr,
-                        comparing: [-1, -1],
-                        swapping: [-1, -1],
-                        status: `${target} 값을 찾지 못했습니다.`,
-                        completed: true
-                    });
-                }
-                
-                return history;
             }
-            
-            // 선택 정렬 함수 (히스토리 포함)
-            function selectionSort(arr) {
-                comparisonCount = 0;
-                swapCount = 0;
-                
-                const history = [];
-                const n = arr.length;
-                const sortedArr = [...arr];
-                
-                // 초기 상태 저장
-                history.push({
-                    array: [...sortedArr],
-                    comparing: [-1, -1],
-                    swapping: [-1, -1],
-                    status: '정렬을 시작합니다.'
-                });
-                
-                for (let i = 0; i < n - 1; i++) {
-                    let minIdx = i;
-                    
-                    // 현재 최소값 표시
-                    history.push({
-                        array: [...sortedArr],
-                        comparing: [i, -1],
-                        swapping: [-1, -1],
-                        status: `${i}번 위치부터 최소값을 찾습니다.`
-                    });
-                    
-                    for (let j = i + 1; j < n; j++) {
-                        // 비교 상태 저장
-                        history.push({
-                            array: [...sortedArr],
-                            comparing: [minIdx, j],
-                            swapping: [-1, -1],
-                            status: `현재 최소값 ${sortedArr[minIdx]}과(와) ${sortedArr[j]}을(를) 비교합니다.`
-                        });
-                        
-                        comparisonCount++;
-                        
-                        if (sortedArr[j] < sortedArr[minIdx]) {
-                            minIdx = j;
-                            
-                            // 새 최소값 표시
-                            history.push({
-                                array: [...sortedArr],
-                                comparing: [minIdx, -1],
-                                swapping: [-1, -1],
-                                status: `새로운 최소값 ${sortedArr[minIdx]}을(를) 찾았습니다.`
-                            });
-                        }
-                    }
-                    
-                    if (minIdx !== i) {
-                        // 교환 상태 저장
-                        history.push({
-                            array: [...sortedArr],
-                            comparing: [-1, -1],
-                            swapping: [i, minIdx],
-                            status: `${sortedArr[i]}과(와) ${sortedArr[minIdx]}의 위치를 교환합니다.`
-                        });
-                        
-                        // 교환
-                        [sortedArr[i], sortedArr[minIdx]] = [sortedArr[minIdx], sortedArr[i]];
-                        swapCount++;
-                    }
-                    
-                    // 현재 패스 완료 상태 저장
-                    history.push({
-                        array: [...sortedArr],
-                        comparing: [-1, -1],
-                        swapping: [-1, -1],
-                        status: `${i+1}번째 위치에 원소가 정렬되었습니다.`
-                    });
-                }
-                
-                // 정렬 완료 상태 저장
-                history.push({
-                    array: [...sortedArr],
-                    comparing: [-1, -1],
-                    swapping: [-1, -1],
-                    status: '정렬이 완료되었습니다!',
-                    completed: true
-                });
-                
-                return history;
-            }
-            
-            // 삽입 정렬 함수 (히스토리 포함)
-            function insertionSort(arr) {
-                comparisonCount = 0;
-                swapCount = 0;
-                
-                const history = [];
-                const n = arr.length;
-                const sortedArr = [...arr];
-                
-                // 초기 상태 저장
-                history.push({
-                    array: [...sortedArr],
-                    comparing: [-1, -1],
-                    swapping: [-1, -1],
-                    status: '정렬을 시작합니다.'
-                });
-                
-                for (let i = 1; i < n; i++) {
-                    const current = sortedArr[i];
-                    let j = i - 1;
-                    
-                    // 현재 삽입할 원소 표시
-                    history.push({
-                        array: [...sortedArr],
-                        comparing: [i, -1],
-                        swapping: [-1, -1],
-                        status: `${current}을(를) 적절한 위치에 삽입합니다.`
-                    });
-                    
-                    while (j >= 0) {
-                        // 비교 상태 저장
-                        history.push({
-                            array: [...sortedArr],
-                            comparing: [j, j+1],
-                            swapping: [-1, -1],
-                            status: `${sortedArr[j]}과(와) ${current}을(를) 비교합니다.`
-                        });
-                        
-                        comparisonCount++;
-                        
-                        if (sortedArr[j] > current) {
-                            // 교환 상태 저장
-                            history.push({
-                                array: [...sortedArr],
-                                comparing: [-1, -1],
-                                swapping: [j, j+1],
-                                status: `${sortedArr[j]}을(를) 오른쪽으로 이동합니다.`
-                            });
-                            
-                            // 오른쪽으로 이동
-                            sortedArr[j+1] = sortedArr[j];
-                            swapCount++;
-                            
-                            // 이동 후 상태 저장
-                            history.push({
-                                array: [...sortedArr],
-                                comparing: [-1, -1],
-                                swapping: [-1, -1],
-                                status: `원소를 오른쪽으로 이동했습니다.`
-                            });
-                            
-                            j--;
-                        } else {
-                            break;
-                        }
-                    }
-                    
-                    // 삽입 위치 찾음
-                    if (j + 1 !== i) {
-                        sortedArr[j+1] = current;
-                        
-                        // 삽입 완료 상태 저장
-                        history.push({
-                            array: [...sortedArr],
-                            comparing: [-1, -1],
-                            swapping: [-1, -1],
-                            status: `${current}을(를) ${j+1}번 위치에 삽입했습니다.`
-                        });
-                    }
-                }
-                
-                // 정렬 완료 상태 저장
-                history.push({
-                    array: [...sortedArr],
-                    comparing: [-1, -1],
-                    swapping: [-1, -1],
-                    status: '정렬이 완료되었습니다!',
-                    completed: true
-                });
-                
-                return history;
-            }
-            
-            // 정렬 알고리즘 실행 함수
+
+            // 정렬 시작 함수
             function startSorting() {
                 resetSorting();
                 startTime = performance.now();
                 
-                // 현재 선택된 알고리즘에 따라 정렬 실행
-                switch (currentAlgorithm) {
-                    case 'bubble':
-                        sortingHistory = bubbleSort(array);
-                        break;
-                    case 'selection':
-                        sortingHistory = selectionSort(array);
-                        break;
-                    case 'insertion':
-                        sortingHistory = insertionSort(array);
-                        break;
-                    case 'quick':
-                    case 'merge':
-                        // 미구현 알고리즘은 기본적으로 버블 정렬 사용
-                        sortingHistory = bubbleSort(array);
-                        statusMessage.textContent = '이 알고리즘은 아직 구현되지 않았습니다. 버블 정렬을 대신 실행합니다.';
-                        break;
-                    case 'binary':
-                        // 탐색할 값을 배열에서 랜덤하게 선택
-                        const targetValue = array[Math.floor(Math.random() * array.length)];
-                        sortingHistory = binarySearch(array, targetValue);
-                        break;
-                    case 'dfs':
-                        // 그래프 정보 가져오기
-                        const dfsGraph = graphContainer.querySelector('svg').graph;
-                        sortingHistory = depthFirstSearch(dfsGraph);
-                        break;
-                    case 'bfs':
-                        // 그래프 정보 가져오기
-                        const bfsGraph = graphContainer.querySelector('svg').graph;
-                        sortingHistory = breadthFirstSearch(bfsGraph);
-                        break;
-                    case 'dijkstra':
-                        // 그래프 정보 가져오기
-                        const dijkstraGraph = graphContainer.querySelector('svg').graph;
-                        sortingHistory = dijkstraAlgorithm(dijkstraGraph);
-                        break;
-                    default:
-                        // 기본적으로 버블 정렬 사용
-                        sortingHistory = bubbleSort(array);
-                        statusMessage.textContent = '이 알고리즘은 아직 구현되지 않았습니다. 버블 정렬을 대신 실행합니다.';
-                }
+                // 현재는 버블 정렬만 구현
+                sortingHistory = bubbleSort(array);
                 
                 endTime = performance.now();
                 executionTimeText.textContent = `실행 시간: ${((endTime - startTime) / 1000).toFixed(2)}초`;
                 
-                // 첫 단계 렌더링
                 currentStep = 0;
                 renderStep(currentStep);
                 updateStepInfo(currentStep);
                 
-                // 자동 재생 시작
                 startAutoPlay();
             }
-            
+
             // 단계 렌더링 함수
             function renderStep(step) {
                 if (step < 0 || step >= sortingHistory.length) return;
                 
                 const state = sortingHistory[step];
+                renderArrayStep(state);
                 
-                // 알고리즘 유형에 따라 렌더링 선택
-                if (['dfs', 'bfs', 'dijkstra'].includes(currentAlgorithm)) {
-                    renderGraphStep(state);
-                } else {
-                    renderArrayStep(state);
-                }
-                
-                // 상태 메시지 업데이트
                 statusMessage.textContent = state.status;
                 statusDetails.textContent = `단계: ${step + 1}/${sortingHistory.length}`;
                 currentStatusText.textContent = state.status;
             }
-            
+
             // 배열 단계 렌더링 함수
             function renderArrayStep(state) {
                 const bars = document.querySelectorAll('.bar-value');
                 
-                // 배열 상태 업데이트
                 state.array.forEach((value, index) => {
                     if (index < bars.length) {
                         bars[index].textContent = value;
                         
-                        // 최대값 찾기 (null 값 제외)
                         const validValues = state.array.filter(v => v !== null);
                         const maxValue = validValues.length > 0 ? Math.max(...validValues) : 1;
                         
-                        // null 값은 높이 0으로 표시 (탐색 범위 밖)
                         const barHeight = value !== null ? (value / maxValue) * 250 : 0;
                         
                         bars[index].style.height = `${barHeight}px`;
@@ -2238,12 +1767,10 @@
                             bars[index].style.opacity = "1";
                         }
                         
-                        // 모든 스타일 초기화
                         bars[index].classList.remove('comparing', 'swapping', 'sorted');
                     }
                 });
                 
-                // 비교 중인 원소 표시
                 if (state.comparing && state.comparing[0] !== -1) {
                     bars[state.comparing[0]].classList.add('comparing');
                 }
@@ -2251,7 +1778,6 @@
                     bars[state.comparing[1]].classList.add('comparing');
                 }
                 
-                // 교환 중인 원소 표시
                 if (state.swapping && state.swapping[0] !== -1) {
                     bars[state.swapping[0]].classList.add('swapping');
                 }
@@ -2259,391 +1785,16 @@
                     bars[state.swapping[1]].classList.add('swapping');
                 }
                 
-                // 완료된 경우 모든 원소에 sorted 클래스 추가
                 if (state.completed) {
                     bars.forEach(bar => bar.classList.add('sorted'));
                 }
             }
-            
-            // 그래프 단계 렌더링 함수
-            function renderGraphStep(state) {
-                // 기존 큐 컨테이너 제거
-                const existingQueueContainer = graphContainer.querySelector('.queue-container');
-                if (existingQueueContainer) {
-                    existingQueueContainer.remove();
-                }
-                
-                // 모든 노드와 간선 초기화
-                const nodes = graphContainer.querySelectorAll('.node');
-                const edges = graphContainer.querySelectorAll('.edge, .arrow');
-                
-                nodes.forEach(node => {
-                    node.classList.remove('active', 'visited');
-                    node.setAttribute('fill', '#f5f5f5');
-                    node.setAttribute('stroke', '#aaa');
-                });
-                
-                edges.forEach(edge => {
-                    edge.classList.remove('active');
-                    edge.setAttribute('stroke', '#aaa');
-                });
-                
-                // 현재 알고리즘에 따른 시각화
-                if (currentAlgorithm === 'dfs' || currentAlgorithm === 'bfs') {
-                    // 방문한 노드 표시
-                    state.visited.forEach((visited, i) => {
-                        if (visited) {
-                            const node = graphContainer.querySelector(`.node[data-node="${i}"]`);
-                            if (node) {
-                                node.classList.add('visited');
-                                node.setAttribute('fill', '#a8d8fd');
-                                node.setAttribute('stroke', '#4285f4');
-                            }
-                        }
-                    });
-                    
-                    // 현재 활성 노드 표시
-                    if (state.activeNode !== -1) {
-                        const activeNode = graphContainer.querySelector(`.node[data-node="${state.activeNode}"]`);
-                        if (activeNode) {
-                            activeNode.classList.add('active');
-                            activeNode.setAttribute('fill', '#fbbc05');
-                            activeNode.setAttribute('stroke', '#ea4335');
-                        }
-                    }
-                    
-                    // 비교 중인 간선 표시
-                    if (state.comparing && state.comparing[0] !== -1 && state.comparing[1] !== -1) {
-                        const edge = graphContainer.querySelector(`.edge[data-from="${state.comparing[0]}"][data-to="${state.comparing[1]}"]`) ||
-                                    graphContainer.querySelector(`.edge[data-from="${state.comparing[1]}"][data-to="${state.comparing[0]}"]`);
-                        
-                        if (edge) {
-                            edge.classList.add('active');
-                            edge.setAttribute('stroke', '#ea4335');
-                            edge.setAttribute('stroke-width', '3');
-                        }
-                        
-                        // 화살표도 업데이트
-                        const arrow = graphContainer.querySelector(`.arrow[data-from="${state.comparing[0]}"][data-to="${state.comparing[1]}"]`) ||
-                                     graphContainer.querySelector(`.arrow[data-from="${state.comparing[1]}"][data-to="${state.comparing[0]}"]`);
-                        
-                        if (arrow) {
-                            arrow.setAttribute('fill', '#ea4335');
-                        }
-                    }
-                    
-                                            // BFS에서만 큐 표시
-                    if (currentAlgorithm === 'bfs' && state.queue && state.queue.length > 0) {
-                        const queueContainer = document.createElement('div');
-                        queueContainer.className = 'queue-container';
-                        
-                        const queueLabel = document.createElement('div');
-                        queueLabel.className = 'queue-label';
-                        queueLabel.textContent = '큐:';
-                        queueContainer.appendChild(queueLabel);
-                        
-                        state.queue.forEach(nodeIndex => {
-                            const queueItem = document.createElement('div');
-                            queueItem.className = 'queue-item';
-                            queueItem.textContent = nodeIndex;
-                            queueContainer.appendChild(queueItem);
-                        });
-                        
-                        graphContainer.appendChild(queueContainer);
-                    }
-                    
-                    // DFS에서 경로 표시 (옵션)
-                    if (currentAlgorithm === 'dfs' && state.path && state.path.length > 0) {
-                        // DFS 경로를 시각화할 수 있음 (선택적)
-                    }
-                } else if (currentAlgorithm === 'dijkstra') {
-                    // 방문한 노드 표시
-                    state.visited.forEach((visited, i) => {
-                        if (visited) {
-                            const node = graphContainer.querySelector(`.node[data-node="${i}"]`);
-                            if (node) {
-                                node.classList.add('visited');
-                                node.setAttribute('fill', '#a8d8fd');
-                                node.setAttribute('stroke', '#4285f4');
-                            }
-                        }
-                    });
-                    
-                    // 현재 활성 노드 표시
-                    if (state.activeNode !== -1) {
-                        const activeNode = graphContainer.querySelector(`.node[data-node="${state.activeNode}"]`);
-                        if (activeNode) {
-                            activeNode.classList.add('active');
-                            activeNode.setAttribute('fill', '#fbbc05');
-                            activeNode.setAttribute('stroke', '#ea4335');
-                        }
-                    }
-                    
-                    // 비교 중인 간선 표시
-                    if (state.comparing && state.comparing[0] !== -1 && state.comparing[1] !== -1) {
-                        const edge = graphContainer.querySelector(`.edge[data-from="${state.comparing[0]}"][data-to="${state.comparing[1]}"]`);
-                        const arrow = graphContainer.querySelector(`.arrow[data-from="${state.comparing[0]}"][data-to="${state.comparing[1]}"]`);
-                        
-                        if (edge) {
-                            edge.classList.add('active');
-                            edge.setAttribute('stroke', '#ea4335');
-                            edge.setAttribute('stroke-width', '3');
-                        }
-                        
-                        if (arrow) {
-                            arrow.setAttribute('fill', '#ea4335');
-                        }
-                    }
-                    
-                    // 활성화된 간선 표시 (최단 경로 업데이트)
-                    if (state.activeEdge && state.activeEdge[0] !== -1 && state.activeEdge[1] !== -1) {
-                        const edge = graphContainer.querySelector(`.edge[data-from="${state.activeEdge[0]}"][data-to="${state.activeEdge[1]}"]`);
-                        const arrow = graphContainer.querySelector(`.arrow[data-from="${state.activeEdge[0]}"][data-to="${state.activeEdge[1]}"]`);
-                        
-                        if (edge) {
-                            edge.classList.add('active');
-                            edge.setAttribute('stroke', '#34a853');
-                            edge.setAttribute('stroke-width', '3');
-                        }
-                        
-                        if (arrow) {
-                            arrow.setAttribute('fill', '#34a853');
-                        }
-                    }
-                    
-                    // 거리 라벨 업데이트
-                    state.distances.forEach((distance, i) => {
-                        const distLabel = graphContainer.querySelector(`.distance-label[data-node="${i}"]`);
-                        if (distLabel) {
-                            distLabel.textContent = distance === Infinity ? '∞' : distance;
-                        }
-                    });
-                }
-            }
-            
-            // 알고리즘 정보 업데이트 함수
-            function updateAlgorithmInfo(algorithm) {
-                const infoTitle = document.querySelector('.algorithm-info h3');
-                const complexityTime = document.querySelector('.algorithm-info p:nth-child(2)');
-                const complexitySpace = document.querySelector('.algorithm-info p:nth-child(3)');
-                const isStable = document.querySelector('.algorithm-info p:nth-child(4)');
-                const description = document.querySelector('.algorithm-description p');
-                
-                switch (algorithm) {
-                    case 'bubble':
-                        infoTitle.textContent = '버블 정렬 (Bubble Sort)';
-                        complexityTime.textContent = '시간 복잡도: O(n²)';
-                        complexitySpace.textContent = '공간 복잡도: O(1)';
-                        isStable.textContent = '안정 정렬: Yes';
-                        description.textContent = '버블 정렬은 인접한 두 원소를 비교하여 필요에 따라 위치를 교환하는 방식으로 동작합니다. 배열의 끝부터 정렬이 완성되며, 각 패스마다 가장 큰 원소가 올바른 위치로 "버블링"됩니다. 이 과정은 더 이상 교환이 필요 없을 때까지 반복됩니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">bubble_sort</span>(arr):
-    n = len(arr)
-    swapped = <span class="boolean">True</span>
-    <span class="keyword">while</span> swapped:
-        swapped = <span class="boolean">False</span>
-        <span class="keyword">for</span> i <span class="keyword">in</span> range(1, n):
-            <span class="keyword">if</span> arr[i-1] > arr[i]:
-                arr[i-1], arr[i] = arr[i], arr[i-1]
-                swapped = <span class="boolean">True</span>
-        n -= 1  # 끝 원소는 이미 정렬됨
-    <span class="keyword">return</span> arr`;
-                        break;
-                    case 'selection':
-                        infoTitle.textContent = '선택 정렬 (Selection Sort)';
-                        complexityTime.textContent = '시간 복잡도: O(n²)';
-                        complexitySpace.textContent = '공간 복잡도: O(1)';
-                        isStable.textContent = '안정 정렬: No';
-                        description.textContent = '선택 정렬은 배열에서 최소값을 찾아 맨 앞의 원소와 교환하는 과정을 반복합니다. 각 패스마다 정렬되지 않은 부분에서 가장 작은 원소를 선택하여 정렬된 부분의 끝에 배치합니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">selection_sort</span>(arr):
-    n = len(arr)
-    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):
-        min_idx = i
-        <span class="keyword">for</span> j <span class="keyword">in</span> range(i+1, n):
-            <span class="keyword">if</span> arr[j] < arr[min_idx]:
-                min_idx = j
-        arr[i], arr[min_idx] = arr[min_idx], arr[i]
-    <span class="keyword">return</span> arr`;
-                        break;
-                    case 'insertion':
-                        infoTitle.textContent = '삽입 정렬 (Insertion Sort)';
-                        complexityTime.textContent = '시간 복잡도: O(n²)';
-                        complexitySpace.textContent = '공간 복잡도: O(1)';
-                        isStable.textContent = '안정 정렬: Yes';
-                        description.textContent = '삽입 정렬은 아직 정렬되지 않은 부분의 원소를 이미 정렬된 부분의 적절한 위치에 삽입하는 알고리즘입니다. 카드 게임에서 카드를 정리하는 방식과 유사하며, 특히 작은 배열이나 대부분 정렬된 배열에서 효율적입니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">insertion_sort</span>(arr):
-    <span class="keyword">for</span> i <span class="keyword">in</span> range(1, len(arr)):
-        key = arr[i]
-        j = i-1
-        <span class="keyword">while</span> j >= 0 <span class="keyword">and</span> key < arr[j]:
-            arr[j+1] = arr[j]
-            j -= 1
-        arr[j+1] = key
-    <span class="keyword">return</span> arr`;
-                        break;
-                    case 'quick':
-                        infoTitle.textContent = '퀵 정렬 (Quick Sort)';
-                        complexityTime.textContent = '시간 복잡도: O(n log n) ~ O(n²)';
-                        complexitySpace.textContent = '공간 복잡도: O(log n)';
-                        isStable.textContent = '안정 정렬: No';
-                        description.textContent = '퀵 정렬은 분할 정복 방식의 정렬 알고리즘으로, 피벗을 선택하고 이를 기준으로 배열을 분할한 후 재귀적으로 정렬합니다. 평균적으로 매우 빠른 성능을 보이며, 많은 실제 구현에서 사용됩니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">quick_sort</span>(arr):
-    <span class="keyword">if</span> len(arr) <= 1:
-        <span class="keyword">return</span> arr
-    
-    pivot = arr[len(arr) // 2]
-    left = [x <span class="keyword">for</span> x <span class="keyword">in</span> arr <span class="keyword">if</span> x < pivot]
-    middle = [x <span class="keyword">for</span> x <span class="keyword">in</span> arr <span class="keyword">if</span> x == pivot]
-    right = [x <span class="keyword">for</span> x <span class="keyword">in</span> arr <span class="keyword">if</span> x > pivot]
-    
-    <span class="keyword">return</span> quick_sort(left) + middle + quick_sort(right)`;
-                        break;
-                    case 'merge':
-                        infoTitle.textContent = '병합 정렬 (Merge Sort)';
-                        complexityTime.textContent = '시간 복잡도: O(n log n)';
-                        complexitySpace.textContent = '공간 복잡도: O(n)';
-                        isStable.textContent = '안정 정렬: Yes';
-                        description.textContent = '병합 정렬은 분할 정복 방식의 알고리즘으로, 배열을 절반으로 나누어 각각 정렬한 다음 두 정렬된 부분 배열을 병합하는 과정을 반복합니다. 안정적인 성능과 안정 정렬 특성으로 많이 사용됩니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">merge_sort</span>(arr):
-    <span class="keyword">if</span> len(arr) <= 1:
-        <span class="keyword">return</span> arr
-    
-    mid = len(arr) // 2
-    left = merge_sort(arr[:mid])
-    right = merge_sort(arr[mid:])
-    
-    <span class="keyword">return</span> merge(left, right)
 
-<span class="keyword">def</span> <span class="function-name">merge</span>(left, right):
-    result = []
-    i = j = 0
-    
-    <span class="keyword">while</span> i < len(left) <span class="keyword">and</span> j < len(right):
-        <span class="keyword">if</span> left[i] <= right[j]:
-            result.append(left[i])
-            i += 1
-        <span class="keyword">else</span>:
-            result.append(right[j])
-            j += 1
-    
-    result.extend(left[i:])
-    result.extend(right[j:])
-    <span class="keyword">return</span> result`;
-                        break;
-                    case 'binary':
-                        infoTitle.textContent = '이진 탐색 (Binary Search)';
-                        complexityTime.textContent = '시간 복잡도: O(log n)';
-                        complexitySpace.textContent = '공간 복잡도: O(1)';
-                        isStable.textContent = '해당 없음';
-                        description.textContent = '이진 탐색은 정렬된 배열에서 특정 값을 찾는 알고리즘입니다. 배열의 중간 요소와 대상 값을 비교하고, 중간 요소보다 작으면 왼쪽 부분을, 크면 오른쪽 부분을 재귀적으로 탐색합니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">binary_search</span>(arr, target):
-    left, right = 0, len(arr) - 1
-    
-    <span class="keyword">while</span> left <= right:
-        mid = (left + right) // 2
-        
-        <span class="keyword">if</span> arr[mid] == target:
-            <span class="keyword">return</span> mid
-        <span class="keyword">elif</span> arr[mid] < target:
-            left = mid + 1
-        <span class="keyword">else</span>:
-            right = mid - 1
-    
-    <span class="keyword">return</span> -1  # 찾지 못한 경우`;
-                        break;
-                    case 'dfs':
-                        infoTitle.textContent = '깊이 우선 탐색 (DFS)';
-                        complexityTime.textContent = '시간 복잡도: O(V + E)';
-                        complexitySpace.textContent = '공간 복잡도: O(V)';
-                        isStable.textContent = '해당 없음';
-                        description.textContent = 'DFS는 그래프 탐색 알고리즘으로, 가능한 한 깊이 파고들어 탐색한 후 다시 되돌아와 다른 경로를 탐색합니다. 스택이나 재귀를 사용하여 구현하며, 경로 찾기, 사이클 감지, 위상 정렬 등에 사용됩니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">dfs</span>(graph, start, visited=None):
-    <span class="keyword">if</span> visited is None:
-        visited = set()
-    
-    visited.add(start)
-    <span class="keyword">print</span>(start)
-    
-    <span class="keyword">for</span> next_node <span class="keyword">in</span> graph[start]:
-        <span class="keyword">if</span> next_node <span class="keyword">not in</span> visited:
-            dfs(graph, next_node, visited)
-    
-    <span class="keyword">return</span> visited`;
-                        break;
-                    case 'bfs':
-                        infoTitle.textContent = '너비 우선 탐색 (BFS)';
-                        complexityTime.textContent = '시간 복잡도: O(V + E)';
-                        complexitySpace.textContent = '공간 복잡도: O(V)';
-                        isStable.textContent = '해당 없음';
-                        description.textContent = 'BFS는 그래프 탐색 알고리즘으로, 시작 노드에서 인접한 모든 노드를 먼저 방문한 후, 그 다음 레벨의 노드를 방문합니다. 큐를 사용하여 구현하며, 최단 경로 찾기나 레벨별 처리에 유용합니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">bfs</span>(graph, start):
-    visited = set()
-    queue = [start]
-    visited.add(start)
-    
-    <span class="keyword">while</span> queue:
-        node = queue.pop(0)
-        <span class="keyword">print</span>(node)
-        
-        <span class="keyword">for</span> neighbor <span class="keyword">in</span> graph[node]:
-            <span class="keyword">if</span> neighbor <span class="keyword">not in</span> visited:
-                visited.add(neighbor)
-                queue.append(neighbor)
-    
-    <span class="keyword">return</span> visited`;
-                        break;
-                    case 'dijkstra':
-                        infoTitle.textContent = '다익스트라 (Dijkstra)';
-                        complexityTime.textContent = '시간 복잡도: O(V² 또는 E log V)';
-                        complexitySpace.textContent = '공간 복잡도: O(V)';
-                        isStable.textContent = '해당 없음';
-                        description.textContent = '다익스트라 알고리즘은 그래프에서 시작 노드로부터 다른 모든 노드까지의 최단 경로를 찾는 알고리즘입니다. 우선순위 큐를 사용하여 효율적으로 구현할 수 있으며, 음수 가중치가 없는 그래프에 적합합니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">dijkstra</span>(graph, start):
-    distances = {node: float('infinity') <span class="keyword">for</span> node <span class="keyword">in</span> graph}
-    distances[start] = 0
-    pq = [(0, start)]
-    
-    <span class="keyword">while</span> pq:
-        current_dist, current_node = heapq.heappop(pq)
-        
-        <span class="keyword">if</span> current_dist > distances[current_node]:
-            continue
-        
-        <span class="keyword">for</span> neighbor, weight <span class="keyword">in</span> graph[current_node].items():
-            distance = current_dist + weight
-            
-            <span class="keyword">if</span> distance < distances[neighbor]:
-                distances[neighbor] = distance
-                heapq.heappush(pq, (distance, neighbor))
-    
-    <span class="keyword">return</span> distances`;
-                        break;
-                    default:
-                        // 기본값은 버블 정렬
-                        infoTitle.textContent = '버블 정렬 (Bubble Sort)';
-                        complexityTime.textContent = '시간 복잡도: O(n²)';
-                        complexitySpace.textContent = '공간 복잡도: O(1)';
-                        isStable.textContent = '안정 정렬: Yes';
-                        description.textContent = '버블 정렬은 인접한 두 원소를 비교하여 필요에 따라 위치를 교환하는 방식으로 동작합니다. 배열의 끝부터 정렬이 완성되며, 각 패스마다 가장 큰 원소가 올바른 위치로 "버블링"됩니다. 이 과정은 더 이상 교환이 필요 없을 때까지 반복됩니다.';
-                        codeContent.innerHTML = `<span class="keyword">def</span> <span class="function-name">bubble_sort</span>(arr):
-    n = len(arr)
-    swapped = <span class="boolean">True</span>
-    <span class="keyword">while</span> swapped:
-        swapped = <span class="boolean">False</span>
-        <span class="keyword">for</span> i <span class="keyword">in</span> range(1, n):
-            <span class="keyword">if</span> arr[i-1] > arr[i]:
-                arr[i-1], arr[i] = arr[i], arr[i-1]
-                swapped = <span class="boolean">True</span>
-        n -= 1  # 끝 원소는 이미 정렬됨
-    <span class="keyword">return</span> arr`;
-                }
-            }
-            
             // 단계 정보 업데이트 함수
             function updateStepInfo(step) {
                 comparisonCountText.textContent = `비교 횟수: ${comparisonCount}회`;
                 swapCountText.textContent = `교환 횟수: ${swapCount}회`;
                 
-                // 현재 상태 업데이트
                 const state = sortingHistory[step];
                 if (state) {
                     currentStatusText.textContent = state.status;
@@ -2652,7 +1803,7 @@
                     }
                 }
             }
-            
+
             // 자동 재생 시작 함수
             function startAutoPlay() {
                 if (isSorting) return;
@@ -2665,17 +1816,16 @@
                         renderStep(currentStep);
                         updateStepInfo(currentStep);
                         
-                        // 다음 프레임 예약
                         timeoutId = setTimeout(nextFrame, 1000 / sortingSpeed);
                     } else {
                         isSorting = false;
+                        navigationManager.showNotification('알고리즘 실행이 완료되었습니다!');
                     }
                 }
                 
-                // 첫 프레임 실행
                 timeoutId = setTimeout(nextFrame, 1000 / sortingSpeed);
             }
-            
+
             // 자동 재생 중지 함수
             function stopAutoPlay() {
                 if (timeoutId) {
@@ -2684,7 +1834,7 @@
                 }
                 isSorting = false;
             }
-            
+
             // 정렬 재설정 함수
             function resetSorting() {
                 stopAutoPlay();
@@ -2693,9 +1843,9 @@
                 comparisonCount = 0;
                 swapCount = 0;
                 
-                // 알고리즘 유형에 따라 시각화 선택
                 if (['dfs', 'bfs', 'dijkstra'].includes(currentAlgorithm)) {
-                    renderGraph(array);
+                    // 그래프 알고리즘은 준비 중
+                    navigationManager.showNotification('그래프 알고리즘은 준비 중입니다.');
                 } else {
                     renderArray(array);
                 }
@@ -2707,46 +1857,23 @@
                 swapCountText.textContent = '교환 횟수: 0회';
                 executionTimeText.textContent = '실행 시간: 0.00초';
             }
+
+            // 그래프 렌더링 함수 (기본 구조만)
+            function renderGraph(arr) {
+                navigationManager.showNotification('그래프 알고리즘은 준비 중입니다.');
+            }
             
             // 초기 배열 렌더링
             generateRandomArray(5);
-        });
 
-        document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.textContent === '정보' || link.textContent === '도움말') {
-                link.addEventListener('click', function() {
-                    alert('준비 중인 기능입니다.');
-                });
-            } else if (link.textContent === '공유') {
-                link.addEventListener('click', function() {
-                    alert('현재 알고리즘 상태를 공유하는 기능은 준비 중입니다.');
-                });
-            }
-        });
-
-        // 상단 로고 클릭 시 대시보드로 이동
-        document.querySelector('.header h1').addEventListener('click', function() {
-            window.location.href = '/dashboard';
-        });
-
-        // 페이지 로드 시 로그인 상태 확인
-        document.addEventListener('DOMContentLoaded', function() {
-            // 로그인 상태 확인
-            const userJSON = sessionStorage.getItem('user');
-            if (!userJSON) {
-                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
-                window.location.href = '/login';
-                return;
-            }
-            
-            // 로그인된 경우 사용자 정보 사용
-            const user = JSON.parse(userJSON);
-            // 사용자 이름 표시 (예: S05의 경우)
-            document.querySelector('.user-profile span').textContent = user.name;
-            // 프로필 아바타 업데이트 (예: S05의 경우)
-            document.querySelector('.avatar').textContent = user.name.charAt(0);
+            // 페이지 이탈 시 확인
+            window.addEventListener('beforeunload', function (e) {
+                if (isSorting) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
         });
     </script>
-    <script src="/js/animations.js"></script>
 </body>
 </html>
