@@ -193,18 +193,7 @@
     </div>
 
     <script>
-        // 빠른 로그인 함수
-        function quickLogin(type) {
-            const accounts = {
-                student: { email: 'test@afa.ac.kr', password: 'password123' },
-                teacher: { email: 'teacher@afa.ac.kr', password: 'password123' },
-                admin: { email: 'admin@afa.ac.kr', password: 'password123' }
-            };
-            
-            const account = accounts[type];
-            document.getElementById('email').value = account.email;
-            document.getElementById('password').value = account.password;
-        }
+        
 
         // 네비게이션 이벤트
         document.getElementById('homeLink').addEventListener('click', function() {
@@ -306,24 +295,41 @@
         }
         
         // 페이지 로드 시 저장된 토큰 확인 (로그인 페이지에서만!)
-        window.addEventListener('load', function() {
-            // 현재 페이지가 로그인 페이지인지 확인
-            if (window.location.pathname === '/login' || window.location.pathname === '/login/') {
-                const token = localStorage.getItem('authToken');
-                const user = localStorage.getItem('user');
+        window.addEventListener('load', async function() {
+    if (window.location.pathname === '/login' || window.location.pathname === '/login/') {
+        const token = localStorage.getItem('authToken');
+        const user = localStorage.getItem('user');
+        
+        if (token && user) {
+            // 토큰 유효성 검증
+            try {
+                const response = await fetch('/api/user/profile', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
                 
-                if (token && user) {
-                    console.log('이미 로그인됨, 대시보드로 리다이렉트');
+                if (response.ok) {
+                    // 토큰이 유효하면 리다이렉트
                     const userData = JSON.parse(user);
-                    // 🔧 수정: 서버 역할명 그대로 사용
                     if (userData.role === 'professor' || userData.role === 'admin') {
                         window.location.href = '/teacher-dashboard';
                     } else {
                         window.location.href = '/dashboard';
                     }
+                } else {
+                    // 토큰이 유효하지 않으면 localStorage 정리
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('user');
                 }
+            } catch (error) {
+                // 오류 발생 시 localStorage 정리
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
             }
-        });
+        }
+    }
+});
     </script>
 </body>
 </html>

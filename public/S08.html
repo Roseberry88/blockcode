@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>코딩스타트 - 제출물 평가</title>
-    <!-- 공통 애니메이션 CSS 추가 -->
-    <link rel="stylesheet" href="/css/animations.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -162,6 +160,7 @@
         .filter-options {
             display: flex;
             gap: 20px;
+            align-items: end;
         }
         .filter-group {
             flex: 1;
@@ -189,8 +188,6 @@
         .filter-buttons {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
-            justify-content: flex-end;
         }
         .filter-btn {
             padding: 10px 20px;
@@ -277,7 +274,7 @@
             font-size: 12px;
             color: white;
         }
-        .status-new {
+        .status-submitted {
             background-color: #4285f4;
         }
         .status-graded {
@@ -356,18 +353,6 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             overflow: auto;
             position: relative;
-            animation: modalSlideIn 0.3s ease;
-        }
-        
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         .modal-close {
@@ -434,105 +419,18 @@
             font-weight: 500;
             color: #333333;
         }
-        .language-selector {
-            display: flex;
-            gap: 10px;
-        }
-        .language-btn {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .language-btn:hover {
-            transform: translateY(-2px);
-        }
-        .language-btn.active {
-            background-color: #4285f4;
-            color: white;
-        }
-        .language-btn:not(.active) {
-            background-color: #f1f3f4;
-            color: #333333;
-        }
         .code-block {
             background-color: #f9f9fa;
             padding: 15px;
             border-radius: 5px;
             border: 1px solid #eeeeee;
             font-family: monospace;
-            white-space: pre;
+            white-space: pre-wrap;
             overflow-x: auto;
             line-height: 1.5;
-        }
-        
-        .test-results {
-            margin-bottom: 30px;
-        }
-        .test-result-header {
-            font-weight: 500;
-            color: #333333;
-            margin-bottom: 10px;
-        }
-        .test-case {
-            background-color: #f9f9fa;
-            border: 1px solid #eeeeee;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .test-case:hover {
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .test-case-header {
-            padding: 10px 15px;
-            background-color: #f1f3f4;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .test-case-title {
-            font-weight: 500;
-            font-size: 14px;
-        }
-        .test-case-result {
-            font-size: 12px;
-            padding: 3px 10px;
-            border-radius: 10px;
-        }
-        .test-passed {
-            background-color: #e8f5e9;
-            color: #34a853;
-        }
-        .test-failed {
-            background-color: #ffebee;
-            color: #ea4335;
-        }
-        .test-case-details {
-            padding: 15px;
-            display: flex;
-            gap: 20px;
-        }
-        .input-output {
-            flex: 1;
-        }
-        .io-label {
-            font-weight: 500;
-            color: #666666;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .io-content {
-            background-color: white;
-            border: 1px solid #eeeeee;
-            border-radius: 5px;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 14px;
-            white-space: pre;
-            overflow-x: auto;
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
         }
         
         .grading-section {
@@ -543,40 +441,26 @@
             color: #333333;
             margin-bottom: 15px;
         }
-        .criteria-list {
-            margin-bottom: 20px;
-        }
-        .criteria-item {
+        .score-input-group {
             display: flex;
             align-items: center;
+            gap: 10px;
             margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eeeeee;
         }
-        .criteria-item:last-child {
-            border-bottom: none;
-        }
-        .criteria-name {
-            flex: 2;
-            font-weight: 500;
-        }
-        .criteria-weight {
-            flex: 1;
-            color: #666666;
-        }
-        .criteria-score {
-            flex: 1;
-        }
-        .criteria-score select {
+        .score-input {
             width: 80px;
             padding: 8px;
             border: 1px solid #dddddd;
             border-radius: 5px;
-            transition: all 0.3s ease;
+            font-size: 16px;
+            text-align: center;
         }
-        .criteria-score select:focus {
+        .score-input:focus {
             border-color: #4285f4;
             box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
+        }
+        .score-max {
+            color: #666666;
         }
         
         .feedback-section {
@@ -592,6 +476,7 @@
             font-size: 14px;
             resize: vertical;
             transition: all 0.3s ease;
+            box-sizing: border-box;
         }
         .feedback-textarea:focus {
             border-color: #4285f4;
@@ -633,67 +518,6 @@
         }
         .btn-secondary:hover {
             background-color: #e4e6e7;
-        }
-        
-        .final-score {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .final-score-label {
-            font-weight: 500;
-            margin-right: 20px;
-        }
-        .final-score-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4285f4;
-        }
-        .final-score-max {
-            color: #666666;
-            margin-left: 5px;
-        }
-        
-        /* 대량 평가 모드 */
-        .batch-grading-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-            margin-left: 10px;
-        }
-        .batch-grading-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .batch-toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #cccccc;
-            transition: 0.4s;
-            border-radius: 26px;
-        }
-        .batch-toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-        input:checked + .batch-toggle-slider {
-            background-color: #4285f4;
-        }
-        input:checked + .batch-toggle-slider:before {
-            transform: translateX(24px);
         }
 
         /* 통합 네비게이션 스타일 */
@@ -749,97 +573,75 @@
     </style>
 </head>
 <body>
-    <!-- 로딩 오버레이 추가 -->
+    <!-- 로딩 오버레이 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
 
     <div class="container">
-        <div class="navbar fade-in-down">
+        <div class="navbar">
             <div class="logo" id="logoLink">🚀 코딩스타트</div>
-            <div class="profile-icon profile-hover" id="profileMenu">
+            <div class="profile-icon" id="profileMenu">
                 <span id="userInitial">U</span>
             </div>
         </div>
         
-        <div class="sidebar fade-in-left delay-300">
-            <div class="profile-section fade-in delay-500">
-                <div class="profile-image profile-hover">
+        <div class="sidebar">
+            <div class="profile-section">
+                <div class="profile-image">
                     <span id="userInitialSidebar">U</span>
                 </div>
                 <span id="userName">사용자</span>
                 <span class="teacher-badge">교수</span>
             </div>
             
-            <div class="menu-item slide-in delay-600 tab-hover" id="dashboardMenu">대시보드</div>
-            <div class="menu-item slide-in delay-700 tab-hover" id="createAssignmentMenu">과제 출제</div>
-            <div class="menu-item active slide-in delay-800 tab-hover" id="reviewSubmissionsMenu">제출물 평가</div>
-            <div class="menu-item slide-in delay-900 tab-hover" id="studentAnalyticsMenu">학생 성취도</div>
-            <div class="menu-item slide-in delay-1000 tab-hover" id="managementMenu">학생 관리</div>
+            <div class="menu-item" id="dashboardMenu">대시보드</div>
+            <div class="menu-item" id="createAssignmentMenu">과제 출제</div>
+            <div class="menu-item active" id="reviewSubmissionsMenu">제출물 평가</div>
+            <div class="menu-item" id="studentAnalyticsMenu">학생 성취도</div>
+            <div class="menu-item" id="managementMenu">학생 관리</div>
         </div>
         
         <div class="content">
-            <h1 class="page-title fade-in delay-400">✅ 제출물 평가</h1>
+            <h1 class="page-title">✅ 제출물 평가</h1>
             
             <!-- 필터 섹션 -->
-            <div class="filter-section fade-in-up delay-500">
+            <div class="filter-section">
                 <div class="filter-header">
                     <div class="filter-title">필터</div>
-                    <div style="display: flex; align-items: center;">
-                        <span style="margin-right: 10px;">대량 평가 모드</span>
-                        <label class="batch-grading-switch">
-                            <input type="checkbox" id="batchGradingToggle">
-                            <span class="batch-toggle-slider"></span>
-                        </label>
-                    </div>
                 </div>
                 <div class="filter-options">
                     <div class="filter-group">
                         <label for="assignmentFilter">과제</label>
                         <select id="assignmentFilter">
-                            <option value="all">모든 과제</option>
-                            <option value="1">반복문으로 사각형 그리기</option>
-                            <option value="2">조건문으로 성적 계산하기</option>
-                            <option value="3">함수로 계산기 만들기</option>
-                            <option value="4">배열로 데이터 분석하기</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="studentFilter">학생</label>
-                        <select id="studentFilter">
-                            <option value="all">모든 학생</option>
-                            <option value="1">김준호</option>
-                            <option value="2">이미진</option>
-                            <option value="3">박지성</option>
-                            <option value="4">최수영</option>
-                            <option value="5">장민호</option>
+                            <option value="">모든 과제</option>
+                            <!-- 과제 옵션은 JavaScript로 동적 로드 -->
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="statusFilter">상태</label>
                         <select id="statusFilter">
-                            <option value="all">모든 상태</option>
-                            <option value="new">신규</option>
-                            <option value="pending">검토 중</option>
-                            <option value="graded">평가 완료</option>
+                            <option value="">모든 상태</option>
+                            <option value="submitted">제출됨</option>
+                            <option value="graded">채점 완료</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="dateFilter">제출일</label>
-                        <input type="date" id="dateFilter">
+                        <label for="searchFilter">검색</label>
+                        <input type="text" id="searchFilter" placeholder="학생 이름 또는 이메일">
                     </div>
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn reset-filter-btn" id="resetFilterBtn">초기화</button>
-                    <button class="filter-btn apply-filter-btn" id="applyFilterBtn">적용</button>
+                    <div class="filter-buttons">
+                        <button class="filter-btn reset-filter-btn" id="resetFilterBtn">초기화</button>
+                        <button class="filter-btn apply-filter-btn" id="applyFilterBtn">적용</button>
+                    </div>
                 </div>
             </div>
             
             <!-- 제출물 목록 -->
-            <div class="submissions-section fade-in-up delay-700">
+            <div class="submissions-section">
                 <div class="submissions-header">
                     <div class="submissions-title">제출물 목록</div>
-                    <div class="submissions-count">총 18개 항목</div>
+                    <div class="submissions-count" id="submissionsCount">로딩 중...</div>
                 </div>
                 <table class="submissions-table">
                     <thead>
@@ -852,96 +654,18 @@
                             <th>작업</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="submissionsTableBody">
                         <tr>
-                            <td>김준호</td>
-                            <td>반복문으로 사각형 그리기</td>
-                            <td>2025-04-22 14:30</td>
-                            <td><span class="status-badge status-new">신규</span></td>
-                            <td>-</td>
-                            <td><a class="action-link grade-btn" data-id="1">평가</a></td>
-                        </tr>
-                        <tr>
-                            <td>이미진</td>
-                            <td>조건문으로 성적 계산하기</td>
-                            <td>2025-04-22 11:45</td>
-                            <td><span class="status-badge status-new">신규</span></td>
-                            <td>-</td>
-                            <td><a class="action-link grade-btn" data-id="2">평가</a></td>
-                        </tr>
-                        <tr>
-                            <td>박지성</td>
-                            <td>함수로 계산기 만들기</td>
-                            <td>2025-04-21 16:20</td>
-                            <td><span class="status-badge status-pending">검토 중</span></td>
-                            <td>-</td>
-                            <td><a class="action-link grade-btn" data-id="3">평가</a></td>
-                        </tr>
-                        <tr>
-                            <td>최수영</td>
-                            <td>배열로 데이터 분석하기</td>
-                            <td>2025-04-21 09:10</td>
-                            <td><span class="status-badge status-graded">평가 완료</span></td>
-                            <td>92</td>
-                            <td><a class="action-link grade-btn" data-id="4">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>장민호</td>
-                            <td>반복문으로 사각형 그리기</td>
-                            <td>2025-04-20 13:55</td>
-                            <td><span class="status-badge status-graded">평가 완료</span></td>
-                            <td>85</td>
-                            <td><a class="action-link grade-btn" data-id="5">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>강지원</td>
-                            <td>조건문으로 성적 계산하기</td>
-                            <td>2025-04-20 10:25</td>
-                            <td><span class="status-badge status-new">신규</span></td>
-                            <td>-</td>
-                            <td><a class="action-link grade-btn" data-id="6">평가</a></td>
-                        </tr>
-                        <tr>
-                            <td>이현우</td>
-                            <td>함수로 계산기 만들기</td>
-                            <td>2025-04-19 15:40</td>
-                            <td><span class="status-badge status-new">신규</span></td>
-                            <td>-</td>
-                            <td><a class="action-link grade-btn" data-id="7">평가</a></td>
-                        </tr>
-                        <tr>
-                            <td>정다은</td>
-                            <td>배열로 데이터 분석하기</td>
-                            <td>2025-04-19 11:20</td>
-                            <td><span class="status-badge status-pending">검토 중</span></td>
-                            <td>-</td>
-                            <td><a class="action-link grade-btn" data-id="8">평가</a></td>
-                        </tr>
-                        <tr>
-                            <td>윤서연</td>
-                            <td>반복문으로 사각형 그리기</td>
-                            <td>2025-04-18 16:30</td>
-                            <td><span class="status-badge status-graded">평가 완료</span></td>
-                            <td>95</td>
-                            <td><a class="action-link grade-btn" data-id="9">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>임준영</td>
-                            <td>조건문으로 성적 계산하기</td>
-                            <td>2025-04-18 09:45</td>
-                            <td><span class="status-badge status-graded">평가 완료</span></td>
-                            <td>88</td>
-                            <td><a class="action-link grade-btn" data-id="10">상세보기</a></td>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                                <div class="loading-spinner" style="margin: 0 auto 10px; width: 30px; height: 30px;"></div>
+                                제출물 데이터를 불러오는 중...
+                            </td>
                         </tr>
                     </tbody>
                 </table>
                 
-                <div class="pagination">
-                    <div class="page-btn active">1</div>
-                    <div class="page-btn">2</div>
-                    <div class="page-btn">3</div>
-                    <div class="page-btn">4</div>
-                    <div class="page-btn">5</div>
+                <div class="pagination" id="paginationContainer">
+                    <!-- 페이지네이션은 JavaScript로 동적 생성 -->
                 </div>
             </div>
         </div>
@@ -952,208 +676,44 @@
         <div class="modal-content">
             <span class="modal-close" id="closeModal">✕</span>
             <div class="modal-header">
-                <h3 class="modal-title">김준호님의 "반복문으로 사각형 그리기" 과제</h3>
-                <div class="modal-subtitle">제출일: 2025-04-22 14:30</div>
+                <h3 class="modal-title" id="modalTitle">제출물 평가</h3>
+                <div class="modal-subtitle" id="modalSubtitle">제출일 정보</div>
             </div>
             <div class="modal-body">
-                <div class="submission-info">
-                    <div class="info-group">
-                        <div class="info-label">학생</div>
-                        <div class="info-value">김준호</div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-label">학번</div>
-                        <div class="info-value">20250001</div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-label">과제</div>
-                        <div class="info-value">반복문으로 사각형 그리기</div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-label">상태</div>
-                        <div class="info-value"><span class="status-badge status-new">신규</span></div>
-                    </div>
+                <div class="submission-info" id="submissionInfo">
+                    <!-- 제출물 정보는 JavaScript로 동적 생성 -->
                 </div>
                 
                 <div class="submission-code">
                     <div class="code-header">
-                        <div class="code-title">제출된 코드</div>
-                        <div class="language-selector">
-                            <div class="language-btn active">Python</div>
-                            <div class="language-btn">JavaScript</div>
-                        </div>
+                        <div class="code-title">제출된 코드/데이터</div>
                     </div>
-                    <div class="code-block">
-# 사각형 그리기 코드
-n = int(input("N을 입력하세요:"))
-for i in range(n):
-    row = ""
-    for j in range(n):
-        row += "*"
-    print(row)
-                    </div>
-                </div>
-                
-                <div class="test-results">
-                    <div class="test-result-header">테스트 케이스 결과</div>
-                    <div class="test-case">
-                        <div class="test-case-header">
-                            <div class="test-case-title">테스트 케이스 #1</div>
-                            <div class="test-case-result test-passed">통과</div>
-                        </div>
-                        <div class="test-case-details">
-                            <div class="input-output">
-                                <div class="io-label">입력</div>
-                                <div class="io-content">3</div>
-                            </div>
-                            <div class="input-output">
-                                <div class="io-label">기대 출력</div>
-                                <div class="io-content">***
-***
-***</div>
-                            </div>
-                            <div class="input-output">
-                                <div class="io-label">실제 출력</div>
-                                <div class="io-content">***
-***
-***</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="test-case">
-                        <div class="test-case-header">
-                            <div class="test-case-title">테스트 케이스 #2</div>
-                            <div class="test-case-result test-passed">통과</div>
-                        </div>
-                        <div class="test-case-details">
-                            <div class="input-output">
-                                <div class="io-label">입력</div>
-                                <div class="io-content">5</div>
-                            </div>
-                            <div class="input-output">
-                                <div class="io-label">기대 출력</div>
-                                <div class="io-content">*****
-*****
-*****
-*****
-*****</div>
-                            </div>
-                            <div class="input-output">
-                                <div class="io-label">실제 출력</div>
-                                <div class="io-content">*****
-*****
-*****
-*****
-*****</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="test-case">
-                        <div class="test-case-header">
-                            <div class="test-case-title">테스트 케이스 #3</div>
-                            <div class="test-case-result test-passed">통과</div>
-                        </div>
-                        <div class="test-case-details">
-                            <div class="input-output">
-                                <div class="io-label">입력</div>
-                                <div class="io-content">1</div>
-                            </div>
-                            <div class="input-output">
-                                <div class="io-label">기대 출력</div>
-                                <div class="io-content">*</div>
-                            </div>
-                            <div class="input-output">
-                                <div class="io-label">실제 출력</div>
-                                <div class="io-content">*</div>
-                            </div>
-                        </div>
+                    <div class="code-block" id="submissionCode">
+                        <!-- 제출 코드는 JavaScript로 동적 로드 -->
                     </div>
                 </div>
                 
                 <div class="grading-section">
-                    <div class="grading-title">채점 기준</div>
-                    <div class="criteria-list">
-                        <div class="criteria-item">
-                            <div class="criteria-name">정확성 (테스트 케이스 통과)</div>
-                            <div class="criteria-weight">50%</div>
-                            <div class="criteria-score">
-                                <select>
-                                    <option value="50">50/50</option>
-                                    <option value="45">45/50</option>
-                                    <option value="40">40/50</option>
-                                    <option value="35">35/50</option>
-                                    <option value="30">30/50</option>
-                                    <option value="25">25/50</option>
-                                    <option value="20">20/50</option>
-                                    <option value="15">15/50</option>
-                                    <option value="10">10/50</option>
-                                    <option value="5">5/50</option>
-                                    <option value="0">0/50</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="criteria-item">
-                            <div class="criteria-name">코드 구조 및 가독성</div>
-                            <div class="criteria-weight">30%</div>
-                            <div class="criteria-score">
-                                <select>
-                                    <option value="30">30/30</option>
-                                    <option value="27">27/30</option>
-                                    <option value="24">24/30</option>
-                                    <option value="21">21/30</option>
-                                    <option value="18">18/30</option>
-                                    <option value="15">15/30</option>
-                                    <option value="12">12/30</option>
-                                    <option value="9">9/30</option>
-                                    <option value="6">6/30</option>
-                                    <option value="3">3/30</option>
-                                    <option value="0">0/30</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="criteria-item">
-                            <div class="criteria-name">효율성</div>
-                            <div class="criteria-weight">20%</div>
-                            <div class="criteria-score">
-                                <select>
-                                    <option value="20">20/20</option>
-                                    <option value="18">18/20</option>
-                                    <option value="16">16/20</option>
-                                    <option value="14">14/20</option>
-                                    <option value="12">12/20</option>
-                                    <option value="10">10/20</option>
-                                    <option value="8">8/20</option>
-                                    <option value="6">6/20</option>
-                                    <option value="4">4/20</option>
-                                    <option value="2">2/20</option>
-                                    <option value="0">0/20</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="final-score">
-                        <div class="final-score-label">최종 점수:</div>
-                        <div class="final-score-value">95</div>
-                        <div class="final-score-max">/100</div>
+                    <div class="grading-title">점수 입력</div>
+                    <div class="score-input-group">
+                        <label for="scoreInput">점수:</label>
+                        <input type="number" id="scoreInput" class="score-input" min="0" max="100" value="0">
+                        <span class="score-max">/ 100</span>
                     </div>
                 </div>
                 
                 <div class="feedback-section">
                     <div class="grading-title">피드백</div>
-                    <textarea class="feedback-textarea" placeholder="학생에게 피드백을 작성하세요...">아주 잘 작성된 코드입니다. 모든 테스트 케이스를 통과했고, 코드 구조도 간결하고 이해하기 쉽게 작성되었습니다. 중첩 반복문을 효과적으로 사용하여 문제를 해결한 점이 인상적입니다. 
-
-다만, 효율성 측면에서는 'row' 변수를 매번 초기화하는 대신 '*' * n을 사용하면 더 효율적일 수 있습니다.</textarea>
+                    <textarea class="feedback-textarea" id="feedbackTextarea" placeholder="학생에게 피드백을 작성하세요..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="saveAsDraftBtn">임시저장</button>
+                <button class="btn btn-secondary" id="cancelGradeBtn">취소</button>
                 <button class="btn btn-primary" id="submitGradeBtn">평가 제출</button>
             </div>
         </div>
     </div>
 
-    <!-- 공통 애니메이션 JS 추가 -->
-    <script src="/js/animations.js"></script>
     <script>
         // 통합 네비게이션 시스템
         class NavigationManager {
@@ -1238,7 +798,10 @@ for i in range(n):
                 const menuEvents = {
                     'dashboardMenu': () => this.navigateTo('teacher-dashboard'),
                     'createAssignmentMenu': () => this.navigateTo('create-assignment'),
-                    'reviewSubmissionsMenu': () => this.navigateTo('review-submissions'),
+                    'reviewSubmissionsMenu': () => {
+                        // 현재 페이지이므로 새로고침
+                        location.reload();
+                    },
                     'studentAnalyticsMenu': () => this.navigateTo('student-analytics'),
                     'managementMenu': () => this.navigateTo('student-management')
                 };
@@ -1262,10 +825,7 @@ for i in range(n):
             navigateTo(routeName) {
                 if (this.routes[routeName]) {
                     this.showLoading();
-                    
-                    setTimeout(() => {
-                        window.location.href = this.routes[routeName];
-                    }, 300);
+                    window.location.href = this.routes[routeName];
                 } else {
                     console.error(`Route not found: ${routeName}`);
                 }
@@ -1315,7 +875,7 @@ for i in range(n):
             }
 
             showLoading() {
-                let loadingOverlay = document.getElementById('loadingOverlay');
+                const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) {
                     loadingOverlay.classList.add('active');
                 }
@@ -1361,109 +921,569 @@ for i in range(n):
             }
         }
 
-        // 네비게이션 매니저 초기화
+        // 제출물 평가 시스템
+        class SubmissionReviewSystem {
+            constructor() {
+                this.submissions = [];
+                this.assignments = [];
+                this.currentPage = 1;
+                this.itemsPerPage = 20;
+                this.totalPages = 1;
+                this.currentSubmission = null;
+                this.filters = {
+                    assignmentId: '',
+                    status: '',
+                    search: ''
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadData();
+            }
+
+            setupEventListeners() {
+                // 필터 이벤트
+                const applyFilterBtn = document.getElementById('applyFilterBtn');
+                const resetFilterBtn = document.getElementById('resetFilterBtn');
+                
+                if (applyFilterBtn) {
+                    applyFilterBtn.addEventListener('click', () => {
+                        this.applyFilters();
+                    });
+                }
+
+                if (resetFilterBtn) {
+                    resetFilterBtn.addEventListener('click', () => {
+                        this.resetFilters();
+                    });
+                }
+
+                // 검색 입력 이벤트
+                const searchFilter = document.getElementById('searchFilter');
+                if (searchFilter) {
+                    searchFilter.addEventListener('input', (e) => {
+                        this.filters.search = e.target.value;
+                        this.debounceSearch();
+                    });
+                }
+
+                // 모달 이벤트
+                const closeModal = document.getElementById('closeModal');
+                const cancelGradeBtn = document.getElementById('cancelGradeBtn');
+                const submitGradeBtn = document.getElementById('submitGradeBtn');
+                const gradeModal = document.getElementById('gradeModal');
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', () => {
+                        this.closeModal();
+                    });
+                }
+
+                if (cancelGradeBtn) {
+                    cancelGradeBtn.addEventListener('click', () => {
+                        this.closeModal();
+                    });
+                }
+
+                if (submitGradeBtn) {
+                    submitGradeBtn.addEventListener('click', () => {
+                        this.submitGrade();
+                    });
+                }
+
+                // 모달 외부 클릭 시 닫기
+                if (gradeModal) {
+                    gradeModal.addEventListener('click', (e) => {
+                        if (e.target === gradeModal) {
+                            this.closeModal();
+                        }
+                    });
+                }
+            }
+
+            debounceSearch() {
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(() => {
+                    this.loadSubmissions();
+                }, 500);
+            }
+
+            async loadData() {
+                try {
+                    navigationManager.showLoading();
+                    
+                    // 과제 목록과 제출물 목록을 병렬로 로드
+                    await Promise.all([
+                        this.loadAssignments(),
+                        this.loadSubmissions()
+                    ]);
+
+                } catch (error) {
+                    console.error('데이터 로드 오류:', error);
+                    navigationManager.showNotification('데이터를 불러오는데 실패했습니다: ' + error.message, 'error');
+                } finally {
+                    navigationManager.hideLoading();
+                }
+            }
+
+            async loadAssignments() {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) throw new Error('인증 토큰이 없습니다.');
+
+                    const response = await fetch('/api/assignments', {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            this.assignments = data.assignments || [];
+                            this.updateAssignmentFilter();
+                        }
+                    }
+                } catch (error) {
+                    console.error('과제 목록 로드 오류:', error);
+                }
+            }
+
+            async loadSubmissions() {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) throw new Error('인증 토큰이 없습니다.');
+
+                    const params = new URLSearchParams({
+                        page: this.currentPage.toString(),
+                        limit: this.itemsPerPage.toString()
+                    });
+
+                    if (this.filters.assignmentId) {
+                        params.append('assignment_id', this.filters.assignmentId);
+                    }
+
+                    if (this.filters.status) {
+                        params.append('status', this.filters.status);
+                    }
+
+                    if (this.filters.search) {
+                        params.append('search', this.filters.search);
+                    }
+
+                    const response = await fetch('/api/assignments/submissions?' + params.toString(), {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            this.submissions = data.submissions || [];
+                            this.totalPages = data.pagination ? data.pagination.totalPages : 1;
+                            this.updateSubmissionsTable();
+                            this.updatePagination();
+                        }
+                    } else {
+                        throw new Error('제출물 데이터를 불러오는데 실패했습니다.');
+                    }
+                } catch (error) {
+                    console.error('제출물 로드 오류:', error);
+                    this.renderEmptyTable();
+                }
+            }
+
+            updateAssignmentFilter() {
+                const assignmentFilter = document.getElementById('assignmentFilter');
+                if (!assignmentFilter) return;
+
+                // 기존 옵션 제거 (첫 번째 옵션 제외)
+                while (assignmentFilter.children.length > 1) {
+                    assignmentFilter.removeChild(assignmentFilter.lastChild);
+                }
+
+                // 과제 옵션 추가
+                this.assignments.forEach(assignment => {
+                    const option = document.createElement('option');
+                    option.value = assignment.assignment_id;
+                    option.textContent = assignment.title;
+                    assignmentFilter.appendChild(option);
+                });
+            }
+
+            updateSubmissionsTable() {
+                const tbody = document.getElementById('submissionsTableBody');
+                const submissionsCount = document.getElementById('submissionsCount');
+
+                if (!tbody) return;
+
+                // 개수 업데이트
+                if (submissionsCount) {
+                    submissionsCount.textContent = this.submissions.length > 0 ? 
+                        `총 ${this.submissions.length}개 항목` : '제출물 없음';
+                }
+
+                // 테이블 업데이트
+                if (this.submissions.length === 0) {
+                    this.renderEmptyTable();
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                this.submissions.forEach(submission => {
+                    const row = this.createSubmissionRow(submission);
+                    tbody.appendChild(row);
+                });
+
+                // 평가 버튼 이벤트 설정
+                this.setupGradeButtons();
+            }
+
+            createSubmissionRow(submission) {
+                const row = document.createElement('tr');
+                
+                const statusClass = this.getStatusClass(submission.score);
+                const statusText = this.getStatusText(submission.score);
+                const submittedDate = this.formatDate(submission.submitted_at);
+                const score = submission.score !== null ? submission.score : '-';
+                
+                row.innerHTML = `
+                    <td><strong>${submission.student_name || '알 수 없음'}</strong></td>
+                    <td>${submission.assignment_title || '과제 정보 없음'}</td>
+                    <td>${submittedDate}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td><span style="font-weight: bold; color: ${score !== '-' ? '#34a853' : '#666'}">${score}</span></td>
+                    <td>
+                        <a class="action-link grade-btn" 
+                           data-submission-id="${submission.submission_id}"
+                           data-assignment-id="${submission.assignment_id}"
+                           data-student-id="${submission.student_id}">
+                            ${submission.score !== null ? '상세보기' : '평가'}
+                        </a>
+                    </td>
+                `;
+
+                return row;
+            }
+
+            getStatusClass(score) {
+                if (score === null) return 'status-submitted';
+                return 'status-graded';
+            }
+
+            getStatusText(score) {
+                if (score === null) return '제출됨';
+                return '채점 완료';
+            }
+
+            formatDate(dateString) {
+                if (!dateString) return '날짜 없음';
+                
+                try {
+                    const date = new Date(dateString);
+                    return date.toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (error) {
+                    return '날짜 오류';
+                }
+            }
+
+            renderEmptyTable() {
+                const tbody = document.getElementById('submissionsTableBody');
+                if (!tbody) return;
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">📝</div>
+                            ${this.filters.search ? '검색 결과가 없습니다.' : '제출된 과제가 없습니다.'}
+                        </td>
+                    </tr>
+                `;
+            }
+
+            setupGradeButtons() {
+                const gradeButtons = document.querySelectorAll('.grade-btn');
+                gradeButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const submissionId = btn.dataset.submissionId;
+                        const assignmentId = btn.dataset.assignmentId;
+                        const studentId = btn.dataset.studentId;
+                        this.openGradeModal(submissionId, assignmentId, studentId);
+                    });
+                });
+            }
+
+            async openGradeModal(submissionId, assignmentId, studentId) {
+                try {
+                    navigationManager.showLoading();
+                    
+                    const token = localStorage.getItem('authToken');
+                    if (!token) throw new Error('인증 토큰이 없습니다.');
+
+                    // 제출물 상세 정보 가져오기
+                    const response = await fetch(`/api/assignments/${assignmentId}/submissions/${submissionId}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            this.currentSubmission = data.submission;
+                            this.displayGradeModal(data.submission);
+                        } else {
+                            throw new Error(data.message || '제출물 정보를 불러오는데 실패했습니다.');
+                        }
+                    } else {
+                        throw new Error('제출물 정보를 불러오는데 실패했습니다.');
+                    }
+
+                } catch (error) {
+                    console.error('제출물 상세 정보 로드 오류:', error);
+                    navigationManager.showNotification('제출물 정보를 불러오는데 실패했습니다.', 'error');
+                } finally {
+                    navigationManager.hideLoading();
+                }
+            }
+
+            displayGradeModal(submission) {
+                const modal = document.getElementById('gradeModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalSubtitle = document.getElementById('modalSubtitle');
+                const submissionInfo = document.getElementById('submissionInfo');
+                const submissionCode = document.getElementById('submissionCode');
+                const scoreInput = document.getElementById('scoreInput');
+                const feedbackTextarea = document.getElementById('feedbackTextarea');
+
+                if (!modal) return;
+
+                // 모달 제목 설정
+                if (modalTitle) {
+                    modalTitle.textContent = `${submission.student_name}님의 "${submission.assignment_title}" 과제`;
+                }
+
+                if (modalSubtitle) {
+                    modalSubtitle.textContent = `제출일: ${this.formatDate(submission.submitted_at)}`;
+                }
+
+                // 제출물 정보 설정
+                if (submissionInfo) {
+                    submissionInfo.innerHTML = `
+                        <div class="info-group">
+                            <div class="info-label">학생</div>
+                            <div class="info-value">${submission.student_name}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">학번</div>
+                            <div class="info-value">${submission.student_number || 'N/A'}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">과제</div>
+                            <div class="info-value">${submission.assignment_title}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">상태</div>
+                            <div class="info-value">
+                                <span class="status-badge ${this.getStatusClass(submission.score)}">
+                                    ${this.getStatusText(submission.score)}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 제출 코드/데이터 설정
+                if (submissionCode) {
+                    submissionCode.textContent = submission.submission_data || '제출 데이터가 없습니다.';
+                }
+
+                // 기존 점수와 피드백 설정
+                if (scoreInput) {
+                    scoreInput.value = submission.score || 0;
+                }
+
+                if (feedbackTextarea) {
+                    feedbackTextarea.value = submission.feedback || '';
+                }
+
+                // 모달 표시
+                modal.style.display = 'flex';
+            }
+
+            closeModal() {
+                const modal = document.getElementById('gradeModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+                this.currentSubmission = null;
+            }
+
+            async submitGrade() {
+                if (!this.currentSubmission) return;
+
+                try {
+                    navigationManager.showLoading();
+                    
+                    const token = localStorage.getItem('authToken');
+                    if (!token) throw new Error('인증 토큰이 없습니다.');
+
+                    const scoreInput = document.getElementById('scoreInput');
+                    const feedbackTextarea = document.getElementById('feedbackTextarea');
+                    
+                    const score = parseInt(scoreInput.value);
+                    const feedback = feedbackTextarea.value;
+
+                    // 점수 유효성 검사
+                    if (score < 0 || score > 100) {
+                        navigationManager.showNotification('점수는 0-100 사이여야 합니다.', 'error');
+                        return;
+                    }
+
+                    const response = await fetch(`/api/submissions/${this.currentSubmission.submission_id}/grade`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            score: score,
+                            feedback: feedback
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            navigationManager.showNotification('평가가 성공적으로 제출되었습니다!');
+                            this.closeModal();
+                            this.loadSubmissions(); // 목록 새로고침
+                        } else {
+                            throw new Error(data.message || '평가 제출에 실패했습니다.');
+                        }
+                    } else {
+                        throw new Error('평가 제출에 실패했습니다.');
+                    }
+
+                } catch (error) {
+                    console.error('평가 제출 오류:', error);
+                    navigationManager.showNotification('평가 제출에 실패했습니다: ' + error.message, 'error');
+                } finally {
+                    navigationManager.hideLoading();
+                }
+            }
+
+            applyFilters() {
+                const assignmentFilter = document.getElementById('assignmentFilter');
+                const statusFilter = document.getElementById('statusFilter');
+                const searchFilter = document.getElementById('searchFilter');
+
+                this.filters.assignmentId = assignmentFilter ? assignmentFilter.value : '';
+                this.filters.status = statusFilter ? statusFilter.value : '';
+                this.filters.search = searchFilter ? searchFilter.value : '';
+
+                this.currentPage = 1;
+                this.loadSubmissions();
+                
+                navigationManager.showNotification('필터가 적용되었습니다.');
+            }
+
+            resetFilters() {
+                const assignmentFilter = document.getElementById('assignmentFilter');
+                const statusFilter = document.getElementById('statusFilter');
+                const searchFilter = document.getElementById('searchFilter');
+
+                if (assignmentFilter) assignmentFilter.value = '';
+                if (statusFilter) statusFilter.value = '';
+                if (searchFilter) searchFilter.value = '';
+
+                this.filters = {
+                    assignmentId: '',
+                    status: '',
+                    search: ''
+                };
+
+                this.currentPage = 1;
+                this.loadSubmissions();
+                
+                navigationManager.showNotification('필터가 초기화되었습니다.');
+            }
+
+            updatePagination() {
+                const paginationContainer = document.getElementById('paginationContainer');
+                if (!paginationContainer) return;
+
+                if (this.totalPages <= 1) {
+                    paginationContainer.style.display = 'none';
+                    return;
+                }
+
+                paginationContainer.style.display = 'flex';
+                paginationContainer.innerHTML = '';
+
+                // 이전 버튼
+                if (this.currentPage > 1) {
+                    const prevBtn = document.createElement('div');
+                    prevBtn.className = 'page-btn';
+                    prevBtn.textContent = '‹';
+                    prevBtn.addEventListener('click', () => {
+                        this.currentPage--;
+                        this.loadSubmissions();
+                    });
+                    paginationContainer.appendChild(prevBtn);
+                }
+
+                // 페이지 번호
+                const startPage = Math.max(1, this.currentPage - 2);
+                const endPage = Math.min(this.totalPages, this.currentPage + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageBtn = document.createElement('div');
+                    pageBtn.className = `page-btn ${i === this.currentPage ? 'active' : ''}`;
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', () => {
+                        this.currentPage = i;
+                        this.loadSubmissions();
+                    });
+                    paginationContainer.appendChild(pageBtn);
+                }
+
+                // 다음 버튼
+                if (this.currentPage < this.totalPages) {
+                    const nextBtn = document.createElement('div');
+                    nextBtn.className = 'page-btn';
+                    nextBtn.textContent = '›';
+                    nextBtn.addEventListener('click', () => {
+                        this.currentPage++;
+                        this.loadSubmissions();
+                    });
+                    paginationContainer.appendChild(nextBtn);
+                }
+            }
+        }
+
+        // 전역 변수
         let navigationManager;
+        let reviewSystem;
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
             // 네비게이션 매니저 초기화
             navigationManager = new NavigationManager();
             
-            // 필터 버튼 이벤트
-            document.getElementById('applyFilterBtn').addEventListener('click', function() {
-                navigationManager.showNotification('필터가 적용되었습니다.');
-            });
-            
-            document.getElementById('resetFilterBtn').addEventListener('click', function() {
-                // 모든 필터 초기화
-                document.getElementById('assignmentFilter').value = 'all';
-                document.getElementById('studentFilter').value = 'all';
-                document.getElementById('statusFilter').value = 'all';
-                document.getElementById('dateFilter').value = '';
-                navigationManager.showNotification('필터가 초기화되었습니다.');
-            });
-            
-            // 페이지네이션 이벤트
-            const pageButtons = document.querySelectorAll('.page-btn');
-            pageButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // 현재 활성화된 버튼 비활성화
-                    document.querySelector('.page-btn.active').classList.remove('active');
-                    // 클릭한 버튼 활성화
-                    this.classList.add('active');
-                    navigationManager.showNotification(`페이지 ${this.textContent}로 이동`);
-                });
-            });
-            
-            // 모달 관련 이벤트
-            const gradeButtons = document.querySelectorAll('.grade-btn');
-            const gradeModal = document.getElementById('gradeModal');
-            const closeModal = document.getElementById('closeModal');
-            
-            gradeButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    gradeModal.style.display = 'flex';
-                });
-            });
-            
-            closeModal.addEventListener('click', function() {
-                gradeModal.style.display = 'none';
-            });
-            
-            // 모달 외부 클릭 시 닫기
-            window.addEventListener('click', function(event) {
-                if (event.target === gradeModal) {
-                    gradeModal.style.display = 'none';
-                }
-            });
-            
-            // 언어 선택 이벤트
-            const languageBtns = document.querySelectorAll('.language-btn');
-            languageBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // 현재 활성화된 버튼 비활성화
-                    document.querySelector('.language-btn.active').classList.remove('active');
-                    // 클릭한 버튼 활성화
-                    this.classList.add('active');
-                });
-            });
-            
-            // 점수 계산 이벤트
-            const criteriaScores = document.querySelectorAll('.criteria-score select');
-            const finalScoreValue = document.querySelector('.final-score-value');
-            
-            criteriaScores.forEach(select => {
-                select.addEventListener('change', function() {
-                    // 모든 점수 합산
-                    let totalScore = 0;
-                    criteriaScores.forEach(s => {
-                        totalScore += parseInt(s.value);
-                    });
-                    finalScoreValue.textContent = totalScore;
-                });
-            });
-            
-            // 평가 제출 버튼 이벤트
-            document.getElementById('submitGradeBtn').addEventListener('click', function() {
-                navigationManager.showNotification('평가가 성공적으로 제출되었습니다!');
-                gradeModal.style.display = 'none';
-                
-                // 여기에서 실제로는 서버에 평가 제출 로직이 들어갑니다
-            });
-            
-            // 임시저장 버튼 이벤트
-            document.getElementById('saveAsDraftBtn').addEventListener('click', function() {
-                navigationManager.showNotification('평가가 임시저장되었습니다.');
-            });
-            
-            // 대량 평가 모드 토글 이벤트
-            document.getElementById('batchGradingToggle').addEventListener('change', function() {
-                if (this.checked) {
-                    navigationManager.showNotification('대량 평가 모드가 활성화되었습니다.');
-                } else {
-                    navigationManager.showNotification('대량 평가 모드가 비활성화되었습니다.');
-                }
-            });
+            // 제출물 평가 시스템 초기화
+            reviewSystem = new SubmissionReviewSystem();
 
             // 키보드 단축키 설정
             document.addEventListener('keydown', (e) => {
@@ -1473,30 +1493,37 @@ for i in range(n):
                             e.preventDefault();
                             navigationManager.navigateTo('teacher-dashboard');
                             break;
-                        case '7':
+                        case '2':
                             e.preventDefault();
                             navigationManager.navigateTo('create-assignment');
                             break;
-                        case '8':
+                        case '3':
                             e.preventDefault();
-                            // 현재 페이지이므로 아무것도 하지 않음
+                            // 현재 페이지
                             break;
-                        case '9':
+                        case '4':
                             e.preventDefault();
                             navigationManager.navigateTo('student-analytics');
                             break;
+                        case '5':
+                            e.preventDefault();
+                            navigationManager.navigateTo('student-management');
+                            break;
                         case 'f':
                             e.preventDefault();
-                            document.getElementById('assignmentFilter').focus();
+                            const searchFilter = document.getElementById('searchFilter');
+                            if (searchFilter) searchFilter.focus();
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            reviewSystem.loadData();
                             break;
                     }
                 }
 
+                // ESC 키로 모달 닫기
                 if (e.key === 'Escape') {
-                    const modal = document.getElementById('gradeModal');
-                    if (modal.style.display === 'flex') {
-                        modal.style.display = 'none';
-                    }
+                    reviewSystem.closeModal();
                 }
             });
         });

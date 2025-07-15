@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>코딩스타트 - 학생 성취도 분석</title>
-    <!-- 공통 애니메이션 CSS 추가 -->
-    <link rel="stylesheet" href="/css/animations.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -158,6 +156,7 @@
         .filter-options {
             display: flex;
             gap: 20px;
+            align-items: end;
         }
         .filter-group {
             flex: 1;
@@ -182,6 +181,20 @@
             border-color: #4285f4;
             box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
         }
+        .refresh-button {
+            padding: 10px 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .refresh-button:hover {
+            background-color: #3b78e7;
+            transform: translateY(-2px);
+        }
         
         /* 통계 카드 */
         .stats-section {
@@ -189,7 +202,7 @@
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
         .stat-card {
@@ -280,28 +293,6 @@
             font-size: 14px;
             margin-top: 5px;
         }
-        .chart-options {
-            display: flex;
-            gap: 10px;
-        }
-        .chart-option {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .chart-option.active {
-            background-color: #4285f4;
-            color: white;
-        }
-        .chart-option:not(.active) {
-            background-color: #f1f3f4;
-            color: #333333;
-        }
-        .chart-option:not(.active):hover {
-            background-color: #e3f2fd;
-        }
         .chart-container {
             height: 300px;
             position: relative;
@@ -353,44 +344,39 @@
             color: #666666;
         }
         
-        /* 진행 추이 라인 차트 */
-        .progress-line-chart {
+        /* 스킬 차트 */
+        .skills-chart {
+            margin: 20px 0;
+        }
+        .skill-item {
+            margin-bottom: 15px;
+        }
+        .skill-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .skill-name {
+            font-size: 14px;
+            color: #333333;
+            font-weight: 500;
+        }
+        .skill-value {
+            font-size: 14px;
+            color: #666666;
+        }
+        .skill-bar-bg {
             width: 100%;
-            height: 250px;
-            position: relative;
-            margin-top: 30px;
+            height: 15px;
+            background-color: #f1f3f4;
+            border-radius: 5px;
+            overflow: hidden;
         }
-        .chart-line {
-            fill: none;
-            stroke: #4285f4;
-            stroke-width: 3;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawLine 2s ease forwards;
-        }
-        @keyframes drawLine {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-        .axis-line {
-            stroke: #dddddd;
-            stroke-width: 1;
-        }
-        .point {
-            fill: #4285f4;
-            stroke: white;
-            stroke-width: 2;
-            r: 5;
-            transition: all 0.3s ease;
-        }
-        .point:hover {
-            r: 8;
-            fill: #fbbc05;
-        }
-        .chart-label {
-            font-size: 12px;
-            fill: #666666;
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4285f4, #2a5298);
+            border-radius: 5px;
+            transition: width 0.8s ease;
         }
         
         /* 학생 목록 테이블 */
@@ -505,56 +491,52 @@
         .page-btn:not(.active):hover {
             background-color: #e3f2fd;
         }
-        
-        /* 가로 바 차트 */
-        .skills-chart {
-            margin: 20px 0;
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
         }
-        .skill-item {
-            margin-bottom: 15px;
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
-        .skill-label {
+        .modal-header {
+            background: linear-gradient(135deg, #4285f4, #3367d6);
+            color: white;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            align-items: center;
         }
-        .skill-name {
-            font-size: 14px;
-            color: #333333;
-            font-weight: 500;
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
         }
-        .skill-value {
-            font-size: 14px;
-            color: #666666;
-        }
-        .skill-bar-bg {
-            width: 100%;
-            height: 15px;
-            background-color: #f1f3f4;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .skill-bar-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #4285f4, #2a5298);
-            border-radius: 5px;
-            transition: width 0.8s ease;
-        }
-        
-        /* 툴팁 */
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.8);
+        .modal-close {
             color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 100;
-            max-width: 200px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+        .modal-body {
+            padding: 20px;
         }
 
         /* 통합 네비게이션 스타일 */
@@ -610,77 +592,69 @@
     </style>
 </head>
 <body>
-    <!-- 로딩 오버레이 추가 -->
+    <!-- 로딩 오버레이 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
 
-    <div class="tooltip" id="tooltip"></div>
-
     <div class="container">
-        <div class="navbar fade-in-down">
+        <div class="navbar">
             <div class="logo" id="logoLink">🚀 코딩스타트</div>
-            <div class="profile-icon profile-hover" id="profileMenu">
+            <div class="profile-icon" id="profileMenu">
                 <span id="userInitial">유</span>
             </div>
         </div>
         
-        <div class="sidebar fade-in-left delay-300">
-            <div class="profile-section fade-in delay-500">
-                <div class="profile-image profile-hover">
+        <div class="sidebar">
+            <div class="profile-section">
+                <div class="profile-image">
                     <span id="userInitialSidebar">유</span>
                 </div>
                 <span id="userName">유승훈</span>
                 <span class="teacher-badge">교수</span>
             </div>
             
-            <div class="menu-item slide-in delay-600 tab-hover" id="dashboardMenu">대시보드</div>
-            <div class="menu-item slide-in delay-700 tab-hover" id="createAssignmentMenu">과제 출제</div>
-            <div class="menu-item slide-in delay-800 tab-hover" id="reviewSubmissionsMenu">제출물 평가</div>
-            <div class="menu-item active slide-in delay-900 tab-hover" id="studentAnalyticsMenu">학생 성취도</div>
-            <div class="menu-item slide-in delay-1000 tab-hover" id="managementMenu">학생 관리</div>
+            <div class="menu-item" id="dashboardMenu">대시보드</div>
+            <div class="menu-item" id="createAssignmentMenu">과제 출제</div>
+            <div class="menu-item" id="reviewSubmissionsMenu">제출물 평가</div>
+            <div class="menu-item active" id="studentAnalyticsMenu">학생 성취도</div>
+            <div class="menu-item" id="managementMenu">학생 관리</div>
         </div>
         
         <div class="content">
-            <h1 class="page-title fade-in delay-400">📊 학생 성취도 분석</h1>
+            <h1 class="page-title">📊 학생 성취도 분석</h1>
             
             <!-- 필터 섹션 -->
-            <div class="filter-section fade-in-up delay-500">
+            <div class="filter-section">
                 <div class="filter-title">분석 필터</div>
                 <div class="filter-options">
                     <div class="filter-group">
-                        <label for="classFilter">분반</label>
-                        <select id="classFilter">
-                            <option value="all">전체 분반</option>
-                            <option value="A" selected>A분반</option>
-                            <option value="B">B분반</option>
-                            <option value="C">C분반</option>
+                        <label for="roleFilter">역할</label>
+                        <select id="roleFilter">
+                            <option value="student" selected>학생</option>
+                            <option value="all">전체</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="periodFilter">기간</label>
-                        <select id="periodFilter">
-                            <option value="all">전체 기간</option>
-                            <option value="week">최근 1주</option>
-                            <option value="month" selected>최근 1개월</option>
-                            <option value="semester">현재 학기</option>
+                        <label for="statusFilter">상태</label>
+                        <select id="statusFilter">
+                            <option value="all" selected>전체</option>
+                            <option value="active">활성</option>
+                            <option value="inactive">비활성</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="assignmentFilter">과제 유형</label>
-                        <select id="assignmentFilter">
-                            <option value="all" selected>모든 과제</option>
-                            <option value="basic">기본 개념</option>
-                            <option value="loops">반복문 과제</option>
-                            <option value="conditional">조건문 과제</option>
-                            <option value="functions">함수 과제</option>
-                        </select>
+                        <label for="searchFilter">검색</label>
+                        <input type="text" id="searchFilter" placeholder="이름 또는 학번으로 검색">
+                    </div>
+                    <div class="filter-group">
+                        <button class="refresh-button" id="refreshButton">🔄 새로고침</button>
                     </div>
                 </div>
             </div>
             
             <!-- 통계 카드 섹션 -->
-            <div class="stats-section fade-in-up delay-600">
+            <div class="stats-section">
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue-bg">
@@ -688,8 +662,8 @@
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">전체 학생</div>
-                            <div class="stat-value">42</div>
-                            <div class="stat-subtext">A분반 학생 수</div>
+                            <div class="stat-value" id="totalStudents">0</div>
+                            <div class="stat-subtext">등록된 학생 수</div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -697,357 +671,127 @@
                             <i>✓</i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-title">평균 과제 완료율</div>
-                            <div class="stat-value">78%</div>
-                            <div class="stat-subtext">전월 대비 5% 증가</div>
+                            <div class="stat-title">활성 학생</div>
+                            <div class="stat-value" id="activeStudents">0</div>
+                            <div class="stat-subtext">현재 활동 중</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon yellow-bg">
-                            <i>📊</i>
+                            <i>📝</i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-title">전체 평균 점수</div>
-                            <div class="stat-value">85</div>
-                            <div class="stat-subtext">100점 만점</div>
+                            <div class="stat-title">총 프로젝트</div>
+                            <div class="stat-value" id="totalProjects">0</div>
+                            <div class="stat-subtext">생성된 프로젝트</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon red-bg">
-                            <i>📝</i>
+                            <i>📊</i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-title">제출된 과제</div>
-                            <div class="stat-value">145</div>
-                            <div class="stat-subtext">총 제출 과제</div>
+                            <div class="stat-title">총 과제</div>
+                            <div class="stat-value" id="totalAssignments">0</div>
+                            <div class="stat-subtext">출제된 과제</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon purple-bg">
-                            <i>⭐</i>
+                            <i>📋</i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-title">상위 그룹</div>
-                            <div class="stat-value">12</div>
-                            <div class="stat-subtext">90점 이상 학생 수</div>
+                            <div class="stat-title">제출물</div>
+                            <div class="stat-value" id="totalSubmissions">0</div>
+                            <div class="stat-subtext">총 제출 건수</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon cyan-bg">
-                            <i>⚠</i>
+                            <i>⭐</i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-title">주의 그룹</div>
-                            <div class="stat-value">5</div>
-                            <div class="stat-subtext">60점 미만 학생 수</div>
+                            <div class="stat-title">평균 점수</div>
+                            <div class="stat-value" id="averageScore">0</div>
+                            <div class="stat-subtext">채점된 과제 평균</div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- 학생 성적 분포 차트 -->
-            <div class="chart-section fade-in-up delay-700">
+            <div class="chart-section">
                 <div class="chart-header">
                     <div>
                         <div class="chart-title">성적 분포</div>
                         <div class="chart-subtitle">학생들의 성적 구간별 분포</div>
                     </div>
-                    <div class="chart-options">
-                        <div class="chart-option active">막대 그래프</div>
-                        <div class="chart-option">파이 차트</div>
-                        <div class="chart-option">선 그래프</div>
-                    </div>
                 </div>
                 <div class="chart-container">
-                    <div class="grade-distribution">
-                        <div class="grade-bar">
-                            <div class="grade-fill" style="height: 10%;"></div>
-                            <div class="grade-label">0-50</div>
-                            <div class="grade-count">2명</div>
-                        </div>
-                        <div class="grade-bar">
-                            <div class="grade-fill" style="height: 15%;"></div>
-                            <div class="grade-label">51-60</div>
-                            <div class="grade-count">3명</div>
-                        </div>
-                        <div class="grade-bar">
-                            <div class="grade-fill" style="height: 25%;"></div>
-                            <div class="grade-label">61-70</div>
-                            <div class="grade-count">5명</div>
-                        </div>
-                        <div class="grade-bar">
-                            <div class="grade-fill" style="height: 45%;"></div>
-                            <div class="grade-label">71-80</div>
-                            <div class="grade-count">9명</div>
-                        </div>
-                        <div class="grade-bar">
-                            <div class="grade-fill" style="height: 55%;"></div>
-                            <div class="grade-label">81-90</div>
-                            <div class="grade-count">11명</div>
-                        </div>
-                        <div class="grade-bar">
-                            <div class="grade-fill" style="height: 60%;"></div>
-                            <div class="grade-label">91-100</div>
-                            <div class="grade-count">12명</div>
-                        </div>
+                    <div class="grade-distribution" id="gradeDistribution">
+                        <!-- 차트 데이터는 JavaScript로 동적 생성 -->
                     </div>
                 </div>
             </div>
             
             <!-- 개념별 숙련도 차트 -->
-            <div class="chart-section fade-in-up delay-800">
+            <div class="chart-section">
                 <div class="chart-header">
                     <div>
-                        <div class="chart-title">개념별 평균 숙련도</div>
-                        <div class="chart-subtitle">각 프로그래밍 개념에 대한 학생들의 평균 이해도</div>
+                        <div class="chart-title">학습 활동 분석</div>
+                        <div class="chart-subtitle">프로젝트 및 과제 활동 현황</div>
                     </div>
                 </div>
-                <div class="skills-chart">
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <div class="skill-name">기본 개념 (변수, 데이터 타입)</div>
-                            <div class="skill-value">92%</div>
-                        </div>
-                        <div class="skill-bar-bg">
-                            <div class="skill-bar-fill" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <div class="skill-name">반복문 (for, while)</div>
-                            <div class="skill-value">78%</div>
-                        </div>
-                        <div class="skill-bar-bg">
-                            <div class="skill-bar-fill" style="width: 78%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <div class="skill-name">함수</div>
-                            <div class="skill-value">65%</div>
-                        </div>
-                        <div class="skill-bar-bg">
-                            <div class="skill-bar-fill" style="width: 65%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <div class="skill-name">배열/리스트</div>
-                            <div class="skill-value">58%</div>
-                        </div>
-                        <div class="skill-bar-bg">
-                            <div class="skill-bar-fill" style="width: 58%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <div class="skill-name">문제 해결 능력</div>
-                            <div class="skill-value">72%</div>
-                        </div>
-                        <div class="skill-bar-bg">
-                            <div class="skill-bar-fill" style="width: 72%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 월별 진행 추이 차트 -->
-            <div class="chart-section fade-in-up delay-900">
-                <div class="chart-header">
-                    <div>
-                        <div class="chart-title">월별 성취도 추이</div>
-                        <div class="chart-subtitle">학생들의 월별 평균 점수 변화</div>
-                    </div>
-                </div>
-                <div class="progress-line-chart">
-                    <svg width="100%" height="100%" viewBox="0 0 600 250">
-                        <!-- 가로, 세로 축 -->
-                        <line x1="50" y1="200" x2="550" y2="200" class="axis-line" />
-                        <line x1="50" y1="20" x2="50" y2="200" class="axis-line" />
-                        
-                        <!-- 가로축 레이블 -->
-                        <text x="100" y="220" class="chart-label">1월</text>
-                        <text x="183" y="220" class="chart-label">2월</text>
-                        <text x="266" y="220" class="chart-label">3월</text>
-                        <text x="349" y="220" class="chart-label">4월</text>
-                        <text x="432" y="220" class="chart-label">5월</text>
-                        <text x="515" y="220" class="chart-label">6월</text>
-                        
-                        <!-- 세로축 레이블 -->
-                        <text x="35" y="200" class="chart-label">0</text>
-                        <text x="35" y="155" class="chart-label">25</text>
-                        <text x="35" y="110" class="chart-label">50</text>
-                        <text x="35" y="65" class="chart-label">75</text>
-                        <text x="35" y="20" class="chart-label">100</text>
-                        
-                        <!-- 가로 그리드 라인 -->
-                        <line x1="50" y1="155" x2="550" y2="155" stroke="#eeeeee" />
-                        <line x1="50" y1="110" x2="550" y2="110" stroke="#eeeeee" />
-                        <line x1="50" y1="65" x2="550" y2="65" stroke="#eeeeee" />
-                        <line x1="50" y1="20" x2="550" y2="20" stroke="#eeeeee" />
-                        
-                        <!-- 선 그래프 -->
-                        <polyline points="100,130 183,110 266,90 349,80 432,65 515,70" class="chart-line" />
-                        
-                        <!-- 데이터 포인트 -->
-                        <circle cx="100" cy="130" data-month="1월" data-score="70" class="point" />
-                        <circle cx="183" cy="110" data-month="2월" data-score="75" class="point" />
-                        <circle cx="266" cy="90" data-month="3월" data-score="80" class="point" />
-                        <circle cx="349" cy="80" data-month="4월" data-score="85" class="point" />
-                        <circle cx="432" cy="65" data-month="5월" data-score="90" class="point" />
-                        <circle cx="515" cy="70" data-month="6월" data-score="88" class="point" />
-                    </svg>
+                <div class="skills-chart" id="skillsChart">
+                    <!-- 스킬 차트 데이터는 JavaScript로 동적 생성 -->
                 </div>
             </div>
             
             <!-- 학생 목록 테이블 -->
-            <div class="students-section fade-in-up delay-1000">
+            <div class="students-section">
                 <div class="students-header">
                     <div class="students-title">학생별 성취도</div>
-                    <div class="students-count">총 42명</div>
+                    <div class="students-count" id="studentsCount">로딩 중...</div>
                 </div>
                 <table class="students-table">
                     <thead>
                         <tr>
                             <th>학생명</th>
                             <th>학번</th>
-                            <th>평균 점수</th>
-                            <th>진행 상황</th>
-                            <th>과제 완료율</th>
-                            <th>세부 정보</th>
+                            <th>이메일</th>
+                            <th>프로젝트 수</th>
+                            <th>과제 제출</th>
+                            <th>마지막 활동</th>
+                            <th>상태</th>
+                            <th>상세 정보</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="studentsTableBody">
                         <tr>
-                            <td>김준호</td>
-                            <td>20250001</td>
-                            <td>95</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill good-progress" style="width: 95%;"></div>
-                                </div>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+                                <div class="loading-spinner" style="margin: 0 auto 10px; width: 30px; height: 30px;"></div>
+                                학생 데이터를 불러오는 중...
                             </td>
-                            <td>100%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>이미진</td>
-                            <td>20250002</td>
-                            <td>88</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill good-progress" style="width: 88%;"></div>
-                                </div>
-                            </td>
-                            <td>92%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>박지성</td>
-                            <td>20250003</td>
-                            <td>78</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill average-progress" style="width: 78%;"></div>
-                                </div>
-                            </td>
-                            <td>85%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>최수영</td>
-                            <td>20250004</td>
-                            <td>92</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill good-progress" style="width: 92%;"></div>
-                                </div>
-                            </td>
-                            <td>95%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>장민호</td>
-                            <td>20250005</td>
-                            <td>85</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill good-progress" style="width: 85%;"></div>
-                                </div>
-                            </td>
-                            <td>90%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>강지원</td>
-                            <td>20250006</td>
-                            <td>72</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill average-progress" style="width: 72%;"></div>
-                                </div>
-                            </td>
-                            <td>80%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>이현우</td>
-                            <td>20250007</td>
-                            <td>65</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill average-progress" style="width: 65%;"></div>
-                                </div>
-                            </td>
-                            <td>75%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>정다은</td>
-                            <td>20250008</td>
-                            <td>55</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill poor-progress" style="width: 55%;"></div>
-                                </div>
-                            </td>
-                            <td>60%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>윤서연</td>
-                            <td>20250009</td>
-                            <td>95</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill good-progress" style="width: 95%;"></div>
-                                </div>
-                            </td>
-                            <td>100%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
-                        </tr>
-                        <tr>
-                            <td>임준영</td>
-                            <td>20250010</td>
-                            <td>88</td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill good-progress" style="width: 88%;"></div>
-                                </div>
-                            </td>
-                            <td>85%</td>
-                            <td><a class="student-detail-link">상세보기</a></td>
                         </tr>
                     </tbody>
                 </table>
                 
-                <div class="pagination">
-                    <div class="page-btn active">1</div>
-                    <div class="page-btn">2</div>
-                    <div class="page-btn">3</div>
-                    <div class="page-btn">4</div>
-                    <div class="page-btn">5</div>
+                <div class="pagination" id="studentPagination" style="display: none;">
+                    <!-- 페이지네이션은 데이터 로드 후 동적 생성 -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학생 상세 정보 모달 -->
+    <div class="modal" id="studentDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">학생 상세 정보</div>
+                <div class="modal-close" id="closeModal">✕</div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 모달 내용은 JavaScript로 동적 생성 -->
             </div>
         </div>
     </div>
@@ -1134,6 +878,7 @@
                     'reviewSubmissionsMenu': () => this.navigateTo('review-submissions'),
                     'studentAnalyticsMenu': () => {
                         // 현재 페이지이므로 아무것도 하지 않음
+                        location.reload();
                     },
                     'managementMenu': () => this.navigateTo('student-management')
                 };
@@ -1170,10 +915,7 @@
             navigateTo(routeName) {
                 if (this.routes[routeName]) {
                     this.showLoading();
-                    
-                    setTimeout(() => {
-                        window.location.href = this.routes[routeName];
-                    }, 300);
+                    window.location.href = this.routes[routeName];
                 } else {
                     console.error(`Route not found: ${routeName}`);
                 }
@@ -1223,7 +965,7 @@
             }
 
             showLoading() {
-                let loadingOverlay = document.getElementById('loadingOverlay');
+                const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) {
                     loadingOverlay.classList.add('active');
                 }
@@ -1269,472 +1011,459 @@
             }
         }
 
-        // 네비게이션 매니저 초기화
-        let navigationManager;
-
-        // 실제 학생 데이터 로드 함수
-        async function loadStudentData() {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    navigationManager.showNotification('인증 토큰이 없습니다.', 'error');
-                    return;
-                }
-
-                navigationManager.showLoading();
-
-                // 학생 목록 가져오기
-                const studentsResponse = await fetch('/api/admin/users?role=student&limit=50', {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-
-                if (!studentsResponse.ok) {
-                    throw new Error('학생 데이터를 가져오는데 실패했습니다.');
-                }
-
-                const studentsData = await studentsResponse.json();
-
-                if (studentsData.success && studentsData.users) {
-                    updateStudentTable(studentsData.users);
-                    updateStatistics(studentsData.users);
-                } else {
-                    throw new Error(studentsData.message || '학생 데이터를 가져오는데 실패했습니다.');
-                }
-
-            } catch (error) {
-                console.error('학생 데이터 로드 오류:', error);
-                navigationManager.showNotification('학생 데이터를 불러오는데 실패했습니다: ' + error.message, 'error');
-            } finally {
-                navigationManager.hideLoading();
-            }
-        }
-
-        // 학생 테이블 업데이트 함수
-        function updateStudentTable(students) {
-            const tbody = document.querySelector('.students-table tbody');
-            if (!tbody) return;
-
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
-                            등록된 학생이 없습니다.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            students.forEach((student, index) => {
-                // 가상의 성취도 데이터 생성 (실제로는 서버에서 가져와야 함)
-                const averageScore = Math.floor(Math.random() * 40) + 60; // 60-100
-                const completionRate = Math.floor(Math.random() * 40) + 60; // 60-100
+        // 학생 성취도 분석 시스템
+        class StudentAnalyticsSystem {
+            constructor() {
+                this.students = [];
+                this.statistics = {};
+                this.currentPage = 1;
+                this.studentsPerPage = 20;
+                this.filters = {
+                    role: 'student',
+                    status: 'all',
+                    search: ''
+                };
                 
-                let progressClass = 'good-progress';
-                if (averageScore < 70) progressClass = 'poor-progress';
-                else if (averageScore < 85) progressClass = 'average-progress';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${student.name}</td>
-                    <td>${student.student_number || 'N/A'}</td>
-                    <td>${averageScore}</td>
-                    <td>
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill ${progressClass}" style="width: ${averageScore}%;"></div>
-                        </div>
-                    </td>
-                    <td>${completionRate}%</td>
-                    <td><a class="student-detail-link" data-student-id="${student.user_id}">상세보기</a></td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            // 학생 수 업데이트
-            const studentsCountElement = document.querySelector('.students-count');
-            if (studentsCountElement) {
-                studentsCountElement.textContent = `총 ${students.length}명`;
+                this.init();
             }
 
-            // 새로 생성된 상세보기 링크에 이벤트 리스너 추가
-            setupStudentDetailLinks();
-        }
-
-        // 통계 업데이트 함수
-        function updateStatistics(students) {
-            const totalStudents = students.length;
-            
-            // 통계 카드 업데이트
-            const statCards = document.querySelectorAll('.stat-card');
-            
-            // 전체 학생 수
-            const totalStudentsCard = statCards[0];
-            if (totalStudentsCard) {
-                const valueElement = totalStudentsCard.querySelector('.stat-value');
-                const subtextElement = totalStudentsCard.querySelector('.stat-subtext');
-                if (valueElement) valueElement.textContent = totalStudents;
-                if (subtextElement) subtextElement.textContent = '등록된 학생 수';
+            init() {
+                this.setupEventListeners();
+                this.loadData();
             }
 
-            // 가상의 통계 데이터 (실제로는 서버에서 계산해야 함)
-            const avgCompletion = Math.floor(Math.random() * 20) + 70; // 70-90%
-            const avgScore = Math.floor(Math.random() * 15) + 80; // 80-95
-            const totalAssignments = Math.floor(totalStudents * (Math.random() * 5 + 3)); // 학생당 3-8개 과제
-            const topStudents = Math.floor(totalStudents * 0.3); // 상위 30%
-            const strugglingStudents = Math.floor(totalStudents * 0.1); // 하위 10%
+            setupEventListeners() {
+                // 새로고침 버튼
+                const refreshButton = document.getElementById('refreshButton');
+                if (refreshButton) {
+                    refreshButton.addEventListener('click', () => {
+                        this.loadData();
+                    });
+                }
 
-            // 평균 과제 완료율
-            if (statCards[1]) {
-                const valueElement = statCards[1].querySelector('.stat-value');
-                if (valueElement) valueElement.textContent = `${avgCompletion}%`;
+                // 필터 변경 이벤트
+                const roleFilter = document.getElementById('roleFilter');
+                const statusFilter = document.getElementById('statusFilter');
+                const searchFilter = document.getElementById('searchFilter');
+
+                if (roleFilter) {
+                    roleFilter.addEventListener('change', (e) => {
+                        this.filters.role = e.target.value;
+                        this.loadData();
+                    });
+                }
+
+                if (statusFilter) {
+                    statusFilter.addEventListener('change', (e) => {
+                        this.filters.status = e.target.value;
+                        this.loadData();
+                    });
+                }
+
+                if (searchFilter) {
+                    searchFilter.addEventListener('input', (e) => {
+                        this.filters.search = e.target.value;
+                        this.debounceSearch();
+                    });
+                }
+
+                // 모달 이벤트
+                const closeModal = document.getElementById('closeModal');
+                if (closeModal) {
+                    closeModal.addEventListener('click', () => {
+                        this.closeModal();
+                    });
+                }
+
+                // 모달 배경 클릭 시 닫기
+                const modal = document.getElementById('studentDetailModal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            this.closeModal();
+                        }
+                    });
+                }
             }
 
-            // 전체 평균 점수
-            if (statCards[2]) {
-                const valueElement = statCards[2].querySelector('.stat-value');
-                if (valueElement) valueElement.textContent = avgScore;
+            debounceSearch() {
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(() => {
+                    this.loadData();
+                }, 500);
             }
 
-            // 제출된 과제
-            if (statCards[3]) {
-                const valueElement = statCards[3].querySelector('.stat-value');
-                if (valueElement) valueElement.textContent = totalAssignments;
+            async loadData() {
+                try {
+                    navigationManager.showLoading();
+                    
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        throw new Error('인증 토큰이 없습니다.');
+                    }
+
+                    // 병렬로 데이터 로드
+                    const [statisticsData, studentsData] = await Promise.all([
+                        this.loadStatistics(token),
+                        this.loadStudents(token)
+                    ]);
+
+                    // 통계 업데이트
+                    this.updateStatistics(statisticsData);
+                    
+                    // 학생 데이터 업데이트
+                    this.updateStudentsTable(studentsData);
+                    
+                    // 차트 업데이트
+                    this.updateCharts(studentsData);
+
+                } catch (error) {
+                    console.error('데이터 로드 오류:', error);
+                    navigationManager.showNotification('데이터를 불러오는데 실패했습니다: ' + error.message, 'error');
+                } finally {
+                    navigationManager.hideLoading();
+                }
             }
 
-            // 상위 그룹
-            if (statCards[4]) {
-                const valueElement = statCards[4].querySelector('.stat-value');
-                if (valueElement) valueElement.textContent = topStudents;
+            async loadStatistics(token) {
+                try {
+                    const response = await fetch('/api/admin/statistics', {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.success ? data.statistics : null;
+                    }
+                    return null;
+                } catch (error) {
+                    console.error('통계 로드 오류:', error);
+                    return null;
+                }
             }
 
-            // 주의 그룹
-            if (statCards[5]) {
-                const valueElement = statCards[5].querySelector('.stat-value');
-                if (valueElement) valueElement.textContent = strugglingStudents;
-            }
-        }
+            async loadStudents(token) {
+                try {
+                    const params = new URLSearchParams({
+                        role: this.filters.role,
+                        page: this.currentPage.toString(),
+                        limit: this.studentsPerPage.toString()
+                    });
 
-        // 학생 상세보기 링크 이벤트 설정
-        function setupStudentDetailLinks() {
-            const studentDetailLinks = document.querySelectorAll('.student-detail-link');
-            studentDetailLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    const studentId = this.getAttribute('data-student-id');
-                    const studentName = this.closest('tr').querySelector('td:first-child').textContent;
-                    showStudentDetail(studentId, studentName);
+                    if (this.filters.search) {
+                        params.append('search', this.filters.search);
+                    }
+
+                    const response = await fetch('/api/admin/users?' + params.toString(), {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.success ? data.users : [];
+                    }
+                    return [];
+                } catch (error) {
+                    console.error('학생 데이터 로드 오류:', error);
+                    return [];
+                }
+            }
+
+            updateStatistics(statistics) {
+                if (!statistics) return;
+
+                // 통계 카드 업데이트
+                const elements = {
+                    totalStudents: statistics.users?.students || 0,
+                    activeStudents: statistics.users?.active_users || 0,
+                    totalProjects: statistics.projects?.total_projects || 0,
+                    totalAssignments: statistics.assignments?.total_assignments || 0,
+                    totalSubmissions: statistics.submissions?.total_submissions || 0,
+                    averageScore: statistics.submissions?.average_score || 0
+                };
+
+                Object.keys(elements).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = elements[id];
+                    }
                 });
-            });
-        }
+            }
 
-        // 학생 상세 정보 표시
-        async function showStudentDetail(studentId, studentName) {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    navigationManager.showNotification('인증 토큰이 없습니다.', 'error');
+            updateStudentsTable(students) {
+                const tbody = document.getElementById('studentsTableBody');
+                const studentsCount = document.getElementById('studentsCount');
+
+                if (!tbody) return;
+
+                // 학생 수 업데이트
+                if (studentsCount) {
+                    studentsCount.textContent = students.length > 0 ? `총 ${students.length}명` : '학생 없음';
+                }
+
+                // 테이블 업데이트
+                if (students.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+                                <div style="font-size: 48px; margin-bottom: 10px;">👨‍🎓</div>
+                                ${this.filters.search ? '검색 결과가 없습니다.' : '등록된 학생이 없습니다.'}
+                            </td>
+                        </tr>
+                    `;
                     return;
                 }
 
-                navigationManager.showLoading();
-
-                // 실제로는 학생별 상세 성취도 데이터를 가져와야 함
-                // 현재는 기본 사용자 정보만 가져옴
-                const userResponse = await fetch(`/api/user/profile`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-
-                if (userResponse.ok) {
-                    // 간단한 팝업으로 표시 (실제로는 모달이나 새 페이지로)
-                    alert(`${studentName} 학생의 상세 정보:\n\n학생 ID: ${studentId}\n\n상세한 성취도 분석 페이지는 준비 중입니다.`);
-                } else {
-                    throw new Error('학생 정보를 가져오는데 실패했습니다.');
+                // 필터 적용
+                let filteredStudents = students;
+                if (this.filters.status !== 'all') {
+                    filteredStudents = students.filter(student => {
+                        if (this.filters.status === 'active') return student.is_active;
+                        if (this.filters.status === 'inactive') return !student.is_active;
+                        return true;
+                    });
                 }
 
-            } catch (error) {
-                console.error('학생 상세 정보 로드 오류:', error);
-                navigationManager.showNotification('학생 상세 정보를 불러오는데 실패했습니다.', 'error');
-            } finally {
-                navigationManager.hideLoading();
+                tbody.innerHTML = '';
+                filteredStudents.forEach(student => {
+                    const row = this.createStudentRow(student);
+                    tbody.appendChild(row);
+                });
+
+                // 상세보기 링크 이벤트 설정
+                this.setupStudentDetailLinks();
+            }
+
+            createStudentRow(student) {
+                const row = document.createElement('tr');
+                
+                // 가상 데이터 생성 (실제로는 서버에서 계산해야 함)
+                const projectCount = Math.floor(Math.random() * 10) + 1;
+                const assignmentCount = Math.floor(Math.random() * 8) + 1;
+                const lastActivity = this.formatLastActivity(student.last_login || student.created_at);
+                const statusClass = student.is_active ? 'active' : 'inactive';
+                const statusText = student.is_active ? '활성' : '비활성';
+
+                row.innerHTML = `
+                    <td><strong>${student.name}</strong></td>
+                    <td>${student.student_number || 'N/A'}</td>
+                    <td>${student.email}</td>
+                    <td><span style="color: #4285f4; font-weight: bold;">${projectCount}개</span></td>
+                    <td><span style="color: #34a853; font-weight: bold;">${assignmentCount}개</span></td>
+                    <td><small style="color: #666;">${lastActivity}</small></td>
+                    <td><span class="status-badge ${statusClass}" style="padding: 4px 8px; border-radius: 12px; font-size: 12px; color: white; background-color: ${student.is_active ? '#34a853' : '#ea4335'}">${statusText}</span></td>
+                    <td><a class="student-detail-link" data-student-id="${student.user_id}" data-student-name="${student.name}">상세보기</a></td>
+                `;
+
+                return row;
+            }
+
+            formatLastActivity(dateString) {
+                if (!dateString) return '활동 없음';
+                
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+                if (diffDays > 7) {
+                    return date.toLocaleDateString('ko-KR');
+                } else if (diffDays > 0) {
+                    return `${diffDays}일 전`;
+                } else if (diffHours > 0) {
+                    return `${diffHours}시간 전`;
+                } else if (diffMinutes > 0) {
+                    return `${diffMinutes}분 전`;
+                } else {
+                    return '방금 전';
+                }
+            }
+
+            setupStudentDetailLinks() {
+                const links = document.querySelectorAll('.student-detail-link');
+                links.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const studentId = link.dataset.studentId;
+                        const studentName = link.dataset.studentName;
+                        this.showStudentDetail(studentId, studentName);
+                    });
+                });
+            }
+
+            async showStudentDetail(studentId, studentName) {
+                try {
+                    navigationManager.showLoading();
+                    
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        throw new Error('인증 토큰이 없습니다.');
+                    }
+
+                    // 학생 진행 상황 가져오기
+                    const response = await fetch(`/api/user/progress?user_id=${studentId}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    let progressData = null;
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success) {
+                            progressData = result.progress;
+                        }
+                    }
+
+                    // 모달 표시
+                    this.displayStudentModal(studentId, studentName, progressData);
+
+                } catch (error) {
+                    console.error('학생 상세 정보 로드 오류:', error);
+                    
+                    // 기본 정보라도 표시
+                    this.displayStudentModal(studentId, studentName, null);
+                } finally {
+                    navigationManager.hideLoading();
+                }
+            }
+
+            displayStudentModal(studentId, studentName, progressData) {
+                const modal = document.getElementById('studentDetailModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalBody = document.getElementById('modalBody');
+
+                if (!modal || !modalTitle || !modalBody) return;
+
+                modalTitle.textContent = `${studentName} 학생 상세 정보`;
+
+                modalBody.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #4285f4; margin-bottom: 10px;">📊 성취도 요약</h3>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <p><strong>학생 ID:</strong> ${studentId}</p>
+                            <p><strong>전체 진행률:</strong> ${progressData ? progressData.overall_progress + '%' : '계산 중...'}</p>
+                            <p><strong>완료한 프로젝트:</strong> ${progressData ? progressData.completed_projects + '개' : '집계 중...'}</p>
+                            <p><strong>제출한 과제:</strong> ${progressData ? progressData.completed_assignments + '개' : '집계 중...'}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #34a853; margin-bottom: 10px;">📈 학습 패턴</h3>
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px;">
+                            <p><strong>학습 시간:</strong> ${progressData ? progressData.total_coding_time + '분' : '집계 중...'}</p>
+                            <p><strong>연속 학습일:</strong> ${progressData ? progressData.current_streak + '일' : '집계 중...'}</p>
+                            <p><strong>마지막 활동:</strong> ${progressData ? new Date(progressData.last_activity).toLocaleString('ko-KR') : '확인 중...'}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #fbbc05; margin-bottom: 10px;">🎯 개선 제안</h3>
+                        <div style="background: #fff8e1; padding: 15px; border-radius: 8px;">
+                            <ul style="margin: 0; padding-left: 20px; color: #666;">
+                                <li>정기적인 학습 습관 유지 권장</li>
+                                <li>어려운 개념은 반복 학습 필요</li>
+                                <li>프로젝트 기반 실습 확대</li>
+                                ${progressData && progressData.overall_progress < 50 ? '<li style="color: #ea4335;">개별 지도 필요</li>' : ''}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+
+                modal.style.display = 'flex';
+            }
+
+            closeModal() {
+                const modal = document.getElementById('studentDetailModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            updateCharts(students) {
+                this.updateGradeDistribution(students);
+                this.updateSkillsChart(students);
+            }
+
+            updateGradeDistribution(students) {
+                const container = document.getElementById('gradeDistribution');
+                if (!container) return;
+
+                // 성적 구간별 분포 계산 (가상 데이터)
+                const grades = {
+                    '0-50': Math.floor(students.length * 0.05),
+                    '51-60': Math.floor(students.length * 0.1),
+                    '61-70': Math.floor(students.length * 0.15),
+                    '71-80': Math.floor(students.length * 0.25),
+                    '81-90': Math.floor(students.length * 0.25),
+                    '91-100': Math.floor(students.length * 0.2)
+                };
+
+                const maxCount = Math.max(...Object.values(grades));
+                
+                container.innerHTML = '';
+                Object.entries(grades).forEach(([range, count]) => {
+                    const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'grade-bar';
+                    bar.innerHTML = `
+                        <div class="grade-fill" style="height: ${height}%;"></div>
+                        <div class="grade-label">${range}</div>
+                        <div class="grade-count">${count}명</div>
+                    `;
+                    container.appendChild(bar);
+                });
+            }
+
+            updateSkillsChart(students) {
+                const container = document.getElementById('skillsChart');
+                if (!container) return;
+
+                const skills = [
+                    { name: '프로젝트 완성도', value: 85 },
+                    { name: '과제 제출률', value: 78 },
+                    { name: '코드 품질', value: 72 },
+                    { name: '학습 지속성', value: 88 },
+                    { name: '문제 해결 능력', value: 65 }
+                ];
+
+                container.innerHTML = '';
+                skills.forEach(skill => {
+                    const item = document.createElement('div');
+                    item.className = 'skill-item';
+                    item.innerHTML = `
+                        <div class="skill-label">
+                            <div class="skill-name">${skill.name}</div>
+                            <div class="skill-value">${skill.value}%</div>
+                        </div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" style="width: ${skill.value}%;"></div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
             }
         }
 
-        // 데이터 새로고침 함수
-        function refreshData() {
-            loadStudentData();
-            navigationManager.showNotification('데이터를 새로고침했습니다.');
-        }
+        // 전역 변수
+        let navigationManager;
+        let analyticsSystem;
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
             // 네비게이션 매니저 초기화
             navigationManager = new NavigationManager();
-
-            // 실제 학생 데이터 로드
-            loadStudentData();
-
-            // 차트 옵션 이벤트
-            const chartOptions = document.querySelectorAll('.chart-option');
-            chartOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelector('.chart-option.active').classList.remove('active');
-                    this.classList.add('active');
-                    
-                    navigationManager.showNotification('차트 유형이 변경되었습니다: ' + this.textContent);
-                });
-            });
             
-            // 필터 변경 이벤트
-            const filters = document.querySelectorAll('select[id$="Filter"]');
-            filters.forEach(filter => {
-                filter.addEventListener('change', function() {
-                    console.log('필터 변경:', this.id, '값:', this.value);
-                    
-                    // 필터 값에 따라 데이터 다시 로드
-                    const classFilter = document.getElementById('classFilter').value;
-                    const periodFilter = document.getElementById('periodFilter').value;
-                    const assignmentFilter = document.getElementById('assignmentFilter').value;
-                    
-                    // 실제로는 필터 파라미터와 함께 API 호출
-                    loadStudentDataWithFilters(classFilter, periodFilter, assignmentFilter);
-                    
-                    updateChartAnimations();
-                    navigationManager.showNotification('필터가 적용되었습니다.');
-                });
-            });
+            // 분석 시스템 초기화
+            analyticsSystem = new StudentAnalyticsSystem();
 
-        // 필터와 함께 학생 데이터 로드
-        async function loadStudentDataWithFilters(classFilter, periodFilter, assignmentFilter) {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) return;
-
-                navigationManager.showLoading();
-
-                // 필터 파라미터 구성
-                let queryParams = new URLSearchParams({
-                    role: 'student',
-                    limit: '50'
-                });
-
-                // 실제로는 서버에서 필터링 지원 필요
-                // 현재는 클라이언트 사이드에서 기본 필터링만 수행
-
-                const studentsResponse = await fetch(`/api/admin/users?${queryParams}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-
-                if (studentsResponse.ok) {
-                    const studentsData = await studentsResponse.json();
-                    if (studentsData.success && studentsData.users) {
-                        let filteredStudents = studentsData.users;
-
-                        // 클라이언트 사이드 필터링 (임시)
-                        if (classFilter !== 'all') {
-                            // 실제로는 서버에서 분반 정보를 관리해야 함
-                            // 현재는 학번 기준으로 분반 할당 (예시)
-                            filteredStudents = filteredStudents.filter(student => {
-                                if (!student.student_number) return classFilter === 'A';
-                                const lastDigit = parseInt(student.student_number.slice(-1));
-                                if (classFilter === 'A') return lastDigit % 3 === 1;
-                                if (classFilter === 'B') return lastDigit % 3 === 2;
-                                if (classFilter === 'C') return lastDigit % 3 === 0;
-                                return true;
-                            });
-                        }
-
-                        updateStudentTable(filteredStudents);
-                        updateStatistics(filteredStudents);
-                        
-                        // 필터 정보 업데이트
-                        updateFilterInfo(classFilter, periodFilter, assignmentFilter, filteredStudents.length);
-                    }
-                }
-
-            } catch (error) {
-                console.error('필터된 학생 데이터 로드 오류:', error);
-                navigationManager.showNotification('데이터를 불러오는데 실패했습니다.', 'error');
-            } finally {
-                navigationManager.hideLoading();
-            }
-        }
-
-        // 필터 정보 업데이트
-        function updateFilterInfo(classFilter, periodFilter, assignmentFilter, studentCount) {
-            // 통계 카드의 첫 번째 카드 업데이트
-            const firstStatCard = document.querySelector('.stat-card .stat-info');
-            if (firstStatCard) {
-                const subtextElement = firstStatCard.querySelector('.stat-subtext');
-                if (subtextElement) {
-                    let filterText = '';
-                    if (classFilter !== 'all') filterText += `${classFilter}분반`;
-                    if (periodFilter !== 'all') {
-                        if (filterText) filterText += ', ';
-                        const periodMap = {
-                            'week': '최근 1주',
-                            'month': '최근 1개월',
-                            'semester': '현재 학기'
-                        };
-                        filterText += periodMap[periodFilter] || periodFilter;
-                    }
-                    subtextElement.textContent = filterText || '전체 학생';
-                }
-            }
-        }
-
-        // 새로고침 버튼 추가 (필요시)
-        function addRefreshButton() {
-            const filterSection = document.querySelector('.filter-section');
-            if (filterSection && !document.getElementById('refreshButton')) {
-                const refreshButton = document.createElement('button');
-                refreshButton.id = 'refreshButton';
-                refreshButton.textContent = '🔄 새로고침';
-                refreshButton.style.cssText = `
-                    padding: 10px 20px;
-                    margin-left: 20px;
-                    border: none;
-                    border-radius: 5px;
-                    background-color: #4285f4;
-                    color: white;
-                    cursor: pointer;
-                    font-size: 14px;
-                    transition: all 0.3s ease;
-                `;
-                
-                refreshButton.addEventListener('click', refreshData);
-                refreshButton.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#3b78e7';
-                });
-                refreshButton.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = '#4285f4';
-                });
-                
-                const filterOptions = document.querySelector('.filter-options');
-                if (filterOptions) {
-                    filterOptions.appendChild(refreshButton);
-                }
-            }
-        }
-
-        // 실시간 데이터 업데이트 (선택적)
-        function startRealTimeUpdates() {
-            // 5분마다 데이터 자동 새로고침
-            setInterval(() => {
-                const now = new Date();
-                console.log(`[${now.toLocaleTimeString()}] 자동 데이터 새로고침`);
-                loadStudentData();
-            }, 5 * 60 * 1000); // 5분
-        }
-
-        // 데이터 내보내기 함수 (CSV)
-        function exportStudentData() {
-            const table = document.querySelector('.students-table');
-            if (!table) return;
-
-            const rows = Array.from(table.querySelectorAll('tr'));
-            const csvContent = rows.map(row => {
-                const cells = Array.from(row.querySelectorAll('th, td'));
-                return cells.map(cell => {
-                    // 진행 상황 바는 텍스트로 변환
-                    if (cell.querySelector('.progress-bar-fill')) {
-                        const width = cell.querySelector('.progress-bar-fill').style.width;
-                        return `"${width}"`;
-                    }
-                    return `"${cell.textContent.trim()}"`;
-                }).join(',');
-            }).join('\n');
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `학생_성취도_분석_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-            
-            navigationManager.showNotification('학생 데이터가 CSV 파일로 내보내졌습니다.');
-        }
-            
-            // 데이터 포인트 호버 이벤트 (툴팁 표시)
-            const dataPoints = document.querySelectorAll('.point');
-            const tooltip = document.getElementById('tooltip');
-            
-            dataPoints.forEach(point => {
-                point.addEventListener('mouseenter', function(e) {
-                    const month = this.getAttribute('data-month');
-                    const score = this.getAttribute('data-score');
-                    tooltip.textContent = `${month}: ${score}점`;
-                    tooltip.style.left = (e.pageX + 10) + 'px';
-                    tooltip.style.top = (e.pageY - 30) + 'px';
-                    tooltip.style.opacity = 1;
-                });
-                
-                point.addEventListener('mousemove', function(e) {
-                    tooltip.style.left = (e.pageX + 10) + 'px';
-                    tooltip.style.top = (e.pageY - 30) + 'px';
-                });
-                
-                point.addEventListener('mouseleave', function() {
-                    tooltip.style.opacity = 0;
-                });
-            });
-            
-            // 학생 상세보기 링크 이벤트
-            const studentDetailLinks = document.querySelectorAll('.student-detail-link');
-            studentDetailLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    const studentName = this.closest('tr').querySelector('td:first-child').textContent;
-                    navigationManager.showNotification(`${studentName} 학생의 상세 정보는 준비 중입니다.`);
-                });
-            });
-            
-            // 페이지네이션 이벤트
-            const pageButtons = document.querySelectorAll('.page-btn');
-            pageButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelector('.page-btn.active').classList.remove('active');
-                    this.classList.add('active');
-                    navigationManager.showNotification('페이지 ' + this.textContent + '로 이동했습니다.');
-                });
-            });
-            
-            // 차트 애니메이션 업데이트 함수
-            function updateChartAnimations() {
-                // 성적 분포 애니메이션 리셋 및 재실행
-                const gradeBars = document.querySelectorAll('.grade-fill');
-                gradeBars.forEach(bar => {
-                    const currentHeight = bar.style.height;
-                    bar.style.height = '0%';
-                    setTimeout(() => {
-                        bar.style.height = currentHeight;
-                    }, 100);
-                });
-                
-                // 스킬 차트 애니메이션 리셋 및 재실행
-                const skillBars = document.querySelectorAll('.skill-bar-fill');
-                skillBars.forEach(bar => {
-                    const currentWidth = bar.style.width;
-                    bar.style.width = '0%';
-                    setTimeout(() => {
-                        bar.style.width = currentWidth;
-                    }, 100);
-                });
-                
-                // 라인 차트 애니메이션 리셋 및 재실행
-                const lineChart = document.querySelector('.chart-line');
-                if (lineChart) {
-                    lineChart.style.animation = 'none';
-                    lineChart.offsetHeight; // 리플로우 트리거
-                    lineChart.style.animation = 'drawLine 2s ease forwards';
-                }
-            }
-
-                        
             // 키보드 단축키 설정
             document.addEventListener('keydown', (e) => {
                 if (e.ctrlKey || e.metaKey) {
@@ -1761,34 +1490,17 @@
                             break;
                         case 'r':
                             e.preventDefault();
-                            refreshData();
-                            break;
-                        case 'e':
-                            e.preventDefault();
-                            exportStudentData();
+                            analyticsSystem.loadData();
                             break;
                     }
                 }
+
+                // ESC 키로 모달 닫기
+                if (e.key === 'Escape') {
+                    analyticsSystem.closeModal();
+                }
             });
-            
-            // 새로고침 버튼 추가
-            addRefreshButton();
-            
-            // 실시간 업데이트 시작 (선택적)
-            // startRealTimeUpdates();
-            
-            // 초기 애니메이션
-            setTimeout(updateChartAnimations, 1000);
         });
     </script>
 </body>
-</html>-bar-fill" style="width: 92%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <div class="skill-name">조건문 (if-else)</div>
-                            <div class="skill-value">85%</div>
-                        </div>
-                        <div class="skill-bar-bg">
-                            <div class="skill
+</html>

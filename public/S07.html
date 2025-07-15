@@ -512,6 +512,43 @@
             z-index: 1000;
             font-family: Arial, sans-serif;
         }
+
+        .error-notification {
+            background: linear-gradient(135deg, #f44336, #d32f2f) !important;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4285f4, #34a853);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .validation-error {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: #f44336;
+        }
+
+        .form-group.error .validation-error {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -555,61 +592,32 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="assignmentTitle">과제명</label>
+                            <label for="assignmentTitle">과제명 *</label>
                             <input type="text" id="assignmentTitle" name="assignmentTitle" placeholder="예: 반복문으로 사각형 그리기" required>
+                            <div class="validation-error">과제명을 입력해주세요.</div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="assignmentType">과제 유형</label>
-                            <div class="assignment-types">
-                                <div class="type-card selected" data-type="block">
-                                    <div class="type-icon">🧩</div>
-                                    <div class="type-title">블록 코딩</div>
-                                    <div class="type-description">블록을 끌어서 코드를 작성하는 형태의 과제</div>
-                                </div>
-                                <div class="type-card" data-type="algorithm">
-                                    <div class="type-icon">🔄</div>
-                                    <div class="type-title">알고리즘</div>
-                                    <div class="type-description">알고리즘 문제 해결 과제</div>
-                                </div>
-                                <div class="type-card" data-type="quiz">
-                                    <div class="type-icon">❓</div>
-                                    <div class="type-title">퀴즈</div>
-                                    <div class="type-description">객관식, 단답형 문제 형태의 과제</div>
-                                </div>
-                            </div>
+                            <label for="assignmentDescription">과제 설명 *</label>
+                            <textarea id="assignmentDescription" name="assignmentDescription" placeholder="과제에 대한 상세한 설명을 작성하세요..." required></textarea>
+                            <div class="validation-error">과제 설명을 입력해주세요.</div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="difficultyLevel">난이도</label>
+                            <label for="problemStatement">문제 명세 *</label>
+                            <textarea id="problemStatement" name="problemStatement" placeholder="학생들이 해결해야 할 구체적인 문제를 작성하세요..." required></textarea>
+                            <div class="validation-error">문제 명세를 입력해주세요.</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="difficultyLevel">난이도 *</label>
                             <select id="difficultyLevel" name="difficultyLevel" required>
-                                <option value="easy">초급</option>
-                                <option value="medium">중급</option>
-                                <option value="hard">고급</option>
+                                <option value="">난이도 선택</option>
+                                <option value="easy">초급 (Easy)</option>
+                                <option value="medium">중급 (Medium)</option>
+                                <option value="hard">고급 (Hard)</option>
                             </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="assignmentCategory">카테고리</label>
-                            <select id="assignmentCategory" name="assignmentCategory" required>
-                                <option value="basics">기본 개념</option>
-                                <option value="variables">변수/연산자</option>
-                                <option value="conditionals">조건문</option>
-                                <option value="loops">반복문</option>
-                                <option value="functions">함수</option>
-                                <option value="arrays">배열/리스트</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                공개 여부
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="isPublic" name="isPublic" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </label>
-                            <div class="input-hint">공개 설정 시 모든 학생에게 과제가 표시됩니다.</div>
+                            <div class="validation-error">난이도를 선택해주세요.</div>
                         </div>
                     </div>
                     
@@ -619,50 +627,20 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="startDate">시작일</label>
-                            <input type="date" id="startDate" name="startDate" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="dueDate">마감일</label>
+                            <label for="dueDate">마감일 *</label>
                             <input type="date" id="dueDate" name="dueDate" required>
+                            <div class="validation-error">마감일을 설정해주세요.</div>
                         </div>
                         
                         <div class="form-group">
                             <label>
-                                지각 제출 허용
+                                과제 활성화
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="allowLate" name="allowLate">
+                                    <input type="checkbox" id="isActive" name="isActive" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </label>
-                            <div class="input-hint">마감 이후에도 과제 제출을 허용합니다. (감점 적용)</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <div class="form-section-title">
-                            <i>📋</i> 과제 내용
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="assignmentDescription">설명</label>
-                            <textarea id="assignmentDescription" name="assignmentDescription" placeholder="과제에 대한 설명을 작성하세요..." required></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="assignmentInstructions">지시사항</label>
-                            <textarea id="assignmentInstructions" name="assignmentInstructions" placeholder="학생들이 따라야 할 상세 지시사항을 작성하세요..." required></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="exampleInput">입력 예시</label>
-                            <textarea id="exampleInput" name="exampleInput" placeholder="예시 입력을 제공하세요..."></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="exampleOutput">출력 예시</label>
-                            <textarea id="exampleOutput" name="exampleOutput" placeholder="예시 출력을 제공하세요..."></textarea>
+                            <div class="input-hint">비활성화 시 학생들에게 과제가 보이지 않습니다.</div>
                         </div>
                     </div>
                     
@@ -679,13 +657,19 @@
                                 </div>
                                 <div class="test-case-inputs">
                                     <div class="test-case-input">
-                                        <label>입력</label>
-                                        <textarea placeholder="테스트 입력값..."></textarea>
+                                        <label>입력 데이터</label>
+                                        <textarea placeholder="테스트 입력값을 입력하세요..." name="testInput"></textarea>
                                     </div>
                                     <div class="test-case-output">
-                                        <label>기대 출력</label>
-                                        <textarea placeholder="기대 출력값..."></textarea>
+                                        <label>예상 출력</label>
+                                        <textarea placeholder="예상 출력값을 입력하세요..." name="testOutput"></textarea>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="testHidden" style="margin-right: 8px;">
+                                        숨겨진 테스트 케이스 (학생에게 보이지 않음)
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -700,85 +684,27 @@
                             <i>⚖️</i> 채점 기준
                         </div>
                         
-                        <div class="criteria-container" id="criteriaContainer">
-                            <div class="criteria-row">
-                                <div class="criteria-name">정확성 (테스트 케이스 통과)</div>
-                                <div class="criteria-weight">
-                                    <input type="number" min="0" max="100" value="50">
-                                    <span>%</span>
-                                </div>
-                                <div class="criteria-actions">✕</div>
-                            </div>
-                            <div class="criteria-row">
-                                <div class="criteria-name">코드 구조 및 가독성</div>
-                                <div class="criteria-weight">
-                                    <input type="number" min="0" max="100" value="30">
-                                    <span>%</span>
-                                </div>
-                                <div class="criteria-actions">✕</div>
-                            </div>
-                            <div class="criteria-row">
-                                <div class="criteria-name">효율성</div>
-                                <div class="criteria-weight">
-                                    <input type="number" min="0" max="100" value="20">
-                                    <span>%</span>
-                                </div>
-                                <div class="criteria-actions">✕</div>
-                            </div>
-                        </div>
-                        
-                        <div class="add-criteria-btn" id="addCriteriaBtn">
-                            <i>+</i> 채점 기준 추가
+                        <div class="form-group">
+                            <label for="gradingCriteria">채점 기준 (JSON 형식)</label>
+                            <textarea id="gradingCriteria" name="gradingCriteria" placeholder='{"accuracy": 60, "code_quality": 25, "efficiency": 15}' style="min-height: 100px;"></textarea>
+                            <div class="input-hint">채점 기준을 JSON 형식으로 입력하세요. 예: {"정확성": 60, "코드품질": 25, "효율성": 15}</div>
                         </div>
                     </div>
                     
                     <div class="form-section">
                         <div class="form-section-title">
-                            <i>🔒</i> 제약사항
+                            <i>💾</i> 저장 및 미리보기
                         </div>
                         
-                        <div class="constraints-container">
-                            <div class="constraint-item">
-                                <input type="checkbox" id="minBlocksConstraint" checked>
-                                <div class="constraint-label">최소 블록 수 제한</div>
-                                <div class="constraint-value">
-                                    <input type="number" min="1" value="5">
-                                </div>
-                            </div>
-                            <div class="constraint-item">
-                                <input type="checkbox" id="useLoopsConstraint" checked>
-                                <div class="constraint-label">반복문 블록 사용 필수</div>
-                                <div class="constraint-value">
-                                    <input type="number" min="1" value="1">
-                                </div>
-                            </div>
-                            <div class="constraint-item">
-                                <input type="checkbox" id="useConditionalConstraint">
-                                <div class="constraint-label">조건문 블록 사용 필수</div>
-                                <div class="constraint-value">
-                                    <input type="number" min="1" value="1">
-                                </div>
-                            </div>
-                            <div class="constraint-item">
-                                <input type="checkbox" id="useFunctionConstraint">
-                                <div class="constraint-label">함수 블록 사용 필수</div>
-                                <div class="constraint-value">
-                                    <input type="number" min="1" value="1">
-                                </div>
-                            </div>
-                            <div class="constraint-item">
-                                <input type="checkbox" id="nestedLoopConstraint">
-                                <div class="constraint-label">중첩 반복문 사용 필수</div>
-                                <div class="constraint-value">
-                                    <input type="number" min="1" value="1">
-                                </div>
-                            </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
                         </div>
-                    </div>
-                    
-                    <div class="button-container">
-                        <button type="button" class="btn btn-secondary" id="previewBtn">미리보기</button>
-                        <button type="submit" class="btn btn-primary">과제 저장</button>
+                        
+                        <div class="button-container">
+                            <button type="button" class="btn btn-secondary" id="saveDraftBtn">임시 저장</button>
+                            <button type="button" class="btn btn-secondary" id="previewBtn">미리보기</button>
+                            <button type="submit" class="btn btn-primary">과제 생성</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -825,7 +751,7 @@
                 try {
                     this.currentUser = JSON.parse(userJSON);
                     
-                    // 교수 권한 확인
+                    // 교수/관리자 권한 확인
                     if (this.currentUser.role !== 'professor' && this.currentUser.role !== 'admin') {
                         this.showNotification('교수 권한이 필요합니다.', 'error');
                         setTimeout(() => {
@@ -972,14 +898,9 @@
 
                 const notification = document.createElement('div');
                 notification.id = 'navigationNotification';
-                notification.className = 'navigation-notification';
+                notification.className = `navigation-notification ${type === 'error' ? 'error-notification' : ''}`;
                 notification.textContent = message;
 
-                const backgroundColor = type === 'error' 
-                    ? 'linear-gradient(135deg, #f44336, #d32f2f)' 
-                    : 'linear-gradient(135deg, #4CAF50, #45a049)';
-
-                notification.style.background = backgroundColor;
                 document.body.appendChild(notification);
 
                 setTimeout(() => {
@@ -997,283 +918,615 @@
             }
         }
 
-        // 네비게이션 매니저 초기화
-        let navigationManager;
+        // 과제 생성 관리자 클래스
+        class AssignmentCreator {
+            constructor() {
+                this.testCaseCount = 1;
+                this.isDraft = false;
+                this.currentData = null;
+                this.init();
+            }
 
-        // 과제 출제 페이지 로직
-        document.addEventListener('DOMContentLoaded', function() {
-            // 네비게이션 매니저 초기화
-            navigationManager = new NavigationManager();
+            init() {
+                this.setupEventListeners();
+                this.setDefaultValues();
+                this.loadDraftIfExists();
+            }
 
-            // 오늘 날짜 기본값 설정
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0];
-            document.getElementById('startDate').value = formattedDate;
-            
-            // 2주 후 마감일 기본값 설정
-            const dueDate = new Date();
-            dueDate.setDate(today.getDate() + 14);
-            document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
-            
-            // 과제 유형 카드 클릭 이벤트
-            const typeCards = document.querySelectorAll('.type-card');
-            typeCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    typeCards.forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
+            setupEventListeners() {
+                // 폼 제출 이벤트
+                document.getElementById('createAssignmentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSubmit(false); // 실제 생성
                 });
-            });
-            
-            // 테스트 케이스 추가 버튼 이벤트
-            const addTestCaseBtn = document.getElementById('addTestCaseBtn');
-            const testCasesContainer = document.getElementById('testCasesContainer');
-            
-            addTestCaseBtn.addEventListener('click', function() {
-                const testCaseCount = testCasesContainer.querySelectorAll('.test-case').length + 1;
+
+                // 임시 저장 버튼
+                document.getElementById('saveDraftBtn').addEventListener('click', () => {
+                    this.handleSubmit(true); // 임시 저장
+                });
+
+                // 미리보기 버튼
+                document.getElementById('previewBtn').addEventListener('click', () => {
+                    this.showPreview();
+                });
+
+                // 테스트 케이스 추가 버튼
+                document.getElementById('addTestCaseBtn').addEventListener('click', () => {
+                    this.addTestCase();
+                });
+
+                // 기존 테스트 케이스 삭제 이벤트
+                this.setupTestCaseRemoveEvents();
+
+                // 실시간 유효성 검사
+                this.setupRealTimeValidation();
+
+                // 키보드 단축키
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch(e.key) {
+                            case 's':
+                                e.preventDefault();
+                                this.handleSubmit(true); // 임시 저장
+                                break;
+                            case 'Enter':
+                                if (e.shiftKey) {
+                                    e.preventDefault();
+                                    this.handleSubmit(false); // 실제 생성
+                                }
+                                break;
+                        }
+                    }
+                });
+
+                // 폼 변경 감지 (진행률 업데이트)
+                const formElements = document.querySelectorAll('#createAssignmentForm input, #createAssignmentForm textarea, #createAssignmentForm select');
+                formElements.forEach(element => {
+                    element.addEventListener('input', () => {
+                        this.updateProgress();
+                    });
+                });
+            }
+
+            setDefaultValues() {
+                // 오늘부터 2주 후를 기본 마감일로 설정
+                const today = new Date();
+                const dueDate = new Date();
+                dueDate.setDate(today.getDate() + 14);
+                document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+
+                // 기본 채점 기준 설정
+                const defaultCriteria = {
+                    "정확성": 50,
+                    "코드 구조": 30,
+                    "효율성": 20
+                };
+                document.getElementById('gradingCriteria').value = JSON.stringify(defaultCriteria, null, 2);
+
+                this.updateProgress();
+            }
+
+            setupTestCaseRemoveEvents() {
+                document.querySelectorAll('.test-case-remove').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const testCase = e.target.closest('.test-case');
+                        const container = document.getElementById('testCasesContainer');
+                        
+                        // 최소 1개의 테스트 케이스는 유지
+                        if (container.querySelectorAll('.test-case').length > 1) {
+                            testCase.remove();
+                            this.updateTestCaseNumbers();
+                            this.updateProgress();
+                        } else {
+                            navigationManager.showNotification('최소 1개의 테스트 케이스가 필요합니다.', 'error');
+                        }
+                    });
+                });
+            }
+
+            addTestCase() {
+                this.testCaseCount++;
+                const container = document.getElementById('testCasesContainer');
+                
                 const newTestCase = document.createElement('div');
                 newTestCase.className = 'test-case';
                 newTestCase.innerHTML = `
                     <div class="test-case-header">
-                        <div>테스트 케이스 #${testCaseCount}</div>
+                        <div>테스트 케이스 #${this.testCaseCount}</div>
                         <div class="test-case-remove">✕</div>
                     </div>
                     <div class="test-case-inputs">
                         <div class="test-case-input">
-                            <label>입력</label>
-                            <textarea placeholder="테스트 입력값..."></textarea>
+                            <label>입력 데이터</label>
+                            <textarea placeholder="테스트 입력값을 입력하세요..." name="testInput"></textarea>
                         </div>
                         <div class="test-case-output">
-                            <label>기대 출력</label>
-                            <textarea placeholder="기대 출력값..."></textarea>
+                            <label>예상 출력</label>
+                            <textarea placeholder="예상 출력값을 입력하세요..." name="testOutput"></textarea>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="testHidden" style="margin-right: 8px;">
+                            숨겨진 테스트 케이스 (학생에게 보이지 않음)
+                        </label>
+                    </div>
                 `;
-                testCasesContainer.appendChild(newTestCase);
                 
-                // 테스트 케이스 삭제 이벤트 추가
-                newTestCase.querySelector('.test-case-remove').addEventListener('click', function() {
-                    newTestCase.remove();
-                    updateTestCaseNumbers();
+                container.appendChild(newTestCase);
+                
+                // 새로운 테스트 케이스의 삭제 이벤트 추가
+                newTestCase.querySelector('.test-case-remove').addEventListener('click', (e) => {
+                    const testCase = e.target.closest('.test-case');
+                    const container = document.getElementById('testCasesContainer');
+                    
+                    if (container.querySelectorAll('.test-case').length > 1) {
+                        testCase.remove();
+                        this.updateTestCaseNumbers();
+                        this.updateProgress();
+                    } else {
+                        navigationManager.showNotification('최소 1개의 테스트 케이스가 필요합니다.', 'error');
+                    }
                 });
-            });
-            
-            // 기존 테스트 케이스 삭제 이벤트 추가
-            document.querySelectorAll('.test-case-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.closest('.test-case').remove();
-                    updateTestCaseNumbers();
+
+                // 새로운 입력 필드에 이벤트 리스너 추가
+                newTestCase.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.addEventListener('input', () => {
+                        this.updateProgress();
+                    });
                 });
-            });
-            
-            // 테스트 케이스 번호 재정렬 함수
-            function updateTestCaseNumbers() {
-                const testCases = testCasesContainer.querySelectorAll('.test-case');
+
+                this.updateProgress();
+                navigationManager.showNotification('테스트 케이스가 추가되었습니다.');
+            }
+
+            updateTestCaseNumbers() {
+                const testCases = document.querySelectorAll('.test-case');
                 testCases.forEach((testCase, index) => {
                     testCase.querySelector('.test-case-header div:first-child').textContent = `테스트 케이스 #${index + 1}`;
                 });
+                this.testCaseCount = testCases.length;
             }
-            
-            // 채점 기준 추가 버튼 이벤트
-            const addCriteriaBtn = document.getElementById('addCriteriaBtn');
-            const criteriaContainer = document.getElementById('criteriaContainer');
-            
-            addCriteriaBtn.addEventListener('click', function() {
-                const newCriteria = document.createElement('div');
-                newCriteria.className = 'criteria-row';
-                newCriteria.innerHTML = `
-                    <div class="criteria-name">
-                        <input type="text" placeholder="채점 기준명" style="width: 100%; padding: 6px; border: 1px solid #dddddd; border-radius: 3px; box-sizing: border-box;">
-                    </div>
-                    <div class="criteria-weight">
-                        <input type="number" min="0" max="100" value="10">
-                        <span>%</span>
-                    </div>
-                    <div class="criteria-actions">✕</div>
-                `;
-                criteriaContainer.appendChild(newCriteria);
-                
-                // 채점 기준 삭제 이벤트 추가
-                newCriteria.querySelector('.criteria-actions').addEventListener('click', function() {
-                    newCriteria.remove();
-                });
-            });
-            
-            // 기존 채점 기준 삭제 이벤트 추가
-            document.querySelectorAll('.criteria-actions').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.closest('.criteria-row').remove();
-                });
-            });
-            
-            // 폼 제출 이벤트
-            document.getElementById('createAssignmentForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // 유효성 검사 - 채점 기준 가중치 합이 100%인지 확인
-                const weights = [...document.querySelectorAll('.criteria-weight input')].map(input => parseInt(input.value) || 0);
-                const weightSum = weights.reduce((sum, weight) => sum + weight, 0);
-                
-                if (weightSum !== 100) {
-                    navigationManager.showNotification(`채점 기준의 가중치 합이 100%가 되어야 합니다. 현재: ${weightSum}%`, 'error');
-                    return;
-                }
-                
-                // 필수 필드 확인
+
+            setupRealTimeValidation() {
                 const requiredFields = [
-                    { id: 'assignmentTitle', name: '과제명' },
-                    { id: 'difficultyLevel', name: '난이도' },
-                    { id: 'assignmentCategory', name: '카테고리' },
-                    { id: 'startDate', name: '시작일' },
-                    { id: 'dueDate', name: '마감일' },
-                    { id: 'assignmentDescription', name: '설명' },
-                    { id: 'assignmentInstructions', name: '지시사항' }
+                    { id: 'assignmentTitle', message: '과제명을 입력해주세요.' },
+                    { id: 'assignmentDescription', message: '과제 설명을 입력해주세요.' },
+                    { id: 'problemStatement', message: '문제 명세를 입력해주세요.' },
+                    { id: 'difficultyLevel', message: '난이도를 선택해주세요.' },
+                    { id: 'dueDate', message: '마감일을 설정해주세요.' }
                 ];
-                
-                for (const field of requiredFields) {
+
+                requiredFields.forEach(field => {
                     const element = document.getElementById(field.id);
-                    if (!element.value.trim()) {
-                        navigationManager.showNotification(`${field.name}을(를) 입력해주세요.`, 'error');
-                        element.focus();
-                        return;
+                    const formGroup = element.closest('.form-group');
+                    
+                    element.addEventListener('blur', () => {
+                        this.validateField(element, formGroup, field.message);
+                    });
+
+                    element.addEventListener('input', () => {
+                        if (formGroup.classList.contains('error')) {
+                            this.validateField(element, formGroup, field.message);
+                        }
+                    });
+                });
+
+                // 채점 기준 JSON 유효성 검사
+                const gradingCriteria = document.getElementById('gradingCriteria');
+                gradingCriteria.addEventListener('blur', () => {
+                    this.validateGradingCriteria();
+                });
+            }
+
+            validateField(element, formGroup, message) {
+                const isValid = element.value.trim() !== '';
+                
+                if (isValid) {
+                    formGroup.classList.remove('error');
+                } else {
+                    formGroup.classList.add('error');
+                    formGroup.querySelector('.validation-error').textContent = message;
+                }
+                
+                return isValid;
+            }
+
+            validateGradingCriteria() {
+                const element = document.getElementById('gradingCriteria');
+                const formGroup = element.closest('.form-group');
+                
+                try {
+                    if (element.value.trim()) {
+                        const criteria = JSON.parse(element.value);
+                        if (typeof criteria === 'object' && criteria !== null) {
+                            formGroup.classList.remove('error');
+                            return true;
+                        }
                     }
+                } catch (e) {
+                    formGroup.classList.add('error');
+                    formGroup.querySelector('.validation-error').textContent = '올바른 JSON 형식이 아닙니다.';
+                    return false;
                 }
                 
-                // 날짜 유효성 검사
-                const startDate = new Date(document.getElementById('startDate').value);
-                const dueDate = new Date(document.getElementById('dueDate').value);
-                
-                if (startDate >= dueDate) {
-                    navigationManager.showNotification('마감일은 시작일보다 늦어야 합니다.', 'error');
-                    return;
-                }
-                
+                return true; // 빈 값은 허용
+            }
+
+            updateProgress() {
+                const requiredFields = [
+                    'assignmentTitle',
+                    'assignmentDescription', 
+                    'problemStatement',
+                    'difficultyLevel',
+                    'dueDate'
+                ];
+
+                let completedFields = 0;
+
+                // 필수 필드 확인
+                requiredFields.forEach(fieldId => {
+                    const element = document.getElementById(fieldId);
+                    if (element && element.value.trim()) {
+                        completedFields++;
+                    }
+                });
+
                 // 테스트 케이스 확인
                 const testCases = document.querySelectorAll('.test-case');
-                if (testCases.length === 0) {
-                    navigationManager.showNotification('최소 1개의 테스트 케이스가 필요합니다.', 'error');
-                    return;
+                let hasValidTestCase = false;
+                testCases.forEach(testCase => {
+                    const input = testCase.querySelector('textarea[name="testInput"]').value.trim();
+                    const output = testCase.querySelector('textarea[name="testOutput"]').value.trim();
+                    if (input && output) {
+                        hasValidTestCase = true;
+                    }
+                });
+
+                if (hasValidTestCase) {
+                    completedFields++;
                 }
+
+                const totalFields = requiredFields.length + 1; // +1 for test cases
+                const progress = Math.round((completedFields / totalFields) * 100);
                 
-                // 폼 데이터 수집
-                const formData = new FormData(this);
-                const assignmentData = {
-                    title: formData.get('assignmentTitle'),
-                    type: document.querySelector('.type-card.selected').dataset.type,
-                    difficulty_level: formData.get('difficultyLevel'),
-                    category: formData.get('assignmentCategory'),
-                    is_public: formData.get('isPublic') === 'on',
-                    start_date: formData.get('startDate'),
-                    due_date: formData.get('dueDate'),
-                    allow_late: formData.get('allowLate') === 'on',
-                    description: formData.get('assignmentDescription'),
-                    problem_statement: formData.get('assignmentInstructions'),
-                    example_input: formData.get('exampleInput'),
-                    example_output: formData.get('exampleOutput'),
-                    test_cases: [],
-                    grading_criteria: {},
-                    constraints: {}
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+
+            collectFormData() {
+                const formData = {
+                    title: document.getElementById('assignmentTitle').value.trim(),
+                    description: document.getElementById('assignmentDescription').value.trim(),
+                    problem_statement: document.getElementById('problemStatement').value.trim(),
+                    difficulty_level: document.getElementById('difficultyLevel').value,
+                    due_date: document.getElementById('dueDate').value,
+                    is_active: document.getElementById('isActive').checked,
+                    grading_criteria: null,
+                    test_cases: []
                 };
-                
-                // 테스트 케이스 데이터 수집
+
+                // 채점 기준 처리
+                const gradingCriteriaText = document.getElementById('gradingCriteria').value.trim();
+                if (gradingCriteriaText) {
+                    try {
+                        formData.grading_criteria = JSON.parse(gradingCriteriaText);
+                    } catch (e) {
+                        throw new Error('채점 기준 JSON 형식이 올바르지 않습니다.');
+                    }
+                }
+
+                // 테스트 케이스 수집
+                const testCases = document.querySelectorAll('.test-case');
                 testCases.forEach((testCase, index) => {
-                    const input = testCase.querySelector('.test-case-input textarea').value;
-                    const output = testCase.querySelector('.test-case-output textarea').value;
-                    if (input.trim() && output.trim()) {
-                        assignmentData.test_cases.push({
+                    const input = testCase.querySelector('textarea[name="testInput"]').value.trim();
+                    const output = testCase.querySelector('textarea[name="testOutput"]').value.trim();
+                    const isHidden = testCase.querySelector('input[name="testHidden"]').checked;
+
+                    if (input && output) {
+                        formData.test_cases.push({
                             input_data: input,
                             expected_output: output,
-                            description: `테스트 케이스 ${index + 1}`
+                            description: `테스트 케이스 ${index + 1}`,
+                            is_hidden: isHidden
                         });
                     }
                 });
+
+                return formData;
+            }
+
+            validateFormData(data) {
+                const errors = [];
+
+                if (!data.title) errors.push('과제명을 입력해주세요.');
+                if (!data.description) errors.push('과제 설명을 입력해주세요.');
+                if (!data.problem_statement) errors.push('문제 명세를 입력해주세요.');
+                if (!data.difficulty_level) errors.push('난이도를 선택해주세요.');
+                if (!data.due_date) errors.push('마감일을 설정해주세요.');
+
+                // 마감일 유효성 검사
+                const dueDate = new Date(data.due_date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
                 
-                // 채점 기준 데이터 수집
-                document.querySelectorAll('.criteria-row').forEach(row => {
-                    const nameEl = row.querySelector('.criteria-name input');
-                    const name = nameEl ? nameEl.value : row.querySelector('.criteria-name').textContent;
-                    const weight = parseInt(row.querySelector('.criteria-weight input').value) || 0;
-                    if (name.trim() && weight > 0) {
-                        assignmentData.grading_criteria[name.trim()] = weight;
+                if (dueDate < today) {
+                    errors.push('마감일은 오늘 이후로 설정해야 합니다.');
+                }
+
+                // 테스트 케이스 검사
+                if (data.test_cases.length === 0) {
+                    errors.push('최소 1개의 유효한 테스트 케이스가 필요합니다.');
+                }
+
+                return errors;
+            }
+
+            async handleSubmit(isDraft = false) {
+                try {
+                    const data = this.collectFormData();
+                    
+                    if (!isDraft) {
+                        const errors = this.validateFormData(data);
+                        if (errors.length > 0) {
+                            navigationManager.showNotification(errors[0], 'error');
+                            return;
+                        }
+                    }
+
+                    this.isDraft = isDraft;
+                    
+                    if (isDraft) {
+                        await this.saveDraft(data);
+                    } else {
+                        await this.createAssignment(data);
+                    }
+
+                } catch (error) {
+                    console.error('폼 처리 오류:', error);
+                    navigationManager.showNotification(error.message || '오류가 발생했습니다.', 'error');
+                }
+            }
+
+            async saveDraft(data) {
+                try {
+                    localStorage.setItem('assignmentDraft', JSON.stringify(data));
+                    navigationManager.showNotification('임시 저장되었습니다.');
+                } catch (error) {
+                    navigationManager.showNotification('임시 저장 중 오류가 발생했습니다.', 'error');
+                }
+            }
+
+            loadDraftIfExists() {
+                try {
+                    const draftData = localStorage.getItem('assignmentDraft');
+                    if (draftData) {
+                        const data = JSON.parse(draftData);
+                        this.populateForm(data);
+                        navigationManager.showNotification('임시 저장된 데이터를 불러왔습니다.');
+                    }
+                } catch (error) {
+                    console.error('임시 저장 데이터 로드 오류:', error);
+                }
+            }
+
+            populateForm(data) {
+                if (data.title) document.getElementById('assignmentTitle').value = data.title;
+                if (data.description) document.getElementById('assignmentDescription').value = data.description;
+                if (data.problem_statement) document.getElementById('problemStatement').value = data.problem_statement;
+                if (data.difficulty_level) document.getElementById('difficultyLevel').value = data.difficulty_level;
+                if (data.due_date) document.getElementById('dueDate').value = data.due_date;
+                if (typeof data.is_active !== 'undefined') document.getElementById('isActive').checked = data.is_active;
+                
+                if (data.grading_criteria) {
+                    document.getElementById('gradingCriteria').value = JSON.stringify(data.grading_criteria, null, 2);
+                }
+
+                // 테스트 케이스 복원
+                if (data.test_cases && data.test_cases.length > 0) {
+                    const container = document.getElementById('testCasesContainer');
+                    container.innerHTML = ''; // 기존 테스트 케이스 제거
+
+                    data.test_cases.forEach((testCase, index) => {
+                        this.addTestCaseWithData(testCase, index + 1);
+                    });
+                }
+
+                this.updateProgress();
+            }
+
+            addTestCaseWithData(testCase, number) {
+                const container = document.getElementById('testCasesContainer');
+                
+                const newTestCase = document.createElement('div');
+                newTestCase.className = 'test-case';
+                newTestCase.innerHTML = `
+                    <div class="test-case-header">
+                        <div>테스트 케이스 #${number}</div>
+                        <div class="test-case-remove">✕</div>
+                    </div>
+                    <div class="test-case-inputs">
+                        <div class="test-case-input">
+                            <label>입력 데이터</label>
+                            <textarea placeholder="테스트 입력값을 입력하세요..." name="testInput">${testCase.input_data || ''}</textarea>
+                        </div>
+                        <div class="test-case-output">
+                            <label>예상 출력</label>
+                            <textarea placeholder="예상 출력값을 입력하세요..." name="testOutput">${testCase.expected_output || ''}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="testHidden" style="margin-right: 8px;" ${testCase.is_hidden ? 'checked' : ''}>
+                            숨겨진 테스트 케이스 (학생에게 보이지 않음)
+                        </label>
+                    </div>
+                `;
+                
+                container.appendChild(newTestCase);
+                
+                // 이벤트 리스너 추가
+                newTestCase.querySelector('.test-case-remove').addEventListener('click', (e) => {
+                    const testCase = e.target.closest('.test-case');
+                    const container = document.getElementById('testCasesContainer');
+                    
+                    if (container.querySelectorAll('.test-case').length > 1) {
+                        testCase.remove();
+                        this.updateTestCaseNumbers();
+                        this.updateProgress();
+                    } else {
+                        navigationManager.showNotification('최소 1개의 테스트 케이스가 필요합니다.', 'error');
                     }
                 });
-                
-                // 제약사항 데이터 수집
-                document.querySelectorAll('.constraint-item').forEach(item => {
-                    const checkbox = item.querySelector('input[type="checkbox"]');
-                    const label = item.querySelector('.constraint-label').textContent;
-                    const value = parseInt(item.querySelector('.constraint-value input').value) || 1;
-                    if (checkbox.checked) {
-                        assignmentData.constraints[label] = value;
-                    }
+
+                newTestCase.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.addEventListener('input', () => {
+                        this.updateProgress();
+                    });
                 });
+
+                this.testCaseCount = Math.max(this.testCaseCount, number);
+            }
+
+            async createAssignment(data) {
+                navigationManager.showLoading();
+
+                const token = localStorage.getItem('authToken');
                 
-                // 서버로 데이터 전송
-                submitAssignment(assignmentData);
-            });
-            
-            // 미리보기 버튼 이벤트
-            document.getElementById('previewBtn').addEventListener('click', function() {
-                navigationManager.showNotification('과제 미리보기 기능은 준비 중입니다.');
-            });
-            
-            // 키보드 단축키 설정
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey || e.metaKey) {
-                    switch(e.key) {
-                        case '1':
-                            e.preventDefault();
+                try {
+                    const response = await fetch('/api/assignments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // 임시 저장 데이터 삭제
+                        localStorage.removeItem('assignmentDraft');
+                        
+                        navigationManager.showNotification('과제가 성공적으로 생성되었습니다!');
+                        
+                        // 2초 후 대시보드로 이동
+                        setTimeout(() => {
                             navigationManager.navigateTo('teacher-dashboard');
-                            break;
-                        case '2':
-                            e.preventDefault();
-                            navigationManager.navigateTo('block-coding');
-                            break;
-                        case '3':
-                            e.preventDefault();
-                            navigationManager.navigateTo('algorithm');
-                            break;
-                        case 's':
-                            e.preventDefault();
-                            document.getElementById('createAssignmentForm').dispatchEvent(new Event('submit'));
-                            break;
+                        }, 2000);
+                    } else {
+                        throw new Error(result.message || '과제 생성에 실패했습니다.');
                     }
+                } catch (error) {
+                    console.error('과제 생성 오류:', error);
+                    navigationManager.showNotification(
+                        error.message || '과제 생성 중 오류가 발생했습니다.', 
+                        'error'
+                    );
+                } finally {
+                    navigationManager.hideLoading();
                 }
-            });
-        });
-        
-        // 과제 제출 함수
-        function submitAssignment(assignmentData) {
-            navigationManager.showLoading();
-            
-            const token = localStorage.getItem('authToken');
-            
-            fetch('/api/assignments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                body: JSON.stringify(assignmentData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    navigationManager.showNotification('과제가 성공적으로 생성되었습니다!');
-                    setTimeout(() => {
-                        navigationManager.navigateTo('teacher-dashboard');
-                    }, 1500);
-                } else {
-                    navigationManager.showNotification(data.message || '과제 생성 중 오류가 발생했습니다.', 'error');
+            }
+
+            showPreview() {
+                try {
+                    const data = this.collectFormData();
+                    
+                    // 미리보기 윈도우 생성
+                    const previewWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+                    
+                    const previewHTML = `
+                        <!DOCTYPE html>
+                        <html lang="ko">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>과제 미리보기</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                                .header { background: #4285f4; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+                                .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+                                .test-case { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 4px; }
+                                .difficulty { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
+                                .easy { background: #34a853; }
+                                .medium { background: #fbbc05; }
+                                .hard { background: #ea4335; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h1>${data.title || '과제 제목'}</h1>
+                                <p>난이도: <span class="difficulty ${data.difficulty_level}">${this.getDifficultyText(data.difficulty_level)}</span></p>
+                                <p>마감일: ${data.due_date || '미설정'}</p>
+                            </div>
+                            
+                            <div class="section">
+                                <h2>📝 과제 설명</h2>
+                                <p>${data.description || '설명이 입력되지 않았습니다.'}</p>
+                            </div>
+                            
+                            <div class="section">
+                                <h2>📋 문제 명세</h2>
+                                <p>${data.problem_statement || '문제 명세가 입력되지 않았습니다.'}</p>
+                            </div>
+                            
+                            ${data.test_cases.length > 0 ? `
+                            <div class="section">
+                                <h2>🧪 테스트 케이스</h2>
+                                ${data.test_cases.map((testCase, index) => `
+                                    <div class="test-case">
+                                        <h4>테스트 케이스 ${index + 1} ${testCase.is_hidden ? '(숨김)' : ''}</h4>
+                                        <p><strong>입력:</strong><br><pre>${testCase.input_data}</pre></p>
+                                        <p><strong>예상 출력:</strong><br><pre>${testCase.expected_output}</pre></p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ` : ''}
+                            
+                            ${data.grading_criteria ? `
+                            <div class="section">
+                                <h2>⚖️ 채점 기준</h2>
+                                <pre>${JSON.stringify(data.grading_criteria, null, 2)}</pre>
+                            </div>
+                            ` : ''}
+                        </body>
+                        </html>
+                    `;
+                    
+                    previewWindow.document.write(previewHTML);
+                    previewWindow.document.close();
+                    
+                } catch (error) {
+                    navigationManager.showNotification('미리보기 생성 중 오류가 발생했습니다.', 'error');
                 }
-            })
-            .catch(error => {
-                console.error('과제 생성 오류:', error);
-                navigationManager.showNotification('과제 생성 중 오류가 발생했습니다.', 'error');
-            })
-            .finally(() => {
-                navigationManager.hideLoading();
-            });
+            }
+
+            getDifficultyText(level) {
+                const levels = {
+                    'easy': '초급 (Easy)',
+                    'medium': '중급 (Medium)', 
+                    'hard': '고급 (Hard)'
+                };
+                return levels[level] || level;
+            }
         }
+
+        // 네비게이션 매니저 및 과제 생성자 초기화
+        let navigationManager;
+        let assignmentCreator;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 네비게이션 매니저 초기화
+            navigationManager = new NavigationManager();
+            
+            // 과제 생성자 초기화
+            assignmentCreator = new AssignmentCreator();
+            
+            // 로딩 종료
+            if (navigationManager) {
+                navigationManager.hideLoading();
+            }
+        });
     </script>
 </body>
 </html>

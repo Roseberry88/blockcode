@@ -92,50 +92,12 @@
             overflow: hidden;
         }
 
-        .category-tabs {
-            height: 40px;
-            background-color: #eee;
+        .left-panel {
+            width: 280px;
+            border-right: 1px solid #ddd;
+            background-color: #f8f9fa;
             display: flex;
-            align-items: center;
-            padding: 0 10px;
-        }
-
-        .category-tab {
-            width: 40px;
-            height: 30px;
-            border-radius: 5px;
-            margin-right: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .search-block {
-            margin: 10px;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            height: 30px;
-            border-radius: 15px;
-            border: 1px solid #ddd;
-            padding: 0 15px;
-            font-size: 12px;
-        }
-
-        .category-title {
-            height: 30px;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            font-weight: bold;
-            color: white;
-            font-size: 14px;
-        }
-
-        .blocks-container {
-            overflow-y: auto;
-            flex: 1;
+            flex-direction: column;
         }
 
         .center-panel {
@@ -175,6 +137,7 @@
         #blocklyDiv {
             flex: 1;
             border-top: 1px solid #ddd;
+            min-height: 400px;
         }
 
         .status-bar {
@@ -247,11 +210,12 @@
         }
 
         .result-canvas {
-            height: 260px;
+            height: 200px;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
             margin: 10px;
             position: relative;
+            overflow: hidden;
         }
 
         .character {
@@ -261,7 +225,8 @@
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
             border-bottom: 20px solid #3b78e7;
-            transform-origin: 50% 50%;
+            transform-origin: 50% 100%;
+            transition: all 0.1s ease;
         }
 
         .console {
@@ -272,10 +237,12 @@
             padding: 10px;
             overflow-y: auto;
             font-size: 12px;
+            font-family: monospace;
         }
 
         .console-line {
-            margin: 5px 0;
+            margin: 2px 0;
+            color: #333;
         }
 
         .variable-monitor {
@@ -298,15 +265,16 @@
             height: 30px;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
-            margin-bottom: 10px;
-            padding: 0 15px;
+            margin-bottom: 5px;
+            padding: 0 10px;
             display: flex;
             align-items: center;
             font-size: 12px;
+            border-radius: 3px;
         }
 
         .code-panel {
-            height: 260px;
+            height: 200px;
             background-color: #292d3e;
             border: 1px solid #1e2132;
             display: flex;
@@ -362,44 +330,15 @@
 
         .code-content {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
             color: #a6accd;
-            font-family: Consolas, monospace;
-            font-size: 14px;
-            white-space: pre;
-        }
-
-        .code-tip {
-            height: 30px;
-            background-color: #333652;
-            border: 1px solid #23293e;
-            margin: 0 20px 20px;
-            border-radius: 5px;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
+            font-family: 'Courier New', monospace;
             font-size: 12px;
-            color: #a6accd;
+            white-space: pre-wrap;
+            line-height: 1.4;
         }
 
-        .category-control {
-            background-color: #fbbc05;
-        }
-
-        .category-movement {
-            background-color: #4285f4;
-        }
-
-        .category-variables {
-            background-color: #ea4335;
-        }
-
-        .category-logic {
-            background-color: #34a853;
-        }
-
-        /* 통합 네비게이션 스타일 */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -449,6 +388,16 @@
             z-index: 1000;
             font-family: Arial, sans-serif;
         }
+
+        .error-message {
+            color: #d32f2f;
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -462,144 +411,88 @@
         <div class="header">
             <div class="header-title" id="logoTitle">🚀 코딩스타트: 블록 코딩</div>
             <button class="header-button back-button" id="backButton">← 대시보드</button>
-            <input type="text" class="project-name" value="내 프로젝트">
+            <input type="text" class="project-name" value="내 프로젝트" id="projectName">
             <div style="flex-grow: 1;"></div>
             <button class="header-button" id="runButton">실행</button>
             <button class="header-button" id="saveButton">저장</button>
             <button class="header-button" id="loadButton">불러오기</button>
         </div>
+        
         <div class="content">
             <div class="left-panel">
-                <div id="toolbox" style="display: none;">
-                    <xml id="toolboxXML">
-                        <category name="제어" colour="#fbbc05">
-                            <block type="start"></block>
-                            <block type="controls_repeat_ext">
-                                <value name="TIMES">
-                                    <shadow type="math_number">
-                                        <field name="NUM">10</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                            <block type="controls_if"></block>
-                            <block type="wait">
-                                <value name="TIME">
-                                    <shadow type="math_number">
-                                        <field name="NUM">1</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                        </category>
-                        <category name="움직임" colour="#4285f4">
-                            <block type="move_forward">
-                                <value name="DISTANCE">
-                                    <shadow type="math_number">
-                                        <field name="NUM">10</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                            <block type="turn_right">
-                                <value name="ANGLE">
-                                    <shadow type="math_number">
-                                        <field name="NUM">90</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                            <block type="turn_left">
-                                <value name="ANGLE">
-                                    <shadow type="math_number">
-                                        <field name="NUM">90</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                        </category>
-                        <category name="논리" colour="#34a853">
-                            <block type="logic_compare"></block>
-                            <block type="logic_operation"></block>
-                            <block type="logic_boolean"></block>
-                        </category>
-                        <category name="변수" colour="#ea4335" custom="VARIABLE"></category>
-                        <category name="수학" colour="#9966FF">
-                            <block type="math_number">
-                                <field name="NUM">1</field>
-                            </block>
-                            <block type="math_arithmetic">
-                                <value name="A">
-                                    <shadow type="math_number">
-                                        <field name="NUM">1</field>
-                                    </shadow>
-                                </value>
-                                <value name="B">
-                                    <shadow type="math_number">
-                                        <field name="NUM">1</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                            <block type="math_number_property">
-                                <value name="NUMBER_TO_CHECK">
-                                    <shadow type="math_number">
-                                        <field name="NUM">0</field>
-                                    </shadow>
-                                </value>
-                            </block>
-                        </category>
-                    </xml>
-                </div>
-                <div id="blocklyToolbox"></div>
+                <!-- 툴박스는 JavaScript에서 동적으로 생성됩니다 -->
             </div>
+            
             <div class="center-panel">
                 <div class="workspace-controls">
                     <div class="workspace-title">코드 작성 영역</div>
-                    <div class="minimap">미니맵</div>
+                    <div class="minimap">블록 작업공간</div>
                 </div>
                 <div id="blocklyDiv"></div>
                 <div class="status-bar">
-                    <span id="blockCount">블록 수: 0</span> | <span id="lastSaved">마지막 저장: --:-- --</span>
+                    <span id="blockCount">블록 수: 0</span> | 
+                    <span id="lastSaved">마지막 저장: --:-- --</span> | 
+                    <span id="executionStatus">준비됨</span>
                 </div>
             </div>
+            
             <div class="right-panel">
                 <div class="result-header">
                     <div class="result-title">실행 결과</div>
                     <div class="control-buttons">
-                        <button class="control-button run-button" id="runButtonSmall">▶</button>
-                        <button class="control-button stop-button" id="stopButton">■</button>
-                        <button class="control-button reset-button" id="resetButton">↻</button>
+                        <button class="control-button run-button" id="runButtonSmall" title="실행">▶</button>
+                        <button class="control-button stop-button" id="stopButton" title="정지">■</button>
+                        <button class="control-button reset-button" id="resetButton" title="리셋">↻</button>
                     </div>
                 </div>
+                
                 <div class="result-canvas" id="canvas">
-                    <div class="character" id="character" style="left: 130px; top: 130px; transform: rotate(0deg);">
-                    </div>
+                    <div class="character" id="character"></div>
                 </div>
+                
                 <div class="console" id="console">
-                    <div class="console-line">> 프로그램 시작</div>
+                    <div class="console-line">> 프로그램 시작 준비</div>
                 </div>
+                
                 <div class="variable-monitor">
                     <div class="variable-monitor-title">변수 모니터</div>
                     <div id="variables"></div>
                 </div>
             </div>
         </div>
+        
         <div class="code-panel">
             <div class="code-header">
-                <div class="code-title">실제 코드 (Python)</div>
+                <div class="code-title">생성된 코드 (Python)</div>
                 <div class="language-buttons">
                     <div class="language-button active-language" id="pythonButton">Python</div>
                     <div class="language-button inactive-language" id="javascriptButton">JavaScript</div>
                     <div class="language-button inactive-language" id="cppButton">C++</div>
                 </div>
             </div>
-            <div class="code-content" id="codeContent"></div>
+            <div class="code-content" id="codeContent"># 블록을 연결하면 여기에 코드가 생성됩니다</div>
         </div>
     </div>
 
     <script>
+        // 전역 변수 선언
+        let workspace = null;
+        let character = null;
+        let x = 130;
+        let y = 130;
+        let angle = 0;
+        let variables = {};
+        let isRunning = false;
+        let shouldStop = false;
+        let navigationManager = null;
+
         // 통합 네비게이션 시스템
         class NavigationManager {
             constructor() {
                 this.currentUser = null;
                 this.routes = {
                     'dashboard': '/dashboard',
-                    'block-coding': '/block-coding', 
+                    'block-coding': '/block-coding',
                     'algorithm': '/algorithm',
                     'assignments': '/assignments',
                     'progress': '/progress',
@@ -610,7 +503,6 @@
                     'student-management': '/student-management',
                     'login': '/login'
                 };
-                
                 this.init();
             }
 
@@ -639,7 +531,6 @@
             }
 
             setupEventListeners() {
-                // 로고/타이틀 클릭 이벤트
                 const logoTitle = document.getElementById('logoTitle');
                 if (logoTitle) {
                     logoTitle.addEventListener('click', () => {
@@ -647,7 +538,6 @@
                     });
                 }
 
-                // 뒤로가기 버튼
                 const backButton = document.getElementById('backButton');
                 if (backButton) {
                     backButton.addEventListener('click', () => {
@@ -657,7 +547,7 @@
             }
 
             navigateToDashboard() {
-                if (this.currentUser.role === 'professor' || this.currentUser.role === 'admin') {
+                if (this.currentUser && (this.currentUser.role === 'professor' || this.currentUser.role === 'admin')) {
                     this.navigateTo('teacher-dashboard');
                 } else {
                     this.navigateTo('dashboard');
@@ -667,7 +557,6 @@
             navigateTo(routeName) {
                 if (this.routes[routeName]) {
                     this.showLoading();
-                    
                     setTimeout(() => {
                         window.location.href = this.routes[routeName];
                     }, 300);
@@ -689,7 +578,7 @@
             }
 
             showLoading() {
-                let loadingOverlay = document.getElementById('loadingOverlay');
+                const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) {
                     loadingOverlay.classList.add('active');
                 }
@@ -713,8 +602,8 @@
                 notification.className = 'navigation-notification';
                 notification.textContent = message;
 
-                const backgroundColor = type === 'error' 
-                    ? 'linear-gradient(135deg, #f44336, #d32f2f)' 
+                const backgroundColor = type === 'error'
+                    ? 'linear-gradient(135deg, #f44336, #d32f2f)'
                     : 'linear-gradient(135deg, #4CAF50, #45a049)';
 
                 notification.style.background = backgroundColor;
@@ -735,149 +624,355 @@
             }
         }
 
-        // 네비게이션 매니저 초기화
-        let navigationManager;
-
-        // Blockly 초기화 및 기존 블록 코딩 로직
-        document.addEventListener('DOMContentLoaded', function () {
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
             // 네비게이션 매니저 초기화
             navigationManager = new NavigationManager();
+            
+            // 로딩 종료
+            if (navigationManager) {
+                navigationManager.hideLoading();
+            }
+
+            // 캐릭터 요소 초기화
+            character = document.getElementById('character');
+            resetCharacter();
 
             // 커스텀 블록 정의
+            defineCustomBlocks();
+            
+            // 코드 생성기 정의
+            defineCodeGenerators();
+            
+            // Blockly 워크스페이스 초기화
+            initializeBlockly();
+            
+            // 이벤트 리스너 설정
+            setupEventListeners();
+            
+            // 초기 화면 업데이트
+            updateCode();
+            updateBlockCount();
+            updateVariableDisplay();
+        });
+
+        // 커스텀 블록 정의
+        function defineCustomBlocks() {
+            // 시작 블록
             Blockly.Blocks['start'] = {
-                init: function () {
+                init: function() {
                     this.appendDummyInput()
-                        .appendField("시작하기");
+                        .appendField("🚀 시작하기");
                     this.setNextStatement(true, null);
-                    this.setColour(240);
+                    this.setColour(120);
                     this.setTooltip("프로그램이 시작될 때 실행됩니다.");
-                    this.setHelpUrl("");
                 }
             };
 
+            // 앞으로 이동 블록
             Blockly.Blocks['move_forward'] = {
-                init: function () {
+                init: function() {
                     this.appendValueInput("DISTANCE")
                         .setCheck("Number")
-                        .appendField("앞으로 이동");
+                        .appendField("🔼 앞으로");
                     this.appendDummyInput()
-                        .appendField("만큼");
+                        .appendField("만큼 이동");
                     this.setPreviousStatement(true, null);
                     this.setNextStatement(true, null);
                     this.setColour(210);
                     this.setTooltip("캐릭터를 앞으로 이동시킵니다.");
-                    this.setHelpUrl("");
                 }
             };
 
+            // 오른쪽 회전 블록
             Blockly.Blocks['turn_right'] = {
-                init: function () {
+                init: function() {
                     this.appendValueInput("ANGLE")
                         .setCheck("Number")
-                        .appendField("오른쪽으로");
+                        .appendField("➡️ 오른쪽으로");
                     this.appendDummyInput()
-                        .appendField("도");
+                        .appendField("도 회전");
                     this.setPreviousStatement(true, null);
                     this.setNextStatement(true, null);
                     this.setColour(210);
                     this.setTooltip("캐릭터를 오른쪽으로 회전시킵니다.");
-                    this.setHelpUrl("");
                 }
             };
 
+            // 왼쪽 회전 블록
             Blockly.Blocks['turn_left'] = {
-                init: function () {
+                init: function() {
                     this.appendValueInput("ANGLE")
                         .setCheck("Number")
-                        .appendField("왼쪽으로");
+                        .appendField("⬅️ 왼쪽으로");
                     this.appendDummyInput()
-                        .appendField("도");
+                        .appendField("도 회전");
                     this.setPreviousStatement(true, null);
                     this.setNextStatement(true, null);
                     this.setColour(210);
                     this.setTooltip("캐릭터를 왼쪽으로 회전시킵니다.");
-                    this.setHelpUrl("");
                 }
             };
 
+            // 대기 블록
             Blockly.Blocks['wait'] = {
-                init: function () {
+                init: function() {
                     this.appendValueInput("TIME")
                         .setCheck("Number")
-                        .appendField("기다리기");
+                        .appendField("⏱️ 대기");
                     this.appendDummyInput()
                         .appendField("초");
                     this.setPreviousStatement(true, null);
                     this.setNextStatement(true, null);
-                    this.setColour(240);
+                    this.setColour(290);
                     this.setTooltip("지정된 시간(초) 동안 기다립니다.");
-                    this.setHelpUrl("");
                 }
             };
+        }
 
+        // 코드 생성기 정의
+        function defineCodeGenerators() {
             // JavaScript 코드 생성기
-            Blockly.JavaScript['start'] = function (block) {
+            Blockly.JavaScript['start'] = function(block) {
                 return '// 프로그램 시작\n';
             };
 
-            Blockly.JavaScript['move_forward'] = function (block) {
-                var value_distance = Blockly.JavaScript.valueToCode(block, 'DISTANCE', Blockly.JavaScript.ORDER_ATOMIC);
-                var code = 'await moveForward(' + value_distance + ');\n';
-                return code;
+            Blockly.JavaScript['move_forward'] = function(block) {
+                const distance = Blockly.JavaScript.valueToCode(block, 'DISTANCE', Blockly.JavaScript.ORDER_ATOMIC) || '10';
+                return `await moveForward(${distance});\n`;
             };
 
-            Blockly.JavaScript['turn_right'] = function (block) {
-                var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
-                var code = 'await turnRight(' + value_angle + ');\n';
-                return code;
+            Blockly.JavaScript['turn_right'] = function(block) {
+                const angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC) || '90';
+                return `await turnRight(${angle});\n`;
             };
 
-            Blockly.JavaScript['turn_left'] = function (block) {
-                var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
-                var code = 'await turnLeft(' + value_angle + ');\n';
-                return code;
+            Blockly.JavaScript['turn_left'] = function(block) {
+                const angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC) || '90';
+                return `await turnLeft(${angle});\n`;
             };
 
-            Blockly.JavaScript['wait'] = function (block) {
-                var value_time = Blockly.JavaScript.valueToCode(block, 'TIME', Blockly.JavaScript.ORDER_ATOMIC);
-                var code = 'await sleep(' + value_time + ');\n';
-                return code;
+            Blockly.JavaScript['wait'] = function(block) {
+                const time = Blockly.JavaScript.valueToCode(block, 'TIME', Blockly.JavaScript.ORDER_ATOMIC) || '1';
+                return `await sleep(${time});\n`;
             };
 
-            // JavaScript 변수 관련 코드 생성기 수정
+            // Python 코드 생성기
+            Blockly.Python['start'] = function(block) {
+                return '# 프로그램 시작\n';
+            };
+
+            Blockly.Python['move_forward'] = function(block) {
+                const distance = Blockly.Python.valueToCode(block, 'DISTANCE', Blockly.Python.ORDER_ATOMIC) || '10';
+                return `move_forward(${distance})\n`;
+            };
+
+            Blockly.Python['turn_right'] = function(block) {
+                const angle = Blockly.Python.valueToCode(block, 'ANGLE', Blockly.Python.ORDER_ATOMIC) || '90';
+                return `turn_right(${angle})\n`;
+            };
+
+            Blockly.Python['turn_left'] = function(block) {
+                const angle = Blockly.Python.valueToCode(block, 'ANGLE', Blockly.Python.ORDER_ATOMIC) || '90';
+                return `turn_left(${angle})\n`;
+            };
+
+            Blockly.Python['wait'] = function(block) {
+                const time = Blockly.Python.valueToCode(block, 'TIME', Blockly.Python.ORDER_ATOMIC) || '1';
+                return `time.sleep(${time})\n`;
+            };
+
+            // 변수 관련 코드 생성기
             Blockly.JavaScript['variables_set'] = function(block) {
-                var argument0 = Blockly.JavaScript.valueToCode(block, 'VALUE',
-                    Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
-                var varId = block.getFieldValue('VAR');
-                var varName = block.workspace.getVariableById(varId).name;
-                
-                return 'updateVariable("' + varName + '", ' + argument0 + ');\n';
+                const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+                const varId = block.getFieldValue('VAR');
+                const varName = block.workspace.getVariableById(varId).name;
+                return `updateVariable("${varName}", ${value});\n`;
+            };
+
+            Blockly.JavaScript['variables_get'] = function(block) {
+                const varId = block.getFieldValue('VAR');
+                const varName = block.workspace.getVariableById(varId).name;
+                return [`variables["${varName}"] || 0`, Blockly.JavaScript.ORDER_ATOMIC];
             };
 
             Blockly.JavaScript['math_change'] = function(block) {
-                var argument0 = Blockly.JavaScript.valueToCode(block, 'DELTA',
-                    Blockly.JavaScript.ORDER_ADDITION) || '0';
-                var varId = block.getFieldValue('VAR');
-                var varName = block.workspace.getVariableById(varId).name;
-                
-                return 'updateVariable("' + varName + '", ' + 
-                    'variables["' + varName + '"] + ' + argument0 + ');\n';
+                const delta = Blockly.JavaScript.valueToCode(block, 'DELTA', Blockly.JavaScript.ORDER_ADDITION) || '0';
+                const varId = block.getFieldValue('VAR');
+                const varName = block.workspace.getVariableById(varId).name;
+                return `updateVariable("${varName}", (variables["${varName}"] || 0) + ${delta});\n`;
+            };
+        }
+
+        // Blockly 워크스페이스 초기화
+        function initializeBlockly() {
+            const toolbox = {
+                kind: 'categoryToolbox',
+                contents: [
+                    {
+                        kind: 'category',
+                        name: '🎯 제어',
+                        colour: 120,
+                        contents: [
+                            {
+                                kind: 'block',
+                                type: 'start'
+                            },
+                            {
+                                kind: 'block',
+                                type: 'controls_repeat_ext',
+                                inputs: {
+                                    TIMES: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 4 }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                kind: 'block',
+                                type: 'controls_if'
+                            },
+                            {
+                                kind: 'block',
+                                type: 'wait',
+                                inputs: {
+                                    TIME: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 1 }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        kind: 'category',
+                        name: '🚀 움직임',
+                        colour: 210,
+                        contents: [
+                            {
+                                kind: 'block',
+                                type: 'move_forward',
+                                inputs: {
+                                    DISTANCE: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 50 }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                kind: 'block',
+                                type: 'turn_right',
+                                inputs: {
+                                    ANGLE: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 90 }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                kind: 'block',
+                                type: 'turn_left',
+                                inputs: {
+                                    ANGLE: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 90 }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        kind: 'category',
+                        name: '🔢 수학',
+                        colour: 230,
+                        contents: [
+                            {
+                                kind: 'block',
+                                type: 'math_number',
+                                fields: { NUM: 10 }
+                            },
+                            {
+                                kind: 'block',
+                                type: 'math_arithmetic',
+                                inputs: {
+                                    A: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 1 }
+                                        }
+                                    },
+                                    B: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 1 }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                kind: 'block',
+                                type: 'math_random_int',
+                                inputs: {
+                                    FROM: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 1 }
+                                        }
+                                    },
+                                    TO: {
+                                        shadow: {
+                                            type: 'math_number',
+                                            fields: { NUM: 100 }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        kind: 'category',
+                        name: '🧠 논리',
+                        colour: 210,
+                        contents: [
+                            {
+                                kind: 'block',
+                                type: 'logic_compare'
+                            },
+                            {
+                                kind: 'block',
+                                type: 'logic_operation'
+                            },
+                            {
+                                kind: 'block',
+                                type: 'logic_boolean'
+                            },
+                            {
+                                kind: 'block',
+                                type: 'logic_negate'
+                            }
+                        ]
+                    },
+                    {
+                        kind: 'category',
+                        name: '📦 변수',
+                        colour: 330,
+                        custom: 'VARIABLE'
+                    }
+                ]
             };
 
-            // 변수 가져오기 함수 수정
-            Blockly.JavaScript['variables_get'] = function(block) {
-                var varId = block.getFieldValue('VAR');
-                var varName = block.workspace.getVariableById(varId).name;
-                
-                return ['variables["' + varName + '"]', Blockly.JavaScript.ORDER_ATOMIC];
-            };
-
-            // Python 코드 생성기들도 동일하게 유지...
-            // (기존 Python 코드 생성기들 생략 - 원본과 동일)
-
-            // 작업 공간 초기화
-            var workspace = Blockly.inject('blocklyDiv', {
-                toolbox: document.getElementById('toolboxXML'),
+            workspace = Blockly.inject('blocklyDiv', {
+                toolbox: toolbox,
                 grid: {
                     spacing: 20,
                     length: 3,
@@ -892,505 +987,700 @@
                     minScale: 0.3,
                     scaleSpeed: 1.2
                 },
-                trashcan: true
+                trashcan: true,
+                sounds: false,
+                move: {
+                    scrollbars: true,
+                    drag: true,
+                    wheel: true
+                }
             });
 
-            // Python 코드 생성기
-            Blockly.Python['start'] = function (block) {
-                return '# 프로그램 시작\n';
-            };
-
-            Blockly.Python['move_forward'] = function (block) {
-                var value_distance = Blockly.Python.valueToCode(block, 'DISTANCE', Blockly.Python.ORDER_ATOMIC);
-                var code = 'move_forward(' + value_distance + ')\n';
-                return code;
-            };
-
-            Blockly.Python['turn_right'] = function (block) {
-                var value_angle = Blockly.Python.valueToCode(block, 'ANGLE', Blockly.Python.ORDER_ATOMIC);
-                var code = 'turn_right(' + value_angle + ')\n';
-                return code;
-            };
-
-            Blockly.Python['turn_left'] = function (block) {
-                var value_angle = Blockly.Python.valueToCode(block, 'ANGLE', Blockly.Python.ORDER_ATOMIC);
-                var code = 'turn_left(' + value_angle + ')\n';
-                return code;
-            };
-
-            Blockly.Python['wait'] = function (block) {
-                var value_time = Blockly.Python.valueToCode(block, 'TIME', Blockly.Python.ORDER_ATOMIC);
-                var code = 'wait(' + value_time + ')\n';
-                return code;
-            };
-
-            // Python 변수 관련 코드 생성기
-            Blockly.Python['variables_set'] = function(block) {
-                var argument0 = Blockly.Python.valueToCode(block, 'VALUE',
-                    Blockly.Python.ORDER_ASSIGNMENT) || '0';
-                var varId = block.getFieldValue('VAR');
-                var varName = block.workspace.getVariableById(varId).name;
-                
-                return varName + ' = ' + argument0 + '\n';
-            };
-
-            Blockly.Python['variables_get'] = function(block) {
-                var varId = block.getFieldValue('VAR');
-                var varName = block.workspace.getVariableById(varId).name;
-                
-                return [varName, Blockly.Python.ORDER_ATOMIC];
-            };
-
-            Blockly.Python['math_change'] = function(block) {
-                var argument0 = Blockly.Python.valueToCode(block, 'DELTA',
-                    Blockly.Python.ORDER_ADDITIVE) || '0';
-                var varId = block.getFieldValue('VAR');
-                var varName = block.workspace.getVariableById(varId).name;
-                
-                return varName + ' += ' + argument0 + '\n';
-            };
-
-            // 블록 변경 이벤트 감지
-            workspace.addChangeListener(function (event) {
-                if (event.type == Blockly.Events.BLOCK_CREATE ||
-                    event.type == Blockly.Events.BLOCK_DELETE ||
-                    event.type == Blockly.Events.BLOCK_CHANGE ||
-                    event.type == Blockly.Events.BLOCK_MOVE ||
-                    event.type == Blockly.Events.VAR_CREATE ||
-                    event.type == Blockly.Events.VAR_DELETE ||
-                    event.type == Blockly.Events.VAR_RENAME) {
-
+            // 워크스페이스 변경 이벤트 리스너
+            workspace.addChangeListener(function(event) {
+                if (event.type === Blockly.Events.BLOCK_CREATE ||
+                    event.type === Blockly.Events.BLOCK_DELETE ||
+                    event.type === Blockly.Events.BLOCK_CHANGE ||
+                    event.type === Blockly.Events.BLOCK_MOVE ||
+                    event.type === Blockly.Events.VAR_CREATE ||
+                    event.type === Blockly.Events.VAR_DELETE ||
+                    event.type === Blockly.Events.VAR_RENAME) {
+                    
                     updateCode();
                     updateBlockCount();
-
-                    if (event.type == Blockly.Events.VAR_CREATE ||
-                        event.type == Blockly.Events.VAR_RENAME) {
-                        let variableList = workspace.getAllVariables();
-                        for (let i = 0; i < variableList.length; i++) {
-                            let varName = variableList[i].name;
-                            if (!(varName in variables)) {
-                                updateVariable(varName, 0);
+                    
+                    // 변수 관련 이벤트 처리
+                    if (event.type === Blockly.Events.VAR_CREATE || 
+                        event.type === Blockly.Events.VAR_RENAME) {
+                        const variableList = workspace.getAllVariables();
+                        variableList.forEach(variable => {
+                            if (!(variable.name in variables)) {
+                                updateVariable(variable.name, 0);
                             }
-                        }
+                        });
                     }
                 }
             });
 
-            // 코드 생성 및 업데이트
-            function updateCode() {
-                var pythonCode = '';
-                
-                try {
-                    pythonCode = Blockly.Python.workspaceToCode(workspace);
-                    
-                    var variableList = workspace.getAllVariables();
-                    var variableDeclarations = '';
-                    
-                    if (variableList.length > 0) {
-                        variableDeclarations = '# 전역 변수 선언\n';
-                        if (variableList.length > 0) {
-                            variableDeclarations += 'global ' + variableList.map(v => v.name).join(', ') + '\n';
-                        }
-                    }
-                    
-                    var formattedPythonCode = '# 생성된 Python 코드\n' +
-                        'def main():\n' +
-                        (variableDeclarations ? '    ' + variableDeclarations.replace(/\n/g, '\n    ') : '') +
-                        '    # 프로그램 시작\n' +
-                        (variableList.length > 0 ? '    ' + variableList.map(v => v.name + ' = 0').join('\n    ') + '\n' : '') +
-                        pythonCode.split('\n').map(line => line ? '    ' + line : '').join('\n') +
-                        '\n\n' +
-                        'if __name__ == "__main__":\n' +
-                        '    main()';
-                    
-                    pythonCode = formattedPythonCode;
-                } catch (e) {
-                    console.error('Python 코드 생성 오류:', e);
-                    pythonCode = '# Python 코드 생성 중 오류가 발생했습니다.\n# ' + e.message;
+            // 샘플 프로그램 로드
+            loadSampleProgram();
+        }
+
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 실행 버튼들
+            document.getElementById('runButton').addEventListener('click', runCode);
+            document.getElementById('runButtonSmall').addEventListener('click', runCode);
+            
+            // 제어 버튼들
+            document.getElementById('stopButton').addEventListener('click', stopCode);
+            document.getElementById('resetButton').addEventListener('click', resetCharacter);
+            
+            // 저장/로드 버튼들
+            document.getElementById('saveButton').addEventListener('click', saveProgram);
+            document.getElementById('loadButton').addEventListener('click', loadProgram);
+            
+            // 언어 전환 버튼들
+            document.getElementById('pythonButton').addEventListener('click', () => switchLanguage('python'));
+            document.getElementById('javascriptButton').addEventListener('click', () => switchLanguage('javascript'));
+            document.getElementById('cppButton').addEventListener('click', () => switchLanguage('cpp'));
+            
+            // 창 크기 조정 이벤트
+            window.addEventListener('resize', function() {
+                if (workspace) {
+                    Blockly.svgResize(workspace);
                 }
-
-                var jsCode = '';
-                
-                try {
-                    jsCode = Blockly.JavaScript.workspaceToCode(workspace);
-                    
-                    var variableList = workspace.getAllVariables();
-                    var variableInitializations = '';
-                    
-                    for (var i = 0; i < variableList.length; i++) {
-                        variableInitializations += ' updateVariable("' + variableList[i].name + '", 0);\n';
-                    }
-                    
-                    jsCode = '// 생성된 JavaScript 코드\n' +
-                        'async function main() {\n' +
-                        variableInitializations +
-                        jsCode.split('\n').map(line => line ? ' ' + line : '').join('\n') +
-                        '\n}\n\n' +
-                        'main();';
-                } catch (e) {
-                    console.error('JavaScript 코드 생성 오류:', e);
-                    jsCode = '// JavaScript 코드 생성 중 오류가 발생했습니다.\n// ' + e.message;
+            });
+            
+            // 키보드 단축키
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+            
+            // 페이지 이탈 경고
+            window.addEventListener('beforeunload', function(e) {
+                if (workspace && workspace.getAllBlocks(false).length > 0) {
+                    e.preventDefault();
+                    e.returnValue = '작업 중인 내용이 있습니다. 정말 페이지를 떠나시겠습니까?';
                 }
+            });
+        }
 
-                var cppCode = generateCppCode(workspace);
-
-                var activeLanguage = document.querySelector('.language-button.active-language').id;
-                if (activeLanguage === 'pythonButton') {
-                    document.getElementById('codeContent').textContent = pythonCode;
-                } else if (activeLanguage === 'javascriptButton') {
-                    document.getElementById('codeContent').textContent = jsCode;
-                } else if (activeLanguage === 'cppButton') {
-                    document.getElementById('codeContent').textContent = cppCode;
+        // 키보드 단축키 처리
+        function handleKeyboardShortcuts(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        if (navigationManager) navigationManager.navigateToDashboard();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        saveProgram();
+                        break;
+                    case 'o':
+                        e.preventDefault();
+                        loadProgram();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        runCode();
+                        break;
                 }
             }
-
-            // C++ 코드 생성 함수
-            function generateCppCode(workspace) {
-                var variableList = workspace.getAllVariables();
-                var variableDeclarations = '';
-                
-                for (var i = 0; i < variableList.length; i++) {
-                    variableDeclarations += 'int ' + variableList[i].name + ' = 0;\n';
-                }
-                
-                return '// 생성된 C++ 코드\n' +
-                    '#include <iostream>\n' +
-                    '#include <chrono>\n' +
-                    '#include <thread>\n\n' +
-                    variableDeclarations + '\n' +
-                    'void move_forward(int distance) {\n' +
-                    '    std::cout << "앞으로 " << distance << "만큼 이동" << std::endl;\n' +
-                    '}\n\n' +
-                    'void turn_right(int angle) {\n' +
-                    '    std::cout << "오른쪽으로 " << angle << "도 회전" << std::endl;\n' +
-                    '}\n\n' +
-                    'void turn_left(int angle) {\n' +
-                    '    std::cout << "왼쪽으로 " << angle << "도 회전" << std::endl;\n' +
-                    '}\n\n' +
-                    'void wait(int seconds) {\n' +
-                    '    std::this_thread::sleep_for(std::chrono::seconds(seconds));\n' +
-                    '}\n\n' +
-                    'int main() {\n' +
-                    '    // 여기에 생성된 코드가 들어갑니다\n' +
-                    '    move_forward(10);\n' +
-                    '    for (int i = 0; i < 4; i++) {\n' +
-                    '        turn_right(90);\n' +
-                    '        move_forward(10);\n' +
-                    '    }\n' +
-                    '    wait(1);\n' +
-                    '    return 0;\n' +
-                    '}';
+            
+            if (e.key === 'Escape') {
+                stopCode();
             }
+        }
 
-            // 블록 개수 업데이트
-            function updateBlockCount() {
-                var count = workspace.getAllBlocks(false).length;
-                document.getElementById('blockCount').textContent = '블록 수: ' + count;
-            }
-
-            // 기본 코드 로드 (샘플)
-            function loadSampleProgram() {
-                var xml = `
+        // 샘플 프로그램 로드
+        function loadSampleProgram() {
+            const sampleXml = `
 <xml xmlns="https://developers.google.com/blockly/xml">
-<block type="start" id="start_block" x="300" y="150">
-<next>
-<block type="variables_set" id="set_score">
-<field name="VAR">점수</field>
-<value name="VALUE">
-<block type="math_number">
-<field name="NUM">0</field>
-</block>
-</value>
-<next>
-<block type="move_forward">
-<value name="DISTANCE">
-<shadow type="math_number">
-<field name="NUM">10</field>
-</shadow>
-</value>
-<next>
-<block type="controls_repeat_ext">
-<value name="TIMES">
-<shadow type="math_number">
-<field name="NUM">4</field>
-</shadow>
-</value>
-<statement name="DO">
-<block type="turn_right">
-<value name="ANGLE">
-<shadow type="math_number">
-<field name="NUM">90</field>
-</shadow>
-</value>
-<next>
-<block type="move_forward">
-<value name="DISTANCE">
-<shadow type="math_number">
-<field name="NUM">10</field>
-</shadow>
-</value>
-<next>
-<block type="math_change">
-<field name="VAR">점수</field>
-<value name="DELTA">
-<shadow type="math_number">
-<field name="NUM">1</field>
-</shadow>
-</value>
-<next>
-<block type="wait">
-<value name="TIME">
-<shadow type="math_number">
-<field name="NUM">1</field>
-</shadow>
-</value>
-</block>
-</next>
-</block>
-</next>
-</block>
-</next>
-</block>
-</statement>
-</block>
-</next>
-</block>
-</next>
-</block>
-</next>
-</block>
-</xml>
-`;
-                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+  <variables>
+    <variable id="counter">카운터</variable>
+  </variables>
+  <block type="start" id="start_block" x="250" y="150">
+    <next>
+      <block type="variables_set" id="init_counter">
+        <field name="VAR" id="counter">카운터</field>
+        <value name="VALUE">
+          <block type="math_number">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <next>
+          <block type="controls_repeat_ext" id="main_loop">
+            <value name="TIMES">
+              <shadow type="math_number">
+                <field name="NUM">4</field>
+              </shadow>
+            </value>
+            <statement name="DO">
+              <block type="move_forward" id="move1">
+                <value name="DISTANCE">
+                  <shadow type="math_number">
+                    <field name="NUM">60</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block type="turn_right" id="turn1">
+                    <value name="ANGLE">
+                      <shadow type="math_number">
+                        <field name="NUM">90</field>
+                      </shadow>
+                    </value>
+                    <next>
+                      <block type="math_change" id="increment">
+                        <field name="VAR" id="counter">카운터</field>
+                        <value name="DELTA">
+                          <shadow type="math_number">
+                            <field name="NUM">1</field>
+                          </shadow>
+                        </value>
+                        <next>
+                          <block type="wait" id="wait1">
+                            <value name="TIME">
+                              <shadow type="math_number">
+                                <field name="NUM">0.5</field>
+                              </shadow>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>`;
+
+            try {
+                const xml = Blockly.Xml.textToDom(sampleXml);
+                Blockly.Xml.domToWorkspace(xml, workspace);
                 updateCode();
                 updateBlockCount();
+                logToConsole('샘플 프로그램이 로드되었습니다.');
+            } catch (error) {
+                console.error('샘플 프로그램 로드 오류:', error);
+                logToConsole('샘플 프로그램 로드 중 오류가 발생했습니다.');
             }
+        }
 
-            // 캐릭터 위치와 방향 설정을 위한 변수
-            var character = document.getElementById('character');
-            var x = 130;
-            var y = 130;
-            var angle = 0;
-            var variables = {};
-            var isRunning = false;
-            var shouldStop = false;
+        // 코드 생성 및 업데이트
+        function updateCode() {
+            if (!workspace) return;
 
-            // 콘솔에 메시지 추가
-            function logToConsole(message) {
-                var console = document.getElementById('console');
-                var line = document.createElement('div');
-                line.className = 'console-line';
-                line.textContent = '> ' + message;
-                console.appendChild(line);
-                console.scrollTop = console.scrollHeight;
-            }
+            try {
+                const activeLanguage = document.querySelector('.language-button.active-language').id;
+                let code = '';
 
-            // 변수 업데이트 함수
-            function updateVariable(name, value) {
-                if (!isNaN(Number(value)) && value !== '') {
-                    value = Number(value);
-                }
-                
-                variables[name] = value;
-                logToConsole(`변수 ${name}의 값이 ${value}로 변경되었습니다.`);
-                updateVariableDisplay();
-            }
-
-            // 변수 표시 업데이트
-            function updateVariableDisplay() {
-                var variablesDiv = document.getElementById('variables');
-                variablesDiv.innerHTML = '';
-
-                for (var name in variables) {
-                    var item = document.createElement('div');
-                    item.className = 'variable-item';
-                    item.textContent = name + ': ' + variables[name];
-                    variablesDiv.appendChild(item);
+                switch (activeLanguage) {
+                    case 'pythonButton':
+                        code = generatePythonCode();
+                        break;
+                    case 'javascriptButton':
+                        code = generateJavaScriptCode();
+                        break;
+                    case 'cppButton':
+                        code = generateCppCode();
+                        break;
+                    default:
+                        code = generatePythonCode();
                 }
 
-                var posX = document.createElement('div');
-                posX.className = 'variable-item';
-                posX.textContent = '위치X: ' + Math.round(x);
-                variablesDiv.appendChild(posX);
+                document.getElementById('codeContent').textContent = code;
+            } catch (error) {
+                console.error('코드 생성 오류:', error);
+                document.getElementById('codeContent').textContent = '# 코드 생성 중 오류가 발생했습니다.\n# ' + error.message;
+            }
+        }
 
-                var posY = document.createElement('div');
-                posY.className = 'variable-item';
-                posY.textContent = '위치Y: ' + Math.round(y);
-                variablesDiv.appendChild(posY);
+        // Python 코드 생성
+        function generatePythonCode() {
+            const pythonCode = Blockly.Python.workspaceToCode(workspace);
+            const variableList = workspace.getAllVariables();
+            
+            let imports = 'import time\n\n';
+            let functions = `def move_forward(distance):
+    print(f"앞으로 {distance}만큼 이동")
+
+def turn_right(angle):
+    print(f"오른쪽으로 {angle}도 회전")
+
+def turn_left(angle):
+    print(f"왼쪽으로 {angle}도 회전")
+
+def wait(seconds):
+    time.sleep(seconds)
+
+`;
+
+            let mainFunction = 'def main():\n';
+            
+            // 변수 초기화
+            if (variableList.length > 0) {
+                mainFunction += '    # 변수 초기화\n';
+                variableList.forEach(variable => {
+                    mainFunction += `    ${variable.name} = 0\n`;
+                });
+                mainFunction += '\n';
+            }
+            
+            // 생성된 코드 추가
+            const indentedCode = pythonCode.split('\n')
+                .map(line => line ? '    ' + line : '')
+                .join('\n');
+            
+            mainFunction += '    # 프로그램 시작\n' + indentedCode;
+            mainFunction += '\n\nif __name__ == "__main__":\n    main()';
+
+            return imports + functions + mainFunction;
+        }
+
+        // JavaScript 코드 생성
+        function generateJavaScriptCode() {
+            const jsCode = Blockly.JavaScript.workspaceToCode(workspace);
+            const variableList = workspace.getAllVariables();
+            
+            let code = `// 생성된 JavaScript 코드
+const variables = {};
+
+// 함수 정의
+async function moveForward(distance) {
+    console.log(\`앞으로 \${distance}만큼 이동\`);
+    // 실제 움직임 구현
+}
+
+async function turnRight(angle) {
+    console.log(\`오른쪽으로 \${angle}도 회전\`);
+    // 실제 회전 구현
+}
+
+async function turnLeft(angle) {
+    console.log(\`왼쪽으로 \${angle}도 회전\`);
+    // 실제 회전 구현
+}
+
+async function sleep(seconds) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+}
+
+function updateVariable(name, value) {
+    variables[name] = value;
+    console.log(\`변수 \${name}의 값이 \${value}로 변경됨\`);
+}
+
+// 메인 함수
+async function main() {
+`;
+
+            // 변수 초기화
+            if (variableList.length > 0) {
+                code += '    // 변수 초기화\n';
+                variableList.forEach(variable => {
+                    code += `    updateVariable("${variable.name}", 0);\n`;
+                });
+                code += '\n';
             }
 
-            // 캐릭터 상태 초기화
-            function resetCharacter() {
-                x = 130;
-                y = 130;
-                angle = 0;
+            // 생성된 코드 추가
+            const indentedCode = jsCode.split('\n')
+                .map(line => line ? '    ' + line : '')
+                .join('\n');
+            
+            code += '    // 프로그램 시작\n' + indentedCode;
+            code += '\n}\n\n// 실행\nmain().catch(console.error);';
+
+            return code;
+        }
+
+        // C++ 코드 생성
+        function generateCppCode() {
+            const variableList = workspace.getAllVariables();
+            
+            let code = `// 생성된 C++ 코드
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <map>
+#include <string>
+
+using namespace std;
+
+// 전역 변수
+map<string, int> variables;
+
+// 함수 정의
+void moveForward(int distance) {
+    cout << "앞으로 " << distance << "만큼 이동" << endl;
+}
+
+void turnRight(int angle) {
+    cout << "오른쪽으로 " << angle << "도 회전" << endl;
+}
+
+void turnLeft(int angle) {
+    cout << "왼쪽으로 " << angle << "도 회전" << endl;
+}
+
+void wait(double seconds) {
+    this_thread::sleep_for(chrono::milliseconds((int)(seconds * 1000)));
+}
+
+void updateVariable(const string& name, int value) {
+    variables[name] = value;
+    cout << "변수 " << name << "의 값이 " << value << "로 변경됨" << endl;
+}
+
+int main() {
+`;
+
+            // 변수 초기화
+            if (variableList.length > 0) {
+                code += '    // 변수 초기화\n';
+                variableList.forEach(variable => {
+                    code += `    updateVariable("${variable.name}", 0);\n`;
+                });
+                code += '\n';
+            }
+
+            code += `    // 프로그램 시작
+    // 여기에 블록에서 생성된 코드가 들어갑니다
+    moveForward(60);
+    for (int i = 0; i < 4; i++) {
+        moveForward(60);
+        turnRight(90);
+        updateVariable("카운터", variables["카운터"] + 1);
+        wait(0.5);
+    }
+    
+    return 0;
+}`;
+
+            return code;
+        }
+
+        // 블록 개수 업데이트
+        function updateBlockCount() {
+            if (!workspace) return;
+            const count = workspace.getAllBlocks(false).length;
+            document.getElementById('blockCount').textContent = `블록 수: ${count}`;
+        }
+
+        // 캐릭터 리셋
+        function resetCharacter() {
+            x = 130;
+            y = 130;
+            angle = 0;
+            variables = {};
+            
+            if (character) {
                 character.style.left = x + 'px';
                 character.style.top = y + 'px';
                 character.style.transform = 'rotate(' + angle + 'deg)';
+            }
+            
+            // 콘솔 초기화
+            const consoleDiv = document.getElementById('console');
+            consoleDiv.innerHTML = '<div class="console-line">> 프로그램 초기화 완료</div>';
+            
+            // 실행 상태 초기화
+            isRunning = false;
+            shouldStop = false;
+            document.getElementById('executionStatus').textContent = '준비됨';
+            
+            updateVariableDisplay();
+            logToConsole('캐릭터와 변수가 초기화되었습니다.');
+        }
 
-                document.getElementById('console').innerHTML = '<div class="console-line">> 프로그램 시작</div>';
-                variables = {};
-                updateVariableDisplay();
+        // 변수 업데이트
+        function updateVariable(name, value) {
+            if (!isNaN(Number(value)) && value !== '') {
+                value = Number(value);
+            }
+            variables[name] = value;
+            updateVariableDisplay();
+            logToConsole(`변수 ${name}: ${value}`);
+        }
+
+        // 변수 디스플레이 업데이트
+        function updateVariableDisplay() {
+            const variablesDiv = document.getElementById('variables');
+            variablesDiv.innerHTML = '';
+
+            // 사용자 정의 변수들
+            for (const [name, value] of Object.entries(variables)) {
+                const item = document.createElement('div');
+                item.className = 'variable-item';
+                item.textContent = `${name}: ${value}`;
+                variablesDiv.appendChild(item);
             }
 
-            // 움직임 함수
-            async function moveForward(distance) {
-                logToConsole('앞으로 ' + distance + '만큼 이동');
+            // 위치 정보
+            const posX = document.createElement('div');
+            posX.className = 'variable-item';
+            posX.textContent = `위치 X: ${Math.round(x)}`;
+            variablesDiv.appendChild(posX);
 
-                var radians = angle * Math.PI / 180;
-                var targetX = x + Math.sin(radians) * distance;
-                var targetY = y - Math.cos(radians) * distance;
+            const posY = document.createElement('div');
+            posY.className = 'variable-item';
+            posY.textContent = `위치 Y: ${Math.round(y)}`;
+            variablesDiv.appendChild(posY);
 
-                var steps = 20;
-                var deltaX = (targetX - x) / steps;
-                var deltaY = (targetY - y) / steps;
+            const rotation = document.createElement('div');
+            rotation.className = 'variable-item';
+            rotation.textContent = `회전각: ${Math.round(angle)}°`;
+            variablesDiv.appendChild(rotation);
+        }
 
-                for (var i = 0; i < steps; i++) {
-                    if (shouldStop) return;
-                    x += deltaX;
-                    y += deltaY;
-                    character.style.left = x + 'px';
-                    character.style.top = y + 'px';
-                    updateVariableDisplay();
-                    await sleep(0.05);
-                }
+        // 콘솔에 로그 추가
+        function logToConsole(message) {
+            const consoleDiv = document.getElementById('console');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.textContent = '> ' + message;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
 
-                x = targetX;
-                y = targetY;
+        // 움직임 함수들
+        async function moveForward(distance) {
+            logToConsole(`앞으로 ${distance}만큼 이동`);
+            
+            if (!character) return;
+            
+            const radians = angle * Math.PI / 180;
+            const targetX = Math.max(10, Math.min(250, x + Math.sin(radians) * distance));
+            const targetY = Math.max(10, Math.min(170, y - Math.cos(radians) * distance));
+            
+            const steps = Math.max(10, Math.abs(distance) / 2);
+            const deltaX = (targetX - x) / steps;
+            const deltaY = (targetY - y) / steps;
+            
+            for (let i = 0; i < steps && !shouldStop; i++) {
+                x += deltaX;
+                y += deltaY;
                 character.style.left = x + 'px';
                 character.style.top = y + 'px';
                 updateVariableDisplay();
+                await sleep(0.02);
+            }
+            
+            x = targetX;
+            y = targetY;
+            character.style.left = x + 'px';
+            character.style.top = y + 'px';
+            updateVariableDisplay();
+        }
+
+        async function turnRight(degrees) {
+            logToConsole(`오른쪽으로 ${degrees}도 회전`);
+            
+            if (!character) return;
+            
+            const targetAngle = angle + degrees;
+            const steps = Math.max(5, Math.abs(degrees) / 10);
+            const deltaAngle = degrees / steps;
+            
+            for (let i = 0; i < steps && !shouldStop; i++) {
+                angle += deltaAngle;
+                character.style.transform = `rotate(${angle}deg)`;
+                updateVariableDisplay();
+                await sleep(0.02);
+            }
+            
+            angle = targetAngle % 360;
+            character.style.transform = `rotate(${angle}deg)`;
+            updateVariableDisplay();
+        }
+
+        async function turnLeft(degrees) {
+            logToConsole(`왼쪽으로 ${degrees}도 회전`);
+            
+            if (!character) return;
+            
+            const targetAngle = angle - degrees;
+            const steps = Math.max(5, Math.abs(degrees) / 10);
+            const deltaAngle = degrees / steps;
+            
+            for (let i = 0; i < steps && !shouldStop; i++) {
+                angle -= deltaAngle;
+                character.style.transform = `rotate(${angle}deg)`;
+                updateVariableDisplay();
+                await sleep(0.02);
+            }
+            
+            angle = targetAngle % 360;
+            character.style.transform = `rotate(${angle}deg)`;
+            updateVariableDisplay();
+        }
+
+        // 지연 함수
+        function sleep(seconds) {
+            return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+        }
+
+        // 코드 실행
+        async function runCode() {
+            if (isRunning) {
+                logToConsole('이미 실행 중입니다.');
+                return;
             }
 
-            // 회전 함수 (오른쪽)
-            async function turnRight(degrees) {
-                logToConsole('오른쪽으로 ' + degrees + '도 회전');
-
-                var targetAngle = angle + degrees;
-                var steps = 10;
-                var deltaAngle = degrees / steps;
-
-                for (var i = 0; i < steps; i++) {
-                    if (shouldStop) return;
-                    angle += deltaAngle;
-                    character.style.transform = 'rotate(' + angle + 'deg)';
-                    await sleep(0.05);
-                }
-
-                angle = targetAngle;
-                character.style.transform = 'rotate(' + angle + 'deg)';
+            if (!workspace) {
+                logToConsole('워크스페이스가 초기화되지 않았습니다.');
+                return;
             }
 
-            // 회전 함수 (왼쪽)
-            async function turnLeft(degrees) {
-                logToConsole('왼쪽으로 ' + degrees + '도 회전');
-
-                var targetAngle = angle - degrees;
-                var steps = 10;
-                var deltaAngle = degrees / steps;
-
-                for (var i = 0; i < steps; i++) {
-                    if (shouldStop) return;
-                    angle -= deltaAngle;
-                    character.style.transform = 'rotate(' + angle + 'deg)';
-                    await sleep(0.05);
-                }
-
-                angle = targetAngle;
-                character.style.transform = 'rotate(' + angle + 'deg)';
+            const blocks = workspace.getAllBlocks(false);
+            if (blocks.length === 0) {
+                logToConsole('실행할 블록이 없습니다.');
+                return;
             }
 
-            // 지연 함수
-            function sleep(seconds) {
-                const ms = seconds * 1000;
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
+            isRunning = true;
+            shouldStop = false;
+            document.getElementById('executionStatus').textContent = '실행 중...';
+            
+            logToConsole('프로그램 실행 시작');
 
-            // 코드 실행 함수
-            async function runCode() {
-                if (isRunning) return;
-
-                isRunning = true;
-                shouldStop = false;
-                resetCharacter();
-                logToConsole('프로그램 실행 시작');
-
-                try {
-                    let variableList = workspace.getAllVariables();
-                    for (let i = 0; i < variableList.length; i++) {
-                        let varName = variableList[i].name;
-                        variables[varName] = 0;
-                        updateVariableDisplay();
+            try {
+                // 변수 초기화
+                const variableList = workspace.getAllVariables();
+                variableList.forEach(variable => {
+                    if (!(variable.name in variables)) {
+                        variables[variable.name] = 0;
                     }
-                    
-                    var code = Blockly.JavaScript.workspaceToCode(workspace);
-                    
-                    code = `async function runUserCode() {
+                });
+                updateVariableDisplay();
+
+                // 코드 생성 및 실행
+                const code = Blockly.JavaScript.workspaceToCode(workspace);
+                
+                if (!code.trim()) {
+                    logToConsole('생성된 코드가 없습니다.');
+                    return;
+                }
+
+                // 안전한 코드 실행을 위한 함수 래핑
+                const runFunction = new Function(
+                    'moveForward', 'turnRight', 'turnLeft', 
+                    'sleep', 'updateVariable', 'variables',
+                    `return (async function() {
                         try {
                             ${code}
-                        } catch (e) {
-                            console.error("Error in user code:", e);
-                            throw e;
+                        } catch (error) {
+                            console.error("실행 오류:", error);
+                            throw error;
                         }
-                    }
-                    runUserCode();`;
+                    })();`
+                );
 
-                    var runFunction = new Function(
-                        'moveForward', 'turnRight', 'turnLeft', 
-                        'sleep', 'updateVariable', 'variables',
-                        code
-                    );
+                await runFunction(
+                    moveForward, turnRight, turnLeft,
+                    sleep, updateVariable, variables
+                );
 
-                    await runFunction(
-                        moveForward, turnRight, turnLeft, 
-                        sleep, updateVariable, variables
-                    );
-
-                    if (!shouldStop) {
-                        logToConsole('프로그램 실행 완료');
-                    }
-                } catch (e) {
-                    logToConsole('오류 발생: ' + e.message);
-                    console.error(e);
+                if (!shouldStop) {
+                    logToConsole('프로그램 실행 완료');
+                    document.getElementById('executionStatus').textContent = '완료';
                 }
-
+            } catch (error) {
+                console.error('실행 오류:', error);
+                logToConsole(`오류 발생: ${error.message}`);
+                document.getElementById('executionStatus').textContent = '오류';
+            } finally {
                 isRunning = false;
+                if (!shouldStop) {
+                    setTimeout(() => {
+                        document.getElementById('executionStatus').textContent = '준비됨';
+                    }, 2000);
+                }
+            }
+        }
+
+        // 코드 실행 중지
+        function stopCode() {
+            if (!isRunning) {
+                logToConsole('실행 중인 프로그램이 없습니다.');
+                return;
+            }
+            
+            shouldStop = true;
+            logToConsole('프로그램 실행이 중지되었습니다.');
+            document.getElementById('executionStatus').textContent = '중지됨';
+            
+            setTimeout(() => {
+                isRunning = false;
+                document.getElementById('executionStatus').textContent = '준비됨';
+            }, 1000);
+        }
+
+        // 프로그램 저장
+        function saveProgram() {
+            if (!workspace) {
+                logToConsole('워크스페이스가 초기화되지 않았습니다.');
+                return;
             }
 
-            // 코드 실행 중지 함수
-            function stopCode() {
-                if (!isRunning) return;
-                shouldStop = true;
-                logToConsole('프로그램 실행 중지');
-            }
-
-            // 저장 기능
-            function saveProgram() {
-                var xml = Blockly.Xml.workspaceToDom(workspace);
-                var xmlText = Blockly.Xml.domToText(xml);
-                localStorage.setItem('savedProgram', xmlText);
-
-                var now = new Date();
-                var timeString = now.getHours().toString().padStart(2, '0') + ':' +
-                    now.getMinutes().toString().padStart(2, '0') + ' ' +
-                    (now.getHours() >= 12 ? 'PM' : 'AM');
-                document.getElementById('lastSaved').textContent = '마지막 저장: ' + timeString;
-
-                logToConsole('프로그램이 저장되었습니다.');
+            try {
+                const xml = Blockly.Xml.workspaceToDom(workspace);
+                const xmlText = Blockly.Xml.domToText(xml);
+                const projectName = document.getElementById('projectName').value || '내 프로젝트';
                 
-                // 네비게이션 매니저의 알림 시스템 사용
+                localStorage.setItem('savedProgram', xmlText);
+                localStorage.setItem('savedProjectName', projectName);
+
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('ko-KR', { 
+                    hour12: false, 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                document.getElementById('lastSaved').textContent = `마지막 저장: ${timeString}`;
+                logToConsole(`프로젝트 "${projectName}"이 저장되었습니다.`);
+                
                 if (navigationManager) {
                     navigationManager.showNotification('프로젝트가 저장되었습니다!');
                 }
+            } catch (error) {
+                console.error('저장 오류:', error);
+                logToConsole('저장 중 오류가 발생했습니다.');
+                if (navigationManager) {
+                    navigationManager.showNotification('저장 중 오류가 발생했습니다.', 'error');
+                }
+            }
+        }
+
+        // 프로그램 로드
+        function loadProgram() {
+            const savedProgram = localStorage.getItem('savedProgram');
+            const savedProjectName = localStorage.getItem('savedProjectName');
+            
+            if (!savedProgram) {
+                logToConsole('저장된 프로그램이 없습니다.');
+                if (navigationManager) {
+                    navigationManager.showNotification('저장된 프로젝트가 없습니다.', 'error');
+                }
+                return;
             }
 
-            // 로드 기능
-            function loadProgram() {
-                var savedProgram = localStorage.getItem('savedProgram');
-                if (savedProgram) {
+            try {
+                if (workspace) {
                     workspace.clear();
-                    var xml = Blockly.Xml.textToDom(savedProgram);
+                    const xml = Blockly.Xml.textToDom(savedProgram);
                     Blockly.Xml.domToWorkspace(xml, workspace);
+                    
+                    if (savedProjectName) {
+                        document.getElementById('projectName').value = savedProjectName;
+                    }
+                    
                     updateCode();
                     updateBlockCount();
                     logToConsole('저장된 프로그램을 불러왔습니다.');
@@ -1398,120 +1688,43 @@
                     if (navigationManager) {
                         navigationManager.showNotification('프로젝트를 불러왔습니다!');
                     }
-                } else {
-                    logToConsole('저장된 프로그램이 없습니다.');
-                    
-                    if (navigationManager) {
-                        navigationManager.showNotification('저장된 프로젝트가 없습니다.', 'error');
-                    }
+                }
+            } catch (error) {
+                console.error('로드 오류:', error);
+                logToConsole('프로그램 로드 중 오류가 발생했습니다.');
+                if (navigationManager) {
+                    navigationManager.showNotification('프로젝트 로드 중 오류가 발생했습니다.', 'error');
                 }
             }
+        }
 
-            // 언어 전환 기능
-            function switchLanguage(language) {
-                var pythonButton = document.getElementById('pythonButton');
-                var javascriptButton = document.getElementById('javascriptButton');
-                var cppButton = document.getElementById('cppButton');
-                var codeTitle = document.querySelector('.code-title');
+        // 언어 전환
+        function switchLanguage(language) {
+            const buttons = {
+                python: document.getElementById('pythonButton'),
+                javascript: document.getElementById('javascriptButton'),
+                cpp: document.getElementById('cppButton')
+            };
+            
+            const titles = {
+                python: '생성된 코드 (Python)',
+                javascript: '생성된 코드 (JavaScript)',
+                cpp: '생성된 코드 (C++)'
+            };
 
-                pythonButton.className = 'language-button inactive-language';
-                javascriptButton.className = 'language-button inactive-language';
-                cppButton.className = 'language-button inactive-language';
+            // 모든 버튼을 비활성화
+            Object.values(buttons).forEach(button => {
+                button.className = 'language-button inactive-language';
+            });
 
-                if (language === 'python') {
-                    pythonButton.className = 'language-button active-language';
-                    codeTitle.textContent = '실제 코드 (Python)';
-                    updateCode();
-                } else if (language === 'javascript') {
-                    javascriptButton.className = 'language-button active-language';
-                    codeTitle.textContent = '실제 코드 (JavaScript)';
-                    updateCode();
-                } else if (language === 'cpp') {
-                    cppButton.className = 'language-button active-language';
-                    codeTitle.textContent = '실제 코드 (C++)';
-                    updateCode();
-                }
+            // 선택된 버튼 활성화
+            if (buttons[language]) {
+                buttons[language].className = 'language-button active-language';
+                document.querySelector('.code-title').textContent = titles[language];
+                updateCode();
+                logToConsole(`코드 언어가 ${language}로 변경되었습니다.`);
             }
-
-            // 이벤트 리스너 설정
-            document.getElementById('runButton').addEventListener('click', runCode);
-            document.getElementById('runButtonSmall').addEventListener('click', runCode);
-            document.getElementById('stopButton').addEventListener('click', stopCode);
-            document.getElementById('resetButton').addEventListener('click', resetCharacter);
-            document.getElementById('saveButton').addEventListener('click', saveProgram);
-            document.getElementById('loadButton').addEventListener('click', loadProgram);
-
-            // 언어 버튼 이벤트 리스너
-            document.getElementById('pythonButton').addEventListener('click', function () {
-                switchLanguage('python');
-            });
-            document.getElementById('javascriptButton').addEventListener('click', function () {
-                switchLanguage('javascript');
-            });
-            document.getElementById('cppButton').addEventListener('click', function () {
-                switchLanguage('cpp');
-            });
-
-            // 샘플 프로그램 로드
-            loadSampleProgram();
-
-            // 창 크기 조정 시 Blockly 재조정
-            window.addEventListener('resize', function () {
-                Blockly.svgResize(workspace);
-            });
-
-            // 키보드 단축키 설정
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey || e.metaKey) {
-                    switch(e.key) {
-                        case '1':
-                            e.preventDefault();
-                            navigationManager.navigateToDashboard();
-                            break;
-                        case '2':
-                            e.preventDefault();
-                            // 현재 페이지이므로 아무것도 하지 않음
-                            break;
-                        case '3':
-                            e.preventDefault();
-                            navigationManager.navigateTo('algorithm');
-                            break;
-                        case '4':
-                            e.preventDefault();
-                            navigationManager.navigateTo('assignments');
-                            break;
-                        case '5':
-                            e.preventDefault();
-                            navigationManager.navigateTo('progress');
-                            break;
-                        case 's':
-                            e.preventDefault();
-                            saveProgram();
-                            break;
-                        case 'o':
-                            e.preventDefault();
-                            loadProgram();
-                            break;
-                        case 'r':
-                            e.preventDefault();
-                            runCode();
-                            break;
-                    }
-                }
-
-                if (e.key === 'Escape') {
-                    stopCode();
-                }
-            });
-
-            // 페이지 이탈 시 확인
-            window.addEventListener('beforeunload', function (e) {
-                if (workspace.getAllBlocks(false).length > 0) {
-                    e.preventDefault();
-                    e.returnValue = '';
-                }
-            });
-        });
+        }
     </script>
 </body>
 </html>
