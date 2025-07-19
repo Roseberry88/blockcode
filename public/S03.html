@@ -54,6 +54,11 @@
             transform: scale(1.05);
         }
 
+        .back-button {
+            background-color: rgba(255,255,255,0.1);
+            margin-right: auto;
+        }
+
         .project-name {
             height: 30px;
             width: 200px;
@@ -81,11 +86,6 @@
             transform: translateY(-2px);
         }
 
-        .back-button {
-            background-color: rgba(255,255,255,0.1);
-            margin-right: auto;
-        }
-
         .content {
             display: flex;
             flex: 1;
@@ -98,6 +98,97 @@
             background-color: #f8f9fa;
             display: flex;
             flex-direction: column;
+        }
+
+        .category-tabs {
+            height: 40px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .category-tab {
+            width: 40px;
+            height: 30px;
+            border-radius: 5px;
+            margin-right: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transform: translateY(-1px);
+        }
+
+        .search-block {
+            margin: 10px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 30px;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            padding: 0 15px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+
+        .category-title {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+
+        .blocks-container {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .block-item {
+            margin: 8px 15px;
+            padding: 10px;
+            color: white;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .block-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .block-item:active {
+            cursor: grabbing;
+        }
+
+        .category-control {
+            background-color: #fbbc05;
+        }
+
+        .category-movement {
+            background-color: #4285f4;
+        }
+
+        .category-variables {
+            background-color: #ea4335;
+        }
+
+        .category-logic {
+            background-color: #34a853;
         }
 
         .center-panel {
@@ -398,6 +489,10 @@
             margin: 10px;
             font-size: 12px;
         }
+
+        #toolbox {
+            display: none;
+        }
     </style>
 </head>
 
@@ -420,7 +515,93 @@
         
         <div class="content">
             <div class="left-panel">
-                <!-- 툴박스는 JavaScript에서 동적으로 생성됩니다 -->
+                <div class="category-tabs">
+                    <button class="category-tab category-control" data-category="control" title="제어">🎯</button>
+                    <button class="category-tab category-movement" data-category="movement" title="움직임">🚀</button>
+                    <button class="category-tab category-variables" data-category="variables" title="변수">📦</button>
+                    <button class="category-tab category-logic" data-category="logic" title="논리">🧠</button>
+                </div>
+                <div class="search-block">
+                    <input type="text" class="search-input" placeholder="블록 검색..." id="blockSearch">
+                </div>
+                <div class="blocks-container" id="blocksContainer">
+                    <!-- 블록들이 여기에 동적으로 생성됩니다 -->
+                </div>
+                
+                <!-- 숨겨진 툴박스 -->
+                <xml id="toolboxXML" style="display: none;">
+                    <category name="제어" colour="#fbbc05">
+                        <block type="start"></block>
+                        <block type="controls_repeat_ext">
+                            <value name="TIMES">
+                                <shadow type="math_number">
+                                    <field name="NUM">10</field>
+                                </shadow>
+                            </value>
+                        </block>
+                        <block type="controls_if"></block>
+                        <block type="wait">
+                            <value name="TIME">
+                                <shadow type="math_number">
+                                    <field name="NUM">1</field>
+                                </shadow>
+                            </value>
+                        </block>
+                    </category>
+                    <category name="움직임" colour="#4285f4">
+                        <block type="move_forward">
+                            <value name="DISTANCE">
+                                <shadow type="math_number">
+                                    <field name="NUM">10</field>
+                                </shadow>
+                            </value>
+                        </block>
+                        <block type="turn_right">
+                            <value name="ANGLE">
+                                <shadow type="math_number">
+                                    <field name="NUM">90</field>
+                                </shadow>
+                            </value>
+                        </block>
+                        <block type="turn_left">
+                            <value name="ANGLE">
+                                <shadow type="math_number">
+                                    <field name="NUM">90</field>
+                                </shadow>
+                            </value>
+                        </block>
+                    </category>
+                    <category name="논리" colour="#34a853">
+                        <block type="logic_compare"></block>
+                        <block type="logic_operation"></block>
+                        <block type="logic_boolean"></block>
+                    </category>
+                    <category name="변수" colour="#ea4335" custom="VARIABLE"></category>
+                    <category name="수학" colour="#9966FF">
+                        <block type="math_number">
+                            <field name="NUM">1</field>
+                        </block>
+                        <block type="math_arithmetic">
+                            <value name="A">
+                                <shadow type="math_number">
+                                    <field name="NUM">1</field>
+                                </shadow>
+                            </value>
+                            <value name="B">
+                                <shadow type="math_number">
+                                    <field name="NUM">1</field>
+                                </shadow>
+                            </value>
+                        </block>
+                        <block type="math_number_property">
+                            <value name="NUMBER_TO_CHECK">
+                                <shadow type="math_number">
+                                    <field name="NUM">0</field>
+                                </shadow>
+                            </value>
+                        </block>
+                    </category>
+                </xml>
             </div>
             
             <div class="center-panel">
@@ -624,12 +805,12 @@
             }
         }
 
-        // 페이지 로드 시 초기화
+        // 페이지 로드 시 초기화 (완전히 새로운 접근)
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== 페이지 로드 시작 ===');
+            
             // 네비게이션 매니저 초기화
             navigationManager = new NavigationManager();
-            
-            // 로딩 종료
             if (navigationManager) {
                 navigationManager.hideLoading();
             }
@@ -638,23 +819,624 @@
             character = document.getElementById('character');
             resetCharacter();
 
-            // 커스텀 블록 정의
+            // 즉시 실행: 커스텀 블록과 코드 생성기 정의
+            console.log('커스텀 블록 및 코드 생성기 정의...');
             defineCustomBlocks();
-            
-            // 코드 생성기 정의
             defineCodeGenerators();
-            
-            // Blockly 워크스페이스 초기화
-            initializeBlockly();
-            
+
+            // 잠시 후 Blockly 워크스페이스 초기화
+            setTimeout(() => {
+                console.log('Blockly 워크스페이스 초기화 시작...');
+                initializeBlocklyWorkspace();
+            }, 100);
+
+            // 블록 팔레트 생성
+            setTimeout(() => {
+                console.log('블록 팔레트 생성...');
+                createBlockPalette();
+            }, 200);
+
             // 이벤트 리스너 설정
-            setupEventListeners();
-            
-            // 초기 화면 업데이트
-            updateCode();
-            updateBlockCount();
-            updateVariableDisplay();
+            setTimeout(() => {
+                console.log('이벤트 리스너 설정...');
+                setupEventListeners();
+                updateCode();
+                updateBlockCount();
+                updateVariableDisplay();
+                console.log('=== 초기화 완료 ===');
+            }, 300);
         });
+
+        // 간단한 Blockly 워크스페이스 초기화
+        function initializeBlocklyWorkspace() {
+            try {
+                console.log('Blockly 워크스페이스 초기화 시작...');
+                
+                // 기존 워크스페이스 정리
+                if (workspace) {
+                    console.log('기존 워크스페이스 제거...');
+                    workspace.dispose();
+                }
+
+                // blocklyDiv 요소 확인
+                const blocklyDiv = document.getElementById('blocklyDiv');
+                if (!blocklyDiv) {
+                    console.error('❌ blocklyDiv 요소를 찾을 수 없습니다.');
+                    return;
+                }
+
+                console.log('blocklyDiv 요소 발견:', blocklyDiv);
+
+                // 매우 간단한 워크스페이스 생성
+                workspace = Blockly.inject('blocklyDiv', {
+                    grid: { spacing: 20, length: 3, colour: '#ccc' },
+                    zoom: { controls: true, wheel: true, startScale: 1.0 },
+                    trashcan: true,
+                    scrollbars: true
+                });
+
+                if (workspace) {
+                    console.log('✅ Blockly 워크스페이스 생성 성공!');
+                    
+                    // 워크스페이스 크기 조정
+                    Blockly.svgResize(workspace);
+                    
+                    // 변경 이벤트 리스너 추가
+                    workspace.addChangeListener(function(event) {
+                        if (event.type === Blockly.Events.BLOCK_CREATE ||
+                            event.type === Blockly.Events.BLOCK_DELETE ||
+                            event.type === Blockly.Events.BLOCK_CHANGE) {
+                            console.log('워크스페이스 변경:', event.type);
+                            updateCode();
+                            updateBlockCount();
+                        }
+                    });
+
+                    // 테스트 블록 추가
+                    setTimeout(() => {
+                        addTestBlock();
+                    }, 500);
+
+                } else {
+                    console.error('❌ Blockly 워크스페이스 생성 실패');
+                }
+
+            } catch (error) {
+                console.error('❌ Blockly 초기화 오류:', error);
+            }
+        }
+
+        // 테스트 블록 추가
+        function addTestBlock() {
+            if (!workspace) {
+                console.error('워크스페이스가 없습니다.');
+                return;
+            }
+
+            try {
+                console.log('테스트 블록 추가...');
+                
+                // 시작 블록 생성
+                const startBlock = workspace.newBlock('start');
+                startBlock.moveBy(100, 100);
+                startBlock.initSvg();
+                startBlock.render();
+                
+                // 이동 블록 생성
+                const moveBlock = workspace.newBlock('move_forward');
+                moveBlock.moveBy(100, 150);
+                moveBlock.initSvg();
+                moveBlock.render();
+                
+                // 숫자 블록 생성 및 연결
+                const numberBlock = workspace.newBlock('math_number');
+                numberBlock.setFieldValue('10', 'NUM');
+                numberBlock.initSvg();
+                numberBlock.render();
+                numberBlock.moveBy(200, 150);
+                
+                // 블록 연결
+                if (moveBlock.getInput('DISTANCE') && numberBlock.outputConnection) {
+                    moveBlock.getInput('DISTANCE').connection.connect(numberBlock.outputConnection);
+                }
+                
+                console.log('✅ 테스트 블록 추가 완료');
+                updateCode();
+                updateBlockCount();
+                
+            } catch (error) {
+                console.error('❌ 테스트 블록 추가 실패:', error);
+            }
+        }
+
+        // 블록 팔레트 생성 (단순화)
+        function createBlockPalette() {
+            console.log('블록 팔레트 생성...');
+            
+            const categories = {
+                control: {
+                    name: '움직임',
+                    color: '#4285f4',
+                    blocks: [
+                        { name: '🚀 시작하기', type: 'start' },
+                        { name: '🔼 앞으로 이동', type: 'move_forward' },
+                        { name: '➡️ 오른쪽 회전', type: 'turn_right' },
+                        { name: '⬅️ 왼쪽 회전', type: 'turn_left' },
+                        { name: '⏱️ 기다리기', type: 'wait' },
+                        { name: '🔢 숫자', type: 'math_number' },
+                        { name: '🔁 반복하기', type: 'controls_repeat_ext' }
+                    ]
+                }
+            };
+
+            // 기본 움직임 카테고리 표시
+            displayBlocks(categories.control);
+
+            // 탭 이벤트 설정
+            const tabs = document.querySelectorAll('.category-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    displayBlocks(categories.control);
+                });
+            });
+
+            // 첫 번째 탭 활성화
+            if (tabs.length > 0) {
+                tabs[0].classList.add('active');
+            }
+        }
+
+        // 블록 표시
+        function displayBlocks(category) {
+            const container = document.getElementById('blocksContainer');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div style="
+                    height: 30px;
+                    background-color: ${category.color};
+                    color: white;
+                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 15px;
+                    margin-bottom: 10px;
+                ">
+                    ${category.name}
+                </div>
+            `;
+
+            category.blocks.forEach(block => {
+                const blockEl = document.createElement('div');
+                blockEl.innerHTML = `
+                    <div style="
+                        margin: 8px 15px;
+                        padding: 12px;
+                        background-color: ${category.color};
+                        color: white;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        font-weight: 500;
+                        transition: all 0.2s ease;
+                        border: 2px solid transparent;
+                    " onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor='white';" 
+                       onmouseout="this.style.transform='scale(1)'; this.style.borderColor='transparent';"
+                       onclick="addBlockToWorkspace('${block.type}')">
+                        ${block.name}
+                    </div>
+                `;
+                container.appendChild(blockEl);
+            });
+        }
+
+        // 워크스페이스에 블록 추가 (단순화)
+        function addBlockToWorkspace(blockType) {
+            console.log('블록 추가 시도:', blockType);
+            
+            if (!workspace) {
+                console.error('❌ 워크스페이스가 없습니다. 다시 초기화 시도...');
+                initializeBlocklyWorkspace();
+                return;
+            }
+
+            try {
+                // 블록 생성
+                const newBlock = workspace.newBlock(blockType);
+                if (!newBlock) {
+                    console.error('❌ 블록 생성 실패:', blockType);
+                    return;
+                }
+
+                // 위치 설정
+                const blocks = workspace.getAllBlocks();
+                const x = 50 + (blocks.length * 30);
+                const y = 50 + (blocks.length * 30);
+                
+                newBlock.moveBy(x, y);
+                newBlock.initSvg();
+                newBlock.render();
+
+                // 기본값 설정
+                setBlockDefaults(newBlock, blockType);
+
+                console.log('✅ 블록 추가 성공:', blockType);
+                updateCode();
+                updateBlockCount();
+                logToConsole(`블록 "${blockType}" 추가됨`);
+
+            } catch (error) {
+                console.error('❌ 블록 추가 오류:', error);
+                logToConsole(`블록 추가 오류: ${error.message}`);
+            }
+        }
+
+        // 블록 기본값 설정 (단순화)
+        function setBlockDefaults(block, blockType) {
+            if (!block || !workspace) return;
+
+            try {
+                switch (blockType) {
+                    case 'move_forward':
+                    case 'turn_right':
+                    case 'turn_left':
+                        const inputName = blockType === 'move_forward' ? 'DISTANCE' : 'ANGLE';
+                        const defaultValue = blockType === 'move_forward' ? '10' : '90';
+                        
+                        if (block.getInput(inputName)) {
+                            const numBlock = workspace.newBlock('math_number');
+                            numBlock.setFieldValue(defaultValue, 'NUM');
+                            numBlock.initSvg();
+                            numBlock.render();
+                            block.getInput(inputName).connection.connect(numBlock.outputConnection);
+                        }
+                        break;
+                    case 'wait':
+                        if (block.getInput('TIME')) {
+                            const numBlock = workspace.newBlock('math_number');
+                            numBlock.setFieldValue('1', 'NUM');
+                            numBlock.initSvg();
+                            numBlock.render();
+                            block.getInput('TIME').connection.connect(numBlock.outputConnection);
+                        }
+                        break;
+                    case 'controls_repeat_ext':
+                        if (block.getInput('TIMES')) {
+                            const numBlock = workspace.newBlock('math_number');
+                            numBlock.setFieldValue('10', 'NUM');
+                            numBlock.initSvg();
+                            numBlock.render();
+                            block.getInput('TIMES').connection.connect(numBlock.outputConnection);
+                        }
+                        break;
+                }
+            } catch (error) {
+                console.error('기본값 설정 오류:', error);
+            }
+        }
+
+        // 기존 복잡한 함수들 제거하고 단순화된 버전으로 대체
+
+        // 블록 표시 함수 (클릭 이벤트 강화)
+        function showBlocks(category) {
+            console.log('블록 표시:', category.name);
+            
+            const container = document.getElementById('blocksContainer');
+            if (!container) {
+                console.error('blocksContainer를 찾을 수 없습니다.');
+                return;
+            }
+
+            // 컨테이너 초기화
+            container.innerHTML = '';
+
+            // 카테고리 제목
+            const title = document.createElement('div');
+            title.innerHTML = `
+                <div style="
+                    height: 30px;
+                    background-color: ${category.color};
+                    color: white;
+                    font-weight: bold;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 15px;
+                    margin-bottom: 5px;
+                ">
+                    ${category.name}
+                </div>
+            `;
+            container.appendChild(title);
+
+            // 블록들 추가
+            category.blocks.forEach(block => {
+                const blockElement = document.createElement('div');
+                blockElement.innerHTML = `
+                    <div class="simple-block" data-block-type="${block.type}" style="
+                        margin: 8px 15px;
+                        padding: 12px;
+                        background-color: ${category.color};
+                        color: white;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        user-select: none;
+                        font-size: 14px;
+                        font-weight: 500;
+                        transition: all 0.2s ease;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        border: 2px solid transparent;
+                    ">
+                        ${block.name}
+                    </div>
+                `;
+                
+                const blockDiv = blockElement.querySelector('.simple-block');
+                
+                // 호버 효과
+                blockDiv.addEventListener('mouseenter', () => {
+                    blockDiv.style.transform = 'translateY(-2px)';
+                    blockDiv.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                    blockDiv.style.borderColor = 'rgba(255,255,255,0.3)';
+                });
+
+                blockDiv.addEventListener('mouseleave', () => {
+                    blockDiv.style.transform = 'translateY(0)';
+                    blockDiv.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    blockDiv.style.borderColor = 'transparent';
+                });
+
+                // 클릭 이벤트 (강화된 버전)
+                blockDiv.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('블록 클릭됨:', block.type);
+                    
+                    // 클릭 피드백
+                    blockDiv.style.transform = 'scale(0.95)';
+                    blockDiv.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                    
+                    setTimeout(() => {
+                        blockDiv.style.transform = 'translateY(0)';
+                        blockDiv.style.backgroundColor = category.color;
+                        
+                        // 블록 추가 실행
+                        addBlockToWorkspace(block.type);
+                    }, 150);
+                });
+
+                // 더블클릭 방지
+                blockDiv.addEventListener('dblclick', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                container.appendChild(blockElement);
+            });
+
+            console.log(`${category.blocks.length}개의 블록이 표시되었습니다.`);
+        }
+
+        // 워크스페이스에 블록 추가
+        function addBlockToWorkspace(blockType) {
+            console.log('워크스페이스에 블록 추가 시도:', blockType);
+            
+            if (!workspace) {
+                console.error('❌ 워크스페이스가 초기화되지 않았습니다.');
+                // 워크스페이스 재초기화 시도
+                setTimeout(() => {
+                    initializeBlockly();
+                }, 100);
+                return;
+            }
+
+            try {
+                // 블록 생성
+                const newBlock = workspace.newBlock(blockType);
+                
+                if (!newBlock) {
+                    console.error('❌ 블록 생성 실패:', blockType);
+                    return;
+                }
+
+                // 위치 설정 (겹치지 않도록)
+                const existingBlocks = workspace.getAllBlocks();
+                const x = 50 + (existingBlocks.length * 20);
+                const y = 50 + (existingBlocks.length * 20);
+                
+                console.log('블록 위치 설정:', x, y);
+                
+                // 블록 초기화 및 렌더링
+                newBlock.moveBy(x, y);
+                newBlock.initSvg();
+                newBlock.render();
+
+                // 기본값 설정
+                setupBlockDefaults(newBlock, blockType);
+
+                // 변경 이벤트 발생
+                Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
+                
+                console.log('✅ 블록 추가 성공:', blockType);
+                
+                // 즉시 코드 업데이트
+                updateCode();
+                updateBlockCount();
+                
+                // 성공 메시지
+                logToConsole(`블록 "${blockType}"이 추가되었습니다.`);
+
+            } catch (error) {
+                console.error('❌ 블록 추가 오류:', error);
+                logToConsole(`블록 추가 중 오류 발생: ${error.message}`);
+            }
+        }
+
+        // 블록 기본값 설정 (개선된 버전)
+        function setupBlockDefaults(block, blockType) {
+            if (!block || !workspace) return;
+            
+            try {
+                console.log('블록 기본값 설정:', blockType);
+                
+                switch (blockType) {
+                    case 'move_forward':
+                        if (block.getInput('DISTANCE') && block.getInput('DISTANCE').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('10', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('DISTANCE').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'turn_right':
+                    case 'turn_left':
+                        if (block.getInput('ANGLE') && block.getInput('ANGLE').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('90', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('ANGLE').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'wait':
+                        if (block.getInput('TIME') && block.getInput('TIME').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('1', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('TIME').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'controls_repeat_ext':
+                        if (block.getInput('TIMES') && block.getInput('TIMES').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('10', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('TIMES').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'variables_set':
+                        // 변수 블록의 경우 변수 생성
+                        if (workspace.getAllVariables().length === 0) {
+                            workspace.createVariable('변수1');
+                        }
+                        break;
+                    case 'math_change':
+                        // 변수 변경 블록의 경우 변수 생성
+                        if (workspace.getAllVariables().length === 0) {
+                            workspace.createVariable('변수1');
+                        }
+                        break;
+                }
+                
+                console.log('블록 기본값 설정 완료:', blockType);
+            } catch (error) {
+                console.error('블록 기본값 설정 오류:', error);
+            }
+        }
+
+        // 블록 검색
+        function searchAllBlocks(searchTerm, categories) {
+            console.log('블록 검색:', searchTerm);
+            
+            const container = document.getElementById('blocksContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            // 검색 결과 제목
+            const title = document.createElement('div');
+            title.innerHTML = `
+                <div style="
+                    height: 30px;
+                    background-color: #666;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 15px;
+                    margin-bottom: 5px;
+                ">
+                    "${searchTerm}" 검색 결과
+                </div>
+            `;
+            container.appendChild(title);
+
+            let foundBlocks = [];
+            
+            // 모든 카테고리에서 검색
+            Object.values(categories).forEach(category => {
+                category.blocks.forEach(block => {
+                    if (block.name.toLowerCase().includes(searchTerm)) {
+                        foundBlocks.push({ ...block, color: category.color });
+                    }
+                });
+            });
+
+            if (foundBlocks.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.innerHTML = `
+                    <div style="
+                        padding: 20px;
+                        text-align: center;
+                        color: #666;
+                        font-size: 14px;
+                    ">
+                        검색 결과가 없습니다.
+                    </div>
+                `;
+                container.appendChild(noResults);
+            } else {
+                foundBlocks.forEach(block => {
+                    const blockElement = document.createElement('div');
+                    blockElement.innerHTML = `
+                        <div class="simple-block" data-block-type="${block.type}" style="
+                            margin: 8px 15px;
+                            padding: 12px;
+                            background-color: ${block.color};
+                            color: white;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            user-select: none;
+                            font-size: 14px;
+                            font-weight: 500;
+                            transition: all 0.2s ease;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        ">
+                            ${block.name}
+                        </div>
+                    `;
+                    
+                    const blockDiv = blockElement.querySelector('.simple-block');
+                    
+                    // 호버 효과
+                    blockDiv.addEventListener('mouseenter', () => {
+                        blockDiv.style.transform = 'translateY(-2px)';
+                        blockDiv.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                    });
+
+                    blockDiv.addEventListener('mouseleave', () => {
+                        blockDiv.style.transform = 'translateY(0)';
+                        blockDiv.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    });
+
+                    // 클릭 이벤트
+                    blockDiv.addEventListener('click', () => {
+                        addBlockToWorkspace(block.type);
+                    });
+
+                    container.appendChild(blockElement);
+                });
+            }
+
+            console.log(`검색 결과: ${foundBlocks.length}개 블록`);
+        }
 
         // 커스텀 블록 정의
         function defineCustomBlocks() {
@@ -802,248 +1584,506 @@
                 const varName = block.workspace.getVariableById(varId).name;
                 return `updateVariable("${varName}", (variables["${varName}"] || 0) + ${delta});\n`;
             };
+
+            // Python 변수 관련 코드 생성기
+            Blockly.Python['variables_set'] = function(block) {
+                const value = Blockly.Python.valueToCode(block, 'VALUE', Blockly.Python.ORDER_ASSIGNMENT) || '0';
+                const varId = block.getFieldValue('VAR');
+                const varName = block.workspace.getVariableById(varId).name;
+                return `${varName} = ${value}\n`;
+            };
+
+            Blockly.Python['variables_get'] = function(block) {
+                const varId = block.getFieldValue('VAR');
+                const varName = block.workspace.getVariableById(varId).name;
+                return [varName, Blockly.Python.ORDER_ATOMIC];
+            };
+
+            Blockly.Python['math_change'] = function(block) {
+                const delta = Blockly.Python.valueToCode(block, 'DELTA', Blockly.Python.ORDER_ADDITIVE) || '0';
+                const varId = block.getFieldValue('VAR');
+                const varName = block.workspace.getVariableById(varId).name;
+                return `${varName} += ${delta}\n`;
+            };
+
+            // 조건문 코드 생성기
+            Blockly.JavaScript['controls_if'] = function(block) {
+                let n = 0;
+                let code = '', branchCode, conditionCode;
+                
+                do {
+                    conditionCode = Blockly.JavaScript.valueToCode(block, 'IF' + n, Blockly.JavaScript.ORDER_NONE) || 'false';
+                    branchCode = Blockly.JavaScript.statementToCode(block, 'DO' + n);
+                    
+                    if (n == 0) {
+                        code += 'if (' + conditionCode + ') {\n' + branchCode + '}';
+                    } else {
+                        code += ' else if (' + conditionCode + ') {\n' + branchCode + '}';
+                    }
+                    n++;
+                } while (block.getInput('IF' + n));
+
+                if (block.getInput('ELSE')) {
+                    branchCode = Blockly.JavaScript.statementToCode(block, 'ELSE');
+                    code += ' else {\n' + branchCode + '}';
+                }
+                
+                return code + '\n';
+            };
+
+            Blockly.Python['controls_if'] = function(block) {
+                let n = 0;
+                let code = '', branchCode, conditionCode;
+                
+                do {
+                    conditionCode = Blockly.Python.valueToCode(block, 'IF' + n, Blockly.Python.ORDER_NONE) || 'False';
+                    branchCode = Blockly.Python.statementToCode(block, 'DO' + n) || Blockly.Python.PASS;
+                    
+                    if (n == 0) {
+                        code += 'if ' + conditionCode + ':\n' + branchCode;
+                    } else {
+                        code += 'elif ' + conditionCode + ':\n' + branchCode;
+                    }
+                    n++;
+                } while (block.getInput('IF' + n));
+
+                if (block.getInput('ELSE')) {
+                    branchCode = Blockly.Python.statementToCode(block, 'ELSE') || Blockly.Python.PASS;
+                    code += 'else:\n' + branchCode;
+                }
+                
+                return code;
+            };
+
+            // 논리 연산자 코드 생성기
+            Blockly.JavaScript['logic_compare'] = function(block) {
+                const OPERATORS = {
+                    'EQ': '==',
+                    'NEQ': '!=',
+                    'LT': '<',
+                    'LTE': '<=',
+                    'GT': '>',
+                    'GTE': '>='
+                };
+                const operator = OPERATORS[block.getFieldValue('OP')];
+                const order = (operator == '==' || operator == '!=') ? 
+                    Blockly.JavaScript.ORDER_EQUALITY : Blockly.JavaScript.ORDER_RELATIONAL;
+                const argument0 = Blockly.JavaScript.valueToCode(block, 'A', order) || '0';
+                const argument1 = Blockly.JavaScript.valueToCode(block, 'B', order) || '0';
+                const code = argument0 + ' ' + operator + ' ' + argument1;
+                return [code, order];
+            };
+
+            Blockly.Python['logic_compare'] = function(block) {
+                const OPERATORS = {
+                    'EQ': '==',
+                    'NEQ': '!=',
+                    'LT': '<',
+                    'LTE': '<=',
+                    'GT': '>',
+                    'GTE': '>='
+                };
+                const operator = OPERATORS[block.getFieldValue('OP')];
+                const order = (operator == '==' || operator == '!=') ? 
+                    Blockly.Python.ORDER_EQUALITY : Blockly.Python.ORDER_RELATIONAL;
+                const argument0 = Blockly.Python.valueToCode(block, 'A', order) || '0';
+                const argument1 = Blockly.Python.valueToCode(block, 'B', order) || '0';
+                const code = argument0 + ' ' + operator + ' ' + argument1;
+                return [code, order];
+            };
+
+            // 논리 연산 (AND, OR)
+            Blockly.JavaScript['logic_operation'] = function(block) {
+                const operator = (block.getFieldValue('OP') == 'AND') ? '&&' : '||';
+                const order = (operator == '&&') ? Blockly.JavaScript.ORDER_LOGICAL_AND : Blockly.JavaScript.ORDER_LOGICAL_OR;
+                let argument0 = Blockly.JavaScript.valueToCode(block, 'A', order);
+                let argument1 = Blockly.JavaScript.valueToCode(block, 'B', order);
+                
+                if (!argument0 && !argument1) {
+                    argument0 = 'false';
+                    argument1 = 'false';
+                } else {
+                    if (!argument0) argument0 = 'false';
+                    if (!argument1) argument1 = 'false';
+                }
+                
+                const code = argument0 + ' ' + operator + ' ' + argument1;
+                return [code, order];
+            };
+
+            Blockly.Python['logic_operation'] = function(block) {
+                const operator = (block.getFieldValue('OP') == 'AND') ? 'and' : 'or';
+                const order = (operator == 'and') ? Blockly.Python.ORDER_LOGICAL_AND : Blockly.Python.ORDER_LOGICAL_OR;
+                let argument0 = Blockly.Python.valueToCode(block, 'A', order);
+                let argument1 = Blockly.Python.valueToCode(block, 'B', order);
+                
+                if (!argument0 && !argument1) {
+                    argument0 = 'False';
+                    argument1 = 'False';
+                } else {
+                    if (!argument0) argument0 = 'False';
+                    if (!argument1) argument1 = 'False';
+                }
+                
+                const code = argument0 + ' ' + operator + ' ' + argument1;
+                return [code, order];
+            };
+
+            // 불린 값
+            Blockly.JavaScript['logic_boolean'] = function(block) {
+                const code = (block.getFieldValue('BOOL') == 'TRUE') ? 'true' : 'false';
+                return [code, Blockly.JavaScript.ORDER_ATOMIC];
+            };
+
+            Blockly.Python['logic_boolean'] = function(block) {
+                const code = (block.getFieldValue('BOOL') == 'TRUE') ? 'True' : 'False';
+                return [code, Blockly.Python.ORDER_ATOMIC];
+            };
         }
 
         // Blockly 워크스페이스 초기화
         function initializeBlockly() {
-            const toolbox = {
-                kind: 'categoryToolbox',
-                contents: [
-                    {
-                        kind: 'category',
-                        name: '🎯 제어',
-                        colour: 120,
-                        contents: [
-                            {
-                                kind: 'block',
-                                type: 'start'
-                            },
-                            {
-                                kind: 'block',
-                                type: 'controls_repeat_ext',
-                                inputs: {
-                                    TIMES: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 4 }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                kind: 'block',
-                                type: 'controls_if'
-                            },
-                            {
-                                kind: 'block',
-                                type: 'wait',
-                                inputs: {
-                                    TIME: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 1 }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        kind: 'category',
-                        name: '🚀 움직임',
-                        colour: 210,
-                        contents: [
-                            {
-                                kind: 'block',
-                                type: 'move_forward',
-                                inputs: {
-                                    DISTANCE: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 50 }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                kind: 'block',
-                                type: 'turn_right',
-                                inputs: {
-                                    ANGLE: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 90 }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                kind: 'block',
-                                type: 'turn_left',
-                                inputs: {
-                                    ANGLE: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 90 }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        kind: 'category',
-                        name: '🔢 수학',
-                        colour: 230,
-                        contents: [
-                            {
-                                kind: 'block',
-                                type: 'math_number',
-                                fields: { NUM: 10 }
-                            },
-                            {
-                                kind: 'block',
-                                type: 'math_arithmetic',
-                                inputs: {
-                                    A: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 1 }
-                                        }
-                                    },
-                                    B: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 1 }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                kind: 'block',
-                                type: 'math_random_int',
-                                inputs: {
-                                    FROM: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 1 }
-                                        }
-                                    },
-                                    TO: {
-                                        shadow: {
-                                            type: 'math_number',
-                                            fields: { NUM: 100 }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        kind: 'category',
-                        name: '🧠 논리',
-                        colour: 210,
-                        contents: [
-                            {
-                                kind: 'block',
-                                type: 'logic_compare'
-                            },
-                            {
-                                kind: 'block',
-                                type: 'logic_operation'
-                            },
-                            {
-                                kind: 'block',
-                                type: 'logic_boolean'
-                            },
-                            {
-                                kind: 'block',
-                                type: 'logic_negate'
-                            }
-                        ]
-                    },
-                    {
-                        kind: 'category',
-                        name: '📦 변수',
-                        colour: 330,
-                        custom: 'VARIABLE'
-                    }
-                ]
-            };
+            try {
+                console.log('Blockly 초기화 시작...');
 
-            workspace = Blockly.inject('blocklyDiv', {
-                toolbox: toolbox,
-                grid: {
-                    spacing: 20,
-                    length: 3,
-                    colour: '#ccc',
-                    snap: true
-                },
-                zoom: {
-                    controls: true,
-                    wheel: true,
-                    startScale: 1.0,
-                    maxScale: 3,
-                    minScale: 0.3,
-                    scaleSpeed: 1.2
-                },
-                trashcan: true,
-                sounds: false,
-                move: {
-                    scrollbars: true,
-                    drag: true,
-                    wheel: true
+                // 기존 워크스페이스 정리
+                if (workspace) {
+                    workspace.dispose();
+                    workspace = null;
                 }
-            });
 
-            // 워크스페이스 변경 이벤트 리스너
-            workspace.addChangeListener(function(event) {
-                if (event.type === Blockly.Events.BLOCK_CREATE ||
-                    event.type === Blockly.Events.BLOCK_DELETE ||
-                    event.type === Blockly.Events.BLOCK_CHANGE ||
-                    event.type === Blockly.Events.BLOCK_MOVE ||
-                    event.type === Blockly.Events.VAR_CREATE ||
-                    event.type === Blockly.Events.VAR_DELETE ||
-                    event.type === Blockly.Events.VAR_RENAME) {
+                // Blockly 워크스페이스 생성
+                workspace = Blockly.inject('blocklyDiv', {
+                    toolbox: document.getElementById('toolboxXML'),
+                    grid: {
+                        spacing: 20,
+                        length: 3,
+                        colour: '#ccc',
+                        snap: true
+                    },
+                    zoom: {
+                        controls: true,
+                        wheel: true,
+                        startScale: 1.0,
+                        maxScale: 3,
+                        minScale: 0.3,
+                        scaleSpeed: 1.2
+                    },
+                    trashcan: true,
+                    sounds: false,
+                    move: {
+                        scrollbars: true,
+                        drag: true,
+                        wheel: true
+                    },
+                    renderer: 'zelos'
+                });
+
+                if (workspace) {
+                    console.log('✅ Blockly 워크스페이스 생성 성공');
                     
-                    updateCode();
-                    updateBlockCount();
-                    
-                    // 변수 관련 이벤트 처리
-                    if (event.type === Blockly.Events.VAR_CREATE || 
-                        event.type === Blockly.Events.VAR_RENAME) {
-                        const variableList = workspace.getAllVariables();
-                        variableList.forEach(variable => {
-                            if (!(variable.name in variables)) {
-                                updateVariable(variable.name, 0);
+                    // 워크스페이스 크기 조정
+                    setTimeout(() => {
+                        Blockly.svgResize(workspace);
+                        console.log('워크스페이스 크기 조정 완료');
+                    }, 100);
+
+                    // 워크스페이스 변경 이벤트 리스너
+                    workspace.addChangeListener(function(event) {
+                        if (event.type === Blockly.Events.BLOCK_CREATE ||
+                            event.type === Blockly.Events.BLOCK_DELETE ||
+                            event.type === Blockly.Events.BLOCK_CHANGE ||
+                            event.type === Blockly.Events.BLOCK_MOVE ||
+                            event.type === Blockly.Events.VAR_CREATE ||
+                            event.type === Blockly.Events.VAR_DELETE ||
+                            event.type === Blockly.Events.VAR_RENAME) {
+                            
+                            console.log('워크스페이스 변경:', event.type);
+                            updateCode();
+                            updateBlockCount();
+                            
+                            // 변수 관련 이벤트 처리
+                            if (event.type === Blockly.Events.VAR_CREATE || 
+                                event.type === Blockly.Events.VAR_RENAME) {
+                                const variableList = workspace.getAllVariables();
+                                variableList.forEach(variable => {
+                                    if (!(variable.name in variables)) {
+                                        updateVariable(variable.name, 0);
+                                    }
+                                });
                             }
-                        });
-                    }
-                }
-            });
+                        }
+                    });
 
-            // 샘플 프로그램 로드
-            loadSampleProgram();
+                    // 샘플 프로그램 로드
+                    setTimeout(() => {
+                        loadSampleProgram();
+                        console.log('샘플 프로그램 로드 완료');
+                    }, 200);
+
+                } else {
+                    console.error('❌ Blockly 워크스페이스 생성 실패');
+                }
+
+            } catch (error) {
+                console.error('❌ Blockly 초기화 오류:', error);
+            }
+        }
+
+        // 워크스페이스에 블록 추가 (수정된 버전)
+        function addBlockToWorkspace(blockType) {
+            console.log('워크스페이스에 블록 추가 시도:', blockType);
+            
+            if (!workspace) {
+                console.error('❌ 워크스페이스가 초기화되지 않았습니다.');
+                // 워크스페이스 재초기화 시도
+                setTimeout(() => {
+                    initializeBlockly();
+                }, 100);
+                return;
+            }
+
+            try {
+                // 블록 생성
+                const newBlock = workspace.newBlock(blockType);
+                
+                if (!newBlock) {
+                    console.error('❌ 블록 생성 실패:', blockType);
+                    return;
+                }
+
+                // 위치 설정 (겹치지 않도록)
+                const existingBlocks = workspace.getAllBlocks();
+                const x = 50 + (existingBlocks.length * 20);
+                const y = 50 + (existingBlocks.length * 20);
+                
+                console.log('블록 위치 설정:', x, y);
+                
+                // 블록 초기화 및 렌더링
+                newBlock.moveBy(x, y);
+                newBlock.initSvg();
+                newBlock.render();
+
+                // 기본값 설정
+                setupBlockDefaults(newBlock, blockType);
+
+                // 변경 이벤트 발생
+                Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
+                
+                console.log('✅ 블록 추가 성공:', blockType);
+                
+                // 즉시 코드 업데이트
+                updateCode();
+                updateBlockCount();
+                
+                // 성공 메시지
+                logToConsole(`블록 "${blockType}"이 추가되었습니다.`);
+
+            } catch (error) {
+                console.error('❌ 블록 추가 오류:', error);
+                logToConsole(`블록 추가 중 오류 발생: ${error.message}`);
+            }
+        }
+
+        // 블록 기본값 설정 (개선된 버전)
+        function setupBlockDefaults(block, blockType) {
+            if (!block || !workspace) return;
+            
+            try {
+                console.log('블록 기본값 설정:', blockType);
+                
+                switch (blockType) {
+                    case 'move_forward':
+                        if (block.getInput('DISTANCE') && block.getInput('DISTANCE').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('10', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('DISTANCE').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'turn_right':
+                    case 'turn_left':
+                        if (block.getInput('ANGLE') && block.getInput('ANGLE').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('90', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('ANGLE').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'wait':
+                        if (block.getInput('TIME') && block.getInput('TIME').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('1', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('TIME').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'controls_repeat_ext':
+                        if (block.getInput('TIMES') && block.getInput('TIMES').connection) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('10', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('TIMES').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'variables_set':
+                        // 변수 블록의 경우 변수 생성
+                        if (workspace.getAllVariables().length === 0) {
+                            workspace.createVariable('변수1');
+                        }
+                        break;
+                    case 'math_change':
+                        // 변수 변경 블록의 경우 변수 생성
+                        if (workspace.getAllVariables().length === 0) {
+                            workspace.createVariable('변수1');
+                        }
+                        break;
+                }
+                
+                console.log('블록 기본값 설정 완료:', blockType);
+            } catch (error) {
+                console.error('블록 기본값 설정 오류:', error);
+            }
+        }
+
+        // 기존 블록 팔레트 초기화 함수는 제거하고 위의 createSimpleBlockPalette로 대체
+
+        // 기존 복잡한 블록 표시 함수들은 제거하고 위의 단순한 방식으로 대체
+
+        // 블록 기본값 설정
+        function setupBlockDefaults(block, blockType) {
+            try {
+                switch (blockType) {
+                    case 'move_forward':
+                        if (block.getInput('DISTANCE')) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('10', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('DISTANCE').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'turn_right':
+                    case 'turn_left':
+                        if (block.getInput('ANGLE')) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('90', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('ANGLE').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'wait':
+                        if (block.getInput('TIME')) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('1', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('TIME').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                    case 'controls_repeat_ext':
+                        if (block.getInput('TIMES')) {
+                            const numberBlock = workspace.newBlock('math_number');
+                            numberBlock.setFieldValue('10', 'NUM');
+                            numberBlock.initSvg();
+                            numberBlock.render();
+                            block.getInput('TIMES').connection.connect(numberBlock.outputConnection);
+                        }
+                        break;
+                }
+            } catch (error) {
+                console.error('블록 기본값 설정 오류:', error);
+            }
         }
 
         // 이벤트 리스너 설정
         function setupEventListeners() {
+            console.log('이벤트 리스너 설정 중...');
+
             // 실행 버튼들
-            document.getElementById('runButton').addEventListener('click', runCode);
-            document.getElementById('runButtonSmall').addEventListener('click', runCode);
+            const runButton = document.getElementById('runButton');
+            const runButtonSmall = document.getElementById('runButtonSmall');
+            
+            if (runButton) {
+                runButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    runCode();
+                });
+            }
+            
+            if (runButtonSmall) {
+                runButtonSmall.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    runCode();
+                });
+            }
             
             // 제어 버튼들
-            document.getElementById('stopButton').addEventListener('click', stopCode);
-            document.getElementById('resetButton').addEventListener('click', resetCharacter);
+            const stopButton = document.getElementById('stopButton');
+            const resetButton = document.getElementById('resetButton');
+            
+            if (stopButton) {
+                stopButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    stopCode();
+                });
+            }
+            
+            if (resetButton) {
+                resetButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    resetCharacter();
+                });
+            }
             
             // 저장/로드 버튼들
-            document.getElementById('saveButton').addEventListener('click', saveProgram);
-            document.getElementById('loadButton').addEventListener('click', loadProgram);
+            const saveButton = document.getElementById('saveButton');
+            const loadButton = document.getElementById('loadButton');
+            
+            if (saveButton) {
+                saveButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    saveProgram();
+                });
+            }
+            
+            if (loadButton) {
+                loadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadProgram();
+                });
+            }
             
             // 언어 전환 버튼들
-            document.getElementById('pythonButton').addEventListener('click', () => switchLanguage('python'));
-            document.getElementById('javascriptButton').addEventListener('click', () => switchLanguage('javascript'));
-            document.getElementById('cppButton').addEventListener('click', () => switchLanguage('cpp'));
+            const pythonButton = document.getElementById('pythonButton');
+            const javascriptButton = document.getElementById('javascriptButton');
+            const cppButton = document.getElementById('cppButton');
+            
+            if (pythonButton) {
+                pythonButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchLanguage('python');
+                });
+            }
+            
+            if (javascriptButton) {
+                javascriptButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchLanguage('javascript');
+                });
+            }
+            
+            if (cppButton) {
+                cppButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchLanguage('cpp');
+                });
+            }
             
             // 창 크기 조정 이벤트
             window.addEventListener('resize', function() {
@@ -1062,6 +2102,8 @@
                     e.returnValue = '작업 중인 내용이 있습니다. 정말 페이지를 떠나시겠습니까?';
                 }
             });
+
+            console.log('모든 이벤트 리스너 설정 완료');
         }
 
         // 키보드 단축키 처리
@@ -1092,82 +2134,51 @@
             }
         }
 
-        // 샘플 프로그램 로드
+        // 간단한 샘플 프로그램 로드
         function loadSampleProgram() {
-            const sampleXml = `
-<xml xmlns="https://developers.google.com/blockly/xml">
-  <variables>
-    <variable id="counter">카운터</variable>
-  </variables>
-  <block type="start" id="start_block" x="250" y="150">
-    <next>
-      <block type="variables_set" id="init_counter">
-        <field name="VAR" id="counter">카운터</field>
-        <value name="VALUE">
-          <block type="math_number">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-        <next>
-          <block type="controls_repeat_ext" id="main_loop">
-            <value name="TIMES">
-              <shadow type="math_number">
-                <field name="NUM">4</field>
-              </shadow>
-            </value>
-            <statement name="DO">
-              <block type="move_forward" id="move1">
-                <value name="DISTANCE">
-                  <shadow type="math_number">
-                    <field name="NUM">60</field>
-                  </shadow>
-                </value>
-                <next>
-                  <block type="turn_right" id="turn1">
-                    <value name="ANGLE">
-                      <shadow type="math_number">
-                        <field name="NUM">90</field>
-                      </shadow>
-                    </value>
-                    <next>
-                      <block type="math_change" id="increment">
-                        <field name="VAR" id="counter">카운터</field>
-                        <value name="DELTA">
-                          <shadow type="math_number">
-                            <field name="NUM">1</field>
-                          </shadow>
-                        </value>
-                        <next>
-                          <block type="wait" id="wait1">
-                            <value name="TIME">
-                              <shadow type="math_number">
-                                <field name="NUM">0.5</field>
-                              </shadow>
-                            </value>
-                          </block>
-                        </next>
-                      </block>
-                    </next>
-                  </block>
-                </next>
-              </block>
-            </statement>
-          </block>
-        </next>
-      </block>
-    </next>
-  </block>
-</xml>`;
+            if (!workspace) {
+                console.log('워크스페이스가 없어서 샘플 프로그램을 나중에 로드합니다.');
+                return;
+            }
 
             try {
-                const xml = Blockly.Xml.textToDom(sampleXml);
-                Blockly.Xml.domToWorkspace(xml, workspace);
+                console.log('간단한 샘플 프로그램 로드...');
+                
+                // 시작 블록
+                const startBlock = workspace.newBlock('start');
+                startBlock.moveBy(100, 100);
+                startBlock.initSvg();
+                startBlock.render();
+
+                // 이동 블록
+                const moveBlock = workspace.newBlock('move_forward');
+                moveBlock.moveBy(100, 150);
+                moveBlock.initSvg();
+                moveBlock.render();
+
+                // 숫자 블록
+                const numberBlock = workspace.newBlock('math_number');
+                numberBlock.setFieldValue('50', 'NUM');
+                numberBlock.initSvg();
+                numberBlock.render();
+
+                // 연결
+                if (moveBlock.getInput('DISTANCE') && numberBlock.outputConnection) {
+                    moveBlock.getInput('DISTANCE').connection.connect(numberBlock.outputConnection);
+                }
+
+                // 블록 연결 (시작 -> 이동)
+                if (startBlock.nextConnection && moveBlock.previousConnection) {
+                    startBlock.nextConnection.connect(moveBlock.previousConnection);
+                }
+
+                console.log('✅ 샘플 프로그램 로드 완료');
                 updateCode();
                 updateBlockCount();
                 logToConsole('샘플 프로그램이 로드되었습니다.');
+
             } catch (error) {
                 console.error('샘플 프로그램 로드 오류:', error);
-                logToConsole('샘플 프로그램 로드 중 오류가 발생했습니다.');
             }
         }
 

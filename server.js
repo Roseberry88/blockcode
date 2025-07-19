@@ -631,7 +631,7 @@ app.use('/api/', limiter);
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5,
+    max: 10,
     message: { success: false, message: '너무 많은 로그인 시도입니다.' }
 });
 
